@@ -25,6 +25,11 @@
 		D3B0802D202B03B6009B046B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3B0802B202B03B6009B046B /* LaunchScreen.storyboard */; };
 		D3B08038202B03B6009B046B /* CampaignSdkDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08037202B03B6009B046B /* CampaignSdkDemoTests.swift */; };
 		D3B08043202B03B6009B046B /* CampaignSdkDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08042202B03B6009B046B /* CampaignSdkDemoUITests.swift */; };
+		D3C21B192032B325002FB1EE /* drop-down-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D3C21B182032B325002FB1EE /* drop-down-arrow.png */; };
+		D3C21B1B2032E14F002FB1EE /* campaign_sdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D3C21B222032E44B002FB1EE /* LoyagramSingleSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B212032E44B002FB1EE /* LoyagramSingleSelectView.swift */; };
+		D3C21B242032F052002FB1EE /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B232032F052002FB1EE /* Campaign.swift */; };
+		D3C21B262032F0BD002FB1EE /* Biz.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B252032F0BD002FB1EE /* Biz.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -49,7 +54,28 @@
 			remoteGlobalIDString = D3B0801F202B03B6009B046B;
 			remoteInfo = CampaignSdkDemo;
 		};
+		D3C21B1C2032E14F002FB1EE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = D3B07FF9202B0068009B046B /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = D3B08001202B0068009B046B;
+			remoteInfo = "campaign-sdk";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		D3C21B1E2032E14F002FB1EE /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				D3C21B1B2032E14F002FB1EE /* campaign_sdk.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		D3064AD6203157BF0015E35B /* LoyagramCampaignManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCampaignManager.swift; sourceTree = "<group>"; };
@@ -78,6 +104,10 @@
 		D3B0803E202B03B6009B046B /* CampaignSdkDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CampaignSdkDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3B08042202B03B6009B046B /* CampaignSdkDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignSdkDemoUITests.swift; sourceTree = "<group>"; };
 		D3B08044202B03B6009B046B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3C21B182032B325002FB1EE /* drop-down-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "drop-down-arrow.png"; path = "../../../../../../../Downloads/drop-down-arrow.png"; sourceTree = "<group>"; };
+		D3C21B212032E44B002FB1EE /* LoyagramSingleSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramSingleSelectView.swift; sourceTree = "<group>"; };
+		D3C21B232032F052002FB1EE /* Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Campaign.swift; sourceTree = "<group>"; };
+		D3C21B252032F0BD002FB1EE /* Biz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biz.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,6 +154,7 @@
 		D3064ADA203178820015E35B /* Images */ = {
 			isa = PBXGroup;
 			children = (
+				D3C21B182032B325002FB1EE /* drop-down-arrow.png */,
 				D3064ADD20318AC90015E35B /* close.png */,
 				D3064ADB20317AD10015E35B /* apple.png */,
 			);
@@ -153,6 +184,8 @@
 		D36D532D202DA09400258DCA /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				D3C21B232032F052002FB1EE /* Campaign.swift */,
+				D3C21B252032F0BD002FB1EE /* Biz.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -162,6 +195,7 @@
 			children = (
 				D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */,
 				D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */,
+				D3C21B212032E44B002FB1EE /* LoyagramSingleSelectView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -314,10 +348,12 @@
 				D3B0801C202B03B6009B046B /* Sources */,
 				D3B0801D202B03B6009B046B /* Frameworks */,
 				D3B0801E202B03B6009B046B /* Resources */,
+				D3C21B1E2032E14F002FB1EE /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
+				D3C21B1D2032E14F002FB1EE /* PBXTargetDependency */,
 			);
 			name = CampaignSdkDemo;
 			productName = CampaignSdkDemo;
@@ -424,6 +460,7 @@
 			files = (
 				D3064ADE20318AC90015E35B /* close.png in Resources */,
 				D3064ADC20317AD10015E35B /* apple.png in Resources */,
+				D3C21B192032B325002FB1EE /* drop-down-arrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,8 +503,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3064AD9203158E20015E35B /* CampaignViewController.swift in Sources */,
+				D3C21B242032F052002FB1EE /* Campaign.swift in Sources */,
 				D3064AE22031C0310015E35B /* LanguageTableViewCell.swift in Sources */,
+				D3C21B262032F0BD002FB1EE /* Biz.swift in Sources */,
 				D36D5332202DA26200258DCA /* LoyagramCampaignView.swift in Sources */,
+				D3C21B222032E44B002FB1EE /* LoyagramSingleSelectView.swift in Sources */,
 				D3064AD7203157BF0015E35B /* LoyagramCampaignManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -523,6 +563,11 @@
 			isa = PBXTargetDependency;
 			target = D3B0801F202B03B6009B046B /* CampaignSdkDemo */;
 			targetProxy = D3B0803F202B03B6009B046B /* PBXContainerItemProxy */;
+		};
+		D3C21B1D2032E14F002FB1EE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = D3B08001202B0068009B046B /* campaign-sdk */;
+			targetProxy = D3C21B1C2032E14F002FB1EE /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -733,6 +778,7 @@
 		D3B08046202B03B6009B046B /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CampaignSdkDemo/Info.plist;
@@ -747,6 +793,7 @@
 		D3B08047202B03B6009B046B /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				INFOPLIST_FILE = CampaignSdkDemo/Info.plist;

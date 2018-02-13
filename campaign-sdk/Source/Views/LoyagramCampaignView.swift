@@ -11,20 +11,13 @@ import UIKit
 public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataSource {
     
     
-
-    /*
-    // Only override draw() if you perform custom drawing.
-    // An empty implementation adversely affects performance during animation.
-    override func draw(_ rect: CGRect) {
-        // Drawing code
-    }
-    */
     
     var headerView: UIView!
     var contentView: UIView!
     var footerView: UIView!
     var lblPoweredBy : UILabel!
     var imageViewBrand : UIImageView!
+    var imageViewArrow : UIImageView!
     var lblBrand : UILabel!
     var brandView : UIView!
     var btnClose : UIButton!
@@ -32,7 +25,12 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var btnLanguage: UIButton!
     var viewController : UIViewController!
     var tableViewLanguage : UITableView!
-    var languages:Array = ["English", "Spanish", "Portugeese"]
+    var languages:NSArray = ["English", "Spanish", "Portugeese", "Hindi", "xyz"]
+    var primaryColor : UIColor!
+    var currentLang : Int!
+    var nextPrevButtonView: UIView!
+    var btnNext:UIButton!
+    var btnPrev: UIButton!
     
     override public init(frame: CGRect){
         super.init(frame: frame)
@@ -44,16 +42,19 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let bundle = Bundle(for: type(of: self))
         btnClose.setImage(UIImage(named: "close.png", in: bundle, compatibleWith: nil), for:.normal)
         imageViewBrand.image = UIImage(named: "apple.png", in: bundle, compatibleWith: nil)
+        btnLanguage.setImage(UIImage(named: "drop-down-arrow.png", in: bundle, compatibleWith: nil), for: .normal)
+        btnLanguage.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 10)
+        btnLanguage.imageEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+        btnLanguage.semanticContentAttribute = .forceRightToLeft
+        btnLanguage.contentHorizontalAlignment = .left
+        
         tableViewLanguage.register(UITableViewCell.self, forCellReuseIdentifier: "languageCell")
         tableViewLanguage.delegate = self
         tableViewLanguage.dataSource = self
-        //headerView.clipsToBounds = false
-//        tableViewLanguage.clipsToBounds = false
-//        headerView.layer.masksToBounds = false
-//        tableViewLanguage.layer.masksToBounds = false
         tableViewLanguage.tableFooterView = UIView()
         tableViewLanguage.layer.zPosition = 1
-        //contentView.layer.zPosition = 0
+        
+        currentLang = 0
         
     }
     
@@ -72,9 +73,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         lblBrand = UILabel()
         btnClose = UIButton()
         lblQuestionCount = UILabel()
-        btnLanguage = UIButton()
+        btnLanguage = UIButton(type: .custom)
+        //imageViewArrow = UIImageView()
         imageViewBrand.contentMode = .scaleAspectFit;
-        //imageViewBrand.frame = rect
         
         lblBrand.textColor = UIColor.white
         lblBrand.textAlignment = .center
@@ -85,6 +86,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         headerView.addSubview(btnClose)
         headerView.addSubview(brandView)
         headerView.addSubview(btnLanguage)
+        //headerView.addSubview(imageViewArrow)
         headerView.addSubview(lblQuestionCount)
         self.addSubview(headerView)
         
@@ -96,6 +98,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnClose.translatesAutoresizingMaskIntoConstraints = false
         imageViewBrand.translatesAutoresizingMaskIntoConstraints = false
         btnLanguage.translatesAutoresizingMaskIntoConstraints = false
+        //imageViewArrow.translatesAutoresizingMaskIntoConstraints = false
         lblQuestionCount.translatesAutoresizingMaskIntoConstraints = false
         btnLanguage.setTitleColor(UIColor.white, for: .normal)
         btnLanguage.setTitleColor(UIColor.white, for: .normal)
@@ -132,7 +135,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                               toItem: nil,
                                               attribute: .notAnAttribute,
                                               multiplier: 1.0,
-                                              constant: 200.0)
+                                              constant: 190.0)
         
         NSLayoutConstraint.activate([headerLeading, headerTrailing, headerTop, headerHeight])
         
@@ -194,7 +197,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                                        toItem: nil,
                                                        attribute: .notAnAttribute,
                                                        multiplier: 1.0,
-                                                       constant: 60.0)
+                                                       constant: 100.0)
         
         let btnLanguageBottom = NSLayoutConstraint(item: btnLanguage,
                                                         attribute: .bottom,
@@ -213,7 +216,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                                           constant: 15.0)
         
         NSLayoutConstraint.activate([btnLanguageHeight, btnLanguageWidth, btnLanguageBottom, btnLanguageLeading])
-        
         
         
         //Close Button Constraints
@@ -278,7 +280,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                               toItem: nil,
                                               attribute: .notAnAttribute,
                                               multiplier: 1.0,
-                                              constant: 130.0)
+                                              constant: 120.0)
         
         //Height
         let brandWidth = NSLayoutConstraint(item: brandView,
@@ -287,7 +289,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                              toItem: nil,
                                              attribute: .notAnAttribute,
                                              multiplier: 1.0,
-                                             constant: 120.0)
+                                             constant: 100.0)
         
         NSLayoutConstraint.activate([brandCenterHorizontally, brandTop, brandWidth, brandHeight])
         
@@ -317,7 +319,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                                toItem: nil,
                                                attribute: .notAnAttribute,
                                                multiplier: 1.0,
-                                               constant: 100.0)
+                                               constant: 80.0)
         
         NSLayoutConstraint.activate([imgBrandCenterHorizontally, imgBrandTop, imgBrandWidth])
         
@@ -338,7 +340,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                            toItem: nil,
                                            attribute: .notAnAttribute,
                                            multiplier: 1.0,
-                                           constant: 100.0)
+                                           constant: 80.0)
         
         
         let lblBrandCenterHorizontally = NSLayoutConstraint(item: lblBrand,
@@ -366,10 +368,20 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         tableViewLanguage = UITableView()
         tableViewLanguage.translatesAutoresizingMaskIntoConstraints = false
-        headerView.addSubview(tableViewLanguage)
+        tableViewLanguage.isScrollEnabled = true
+        self.addSubview(tableViewLanguage)
         //tableViewLanguage.layer.zPosition = 1;
         tableViewLanguage.isHidden = true
         tableViewLanguage.superview?.bringSubview(toFront: tableViewLanguage)
+        tableViewLanguage.allowsSelection = true;
+        tableViewLanguage.isUserInteractionEnabled = true
+        tableViewLanguage.clipsToBounds = false;
+        //Table View shadow effects
+        tableViewLanguage.layer.masksToBounds = false
+        tableViewLanguage.layer.shadowOffset = CGSize(width:1, height:1);
+        tableViewLanguage.layer.shadowRadius = 5
+        tableViewLanguage.layer.shadowOpacity = 0.6
+        tableViewLanguage.layer.shadowColor = UIColor.darkGray.cgColor
         
         //Table view cosntraints
         let tableViewLangHeight = NSLayoutConstraint(item: tableViewLanguage,
@@ -378,7 +390,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                                 toItem: nil,
                                                 attribute: .notAnAttribute,
                                                 multiplier: 1.0,
-                                                constant: 150.0)
+                                                constant: 130.0)
         
         let tableViewLangWidth = NSLayoutConstraint(item: tableViewLanguage,
                                                attribute: .width,
@@ -386,14 +398,14 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                                toItem: nil,
                                                attribute: .notAnAttribute,
                                                multiplier: 1.0,
-                                               constant: 110.0)
+                                               constant: 100.0)
     
         
         let tableViewLangTop =  NSLayoutConstraint(item: tableViewLanguage,
                                                  attribute: .top,
                                                  relatedBy: .equal,
                                                  toItem: btnLanguage,
-                                                 attribute: .bottom,
+                                                 attribute: .top,
                                                  multiplier: 1.0,
                                                  constant: 0.0)
         
@@ -412,10 +424,28 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func initContentView() {
         contentView = UIView()
-        contentView.backgroundColor = UIColor.white
-        self.addSubview(contentView)
-        contentView.translatesAutoresizingMaskIntoConstraints = false;
+        nextPrevButtonView = UIView()
+        btnNext = UIButton()
+        btnPrev = UIButton()
         
+        contentView.backgroundColor = UIColor.white
+        
+        self.addSubview(contentView)
+        nextPrevButtonView.addSubview(btnPrev)
+        nextPrevButtonView.addSubview(btnNext)
+        contentView.addSubview(nextPrevButtonView)
+        
+        contentView.translatesAutoresizingMaskIntoConstraints = false;
+        nextPrevButtonView.translatesAutoresizingMaskIntoConstraints = false;
+        btnPrev.translatesAutoresizingMaskIntoConstraints = false;
+        btnNext.translatesAutoresizingMaskIntoConstraints = false;
+       
+        //Style buttons
+        
+        
+        
+        btnPrev.setTitle("Previous", for: .normal)
+        btnNext.setTitle("Next", for: .normal)
         //Content View constraints
         
         //Leading
@@ -442,6 +472,120 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                             constant: 0.0)
         
         NSLayoutConstraint.activate([contentLeading, contentTrailing, contentBottom, contentTop])
+        
+        //Button View Constraints
+        
+        //Leading
+        let buttonViewLeading  = NSLayoutConstraint(item: nextPrevButtonView, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1, constant: 0)
+        
+        //Trailing
+        let buttonViewTrailing  = NSLayoutConstraint(item: nextPrevButtonView, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1, constant: 0)
+        
+        //Top
+        let buttonViewBottom = NSLayoutConstraint(item: nextPrevButtonView,
+                                               attribute: .bottom,
+                                               //relatedBy: .greaterThanOrEqual,
+                                              relatedBy :.equal,
+                                               toItem: contentView,
+                                               attribute: .bottom,
+                                               multiplier: 1.0,
+                                               constant: -10.0)
+        let buttonViewHeight = NSLayoutConstraint(item: nextPrevButtonView,
+                                               attribute: .height,
+                                               relatedBy: .equal,
+                                               toItem: nil,
+                                               attribute: .notAnAttribute,
+                                               multiplier: 1.0,
+                                               constant: 30.0)
+        
+        NSLayoutConstraint.activate([buttonViewLeading, buttonViewTrailing, buttonViewBottom, buttonViewHeight])
+        
+        //Prev Button Constrinats
+        let btnPrevHeight = NSLayoutConstraint(item: btnPrev,
+                                                     attribute: .height,
+                                                     relatedBy: .equal,
+                                                     toItem: nil,
+                                                     attribute: .notAnAttribute,
+                                                     multiplier: 1.0,
+                                                     constant: 30.0)
+        
+        let btnPrevWidth = NSLayoutConstraint(item: btnPrev,
+                                                    attribute: .width,
+                                                    relatedBy: .equal,
+                                                    toItem: nil,
+                                                    attribute: .notAnAttribute,
+                                                    multiplier: 1.0,
+                                                    constant: 80.0)
+        let btnPrevleading = NSLayoutConstraint(item: btnPrev,
+                                                attribute: .leading,
+                                                relatedBy: .equal,
+                                                toItem: nextPrevButtonView,
+                                                attribute: .leading,
+                                                multiplier: 1.0,
+                                                constant: 50.0)
+        
+        let btnPrevCenterVertically = NSLayoutConstraint(item: btnPrev,
+                                                            attribute: .centerY,
+                                                            relatedBy: .equal,
+                                                            toItem: nextPrevButtonView,
+                                                            attribute: .centerY,
+                                                            multiplier: 1.0,
+                                                            constant: 0.0)
+        
+//        let btnPrevCenterHorizontally = NSLayoutConstraint(item: btnPrev,
+//                                                         attribute: .centerY,
+//                                                         relatedBy: .equal,
+//                                                         toItem: nextPrevButtonView,
+//                                                         attribute: .centerY,
+//                                                         multiplier: 1.0,
+//                                                         constant: 0.0)
+        
+        NSLayoutConstraint.activate([btnPrevHeight, btnPrevWidth, btnPrevleading, btnPrevCenterVertically])
+        
+        //Next Button Constrinats
+        
+        let btnNextHeight = NSLayoutConstraint(item: btnNext,
+                                               attribute: .height,
+                                               relatedBy: .equal,
+                                               toItem: nil,
+                                               attribute: .notAnAttribute,
+                                               multiplier: 1.0,
+                                               constant: 30.0)
+        
+        let btnNextWidth = NSLayoutConstraint(item: btnNext,
+                                              attribute: .width,
+                                              relatedBy: .equal,
+                                              toItem: nil,
+                                              attribute: .notAnAttribute,
+                                              multiplier: 1.0,
+                                              constant: 80.0)
+        
+        let btnNextCenterVertically = NSLayoutConstraint(item: btnNext,
+                                                           attribute: .centerY,
+                                                           relatedBy: .equal,
+                                                           toItem: nextPrevButtonView,
+                                                           attribute: .centerY,
+                                                           multiplier: 1.0,
+                                                           constant: 0.0)
+
+//        let btnNextCenterHorizontally = NSLayoutConstraint(item: btnNext,
+//                                                           attribute: .centerY,
+//                                                           relatedBy: .equal,
+//                                                           toItem: nextPrevButtonView,
+//                                                           attribute: .centerY,
+//                                                           multiplier: 1.0,
+//                                                           constant: 0.0)
+        
+        let btnNextTrailing = NSLayoutConstraint(item: btnNext,
+                                                attribute: .trailing,
+                                                relatedBy: .equal,
+                                                toItem: nextPrevButtonView,
+                                                attribute: .trailing,
+                                                multiplier: 1.0,
+                                                constant: -50.0)
+        
+        
+        NSLayoutConstraint.activate([btnNextHeight, btnNextWidth, btnNextTrailing, btnNextCenterVertically])
     
     }
     
@@ -508,7 +652,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func languageButtonAction(sender:UIButton!) {
         
         tableViewLanguage.isHidden = !tableViewLanguage.isHidden
-        //self.bringSubview(toFront: tableViewLanguage)
+        self.bringSubview(toFront: tableViewLanguage)
+        //tableViewLanguage.reloadData()
         self.sendSubview(toBack: contentView)
     }
     
@@ -516,14 +661,34 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
        
         return languages.count
+       
     }
     
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "LanguageCell")
-        //cell.textLabel!.text = "\(languages[indexPath.row])"
-        cell.lblLanguage.text = languages[indexPath.row]
+        cell.selectionStyle = .none
+        cell.lblLanguage.text = languages[indexPath.row] as? String
+        //check if row is current language
+        let colorPrimary = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+        if(currentLang == indexPath.row) {
+            cell.backgroundColor = UIColor.white
+            cell.lblLanguage.textColor = colorPrimary
+        }
+        else {
+            cell.backgroundColor = colorPrimary
+            cell.lblLanguage.textColor = UIColor.white
+        }
         return cell
+    }
+    
+    public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        //
+        tableViewLanguage.isHidden = !tableViewLanguage.isHidden
+        currentLang = indexPath.row
+        let cell = tableViewLanguage.cellForRow(at: indexPath) as! LanguageTableViewCell
+        cell.backgroundColor = UIColor.white
+        cell.lblLanguage.textColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+        tableViewLanguage.reloadData()
     }
     
 }
