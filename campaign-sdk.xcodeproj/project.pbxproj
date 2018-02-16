@@ -13,6 +13,9 @@
 		D3064ADE20318AC90015E35B /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = D3064ADD20318AC90015E35B /* close.png */; };
 		D3064AE22031C0310015E35B /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */; };
 		D31AC33F202C4F88006EA2DB /* LGRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31AC33E202C4F88006EA2DB /* LGRadioButton.swift */; };
+		D32AD91F2035A0F400B3061D /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD91D2035A0F300B3061D /* Labels.swift */; };
+		D32AD9202035A0F400B3061D /* LabelTranslations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD91E2035A0F400B3061D /* LabelTranslations.swift */; };
+		D32AD9222035B5BA00B3061D /* LoyagramRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD9212035B5BA00B3061D /* LoyagramRadioButton.swift */; };
 		D33E8F3C202DDE8B00BDF83C /* campaign_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; };
 		D36D5332202DA26200258DCA /* LoyagramCampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */; };
 		D3B0800C202B0068009B046B /* campaign_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; };
@@ -27,9 +30,28 @@
 		D3B08043202B03B6009B046B /* CampaignSdkDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08042202B03B6009B046B /* CampaignSdkDemoUITests.swift */; };
 		D3C21B192032B325002FB1EE /* drop-down-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D3C21B182032B325002FB1EE /* drop-down-arrow.png */; };
 		D3C21B1B2032E14F002FB1EE /* campaign_sdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		D3C21B222032E44B002FB1EE /* LoyagramSingleSelectView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B212032E44B002FB1EE /* LoyagramSingleSelectView.swift */; };
-		D3C21B242032F052002FB1EE /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B232032F052002FB1EE /* Campaign.swift */; };
-		D3C21B262032F0BD002FB1EE /* Biz.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B252032F0BD002FB1EE /* Biz.swift */; };
+		D3C21B222032E44B002FB1EE /* LoyagramSurveyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */; };
+		D3D9F9A020347A250054F7FF /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98B20347A200054F7FF /* Campaign.swift */; };
+		D3D9F9A120347A250054F7FF /* Passives.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98C20347A210054F7FF /* Passives.swift */; };
+		D3D9F9A220347A250054F7FF /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98D20347A210054F7FF /* Custom.swift */; };
+		D3D9F9A320347A250054F7FF /* Biz.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98E20347A210054F7FF /* Biz.swift */; };
+		D3D9F9A420347A250054F7FF /* QuestionTranslations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98F20347A210054F7FF /* QuestionTranslations.swift */; };
+		D3D9F9A520347A250054F7FF /* Static_texts.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99020347A220054F7FF /* Static_texts.swift */; };
+		D3D9F9A620347A250054F7FF /* Promoters.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99120347A220054F7FF /* Promoters.swift */; };
+		D3D9F9A720347A250054F7FF /* All.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99220347A220054F7FF /* All.swift */; };
+		D3D9F9A820347A250054F7FF /* Nps_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99320347A220054F7FF /* Nps_settings.swift */; };
+		D3D9F9A920347A250054F7FF /* Placeholders.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99420347A220054F7FF /* Placeholders.swift */; };
+		D3D9F9AA20347A250054F7FF /* Thank_you_and_redirect_settings_translations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99520347A220054F7FF /* Thank_you_and_redirect_settings_translations.swift */; };
+		D3D9F9AB20347A250054F7FF /* Widget.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99620347A230054F7FF /* Widget.swift */; };
+		D3D9F9AC20347A250054F7FF /* Text.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99720347A230054F7FF /* Text.swift */; };
+		D3D9F9AD20347A250054F7FF /* Request_reason_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99820347A230054F7FF /* Request_reason_settings.swift */; };
+		D3D9F9AE20347A250054F7FF /* Detractors.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99920347A230054F7FF /* Detractors.swift */; };
+		D3D9F9AF20347A250054F7FF /* Language.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99A20347A240054F7FF /* Language.swift */; };
+		D3D9F9B020347A250054F7FF /* Thank_you_and_redirect_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99B20347A240054F7FF /* Thank_you_and_redirect_settings.swift */; };
+		D3D9F9B120347A250054F7FF /* Welcome_message_translations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99C20347A240054F7FF /* Welcome_message_translations.swift */; };
+		D3D9F9B220347A250054F7FF /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99D20347A240054F7FF /* Question.swift */; };
+		D3D9F9B320347A250054F7FF /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99E20347A250054F7FF /* Settings.swift */; };
+		D3D9F9B420347A250054F7FF /* SettingsTranslations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99F20347A250054F7FF /* SettingsTranslations.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -84,6 +106,9 @@
 		D3064ADD20318AC90015E35B /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
 		D31AC33E202C4F88006EA2DB /* LGRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LGRadioButton.swift; sourceTree = "<group>"; };
+		D32AD91D2035A0F300B3061D /* Labels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
+		D32AD91E2035A0F400B3061D /* LabelTranslations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelTranslations.swift; sourceTree = "<group>"; };
+		D32AD9212035B5BA00B3061D /* LoyagramRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramRadioButton.swift; sourceTree = "<group>"; };
 		D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCampaignView.swift; sourceTree = "<group>"; };
 		D3B08002202B0068009B046B /* campaign_sdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = campaign_sdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3B08005202B0068009B046B /* campaign_sdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = campaign_sdk.h; sourceTree = "<group>"; };
@@ -105,9 +130,28 @@
 		D3B08042202B03B6009B046B /* CampaignSdkDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignSdkDemoUITests.swift; sourceTree = "<group>"; };
 		D3B08044202B03B6009B046B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D3C21B182032B325002FB1EE /* drop-down-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = "drop-down-arrow.png"; path = "../../../../../../../Downloads/drop-down-arrow.png"; sourceTree = "<group>"; };
-		D3C21B212032E44B002FB1EE /* LoyagramSingleSelectView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramSingleSelectView.swift; sourceTree = "<group>"; };
-		D3C21B232032F052002FB1EE /* Campaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Campaign.swift; sourceTree = "<group>"; };
-		D3C21B252032F0BD002FB1EE /* Biz.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Biz.swift; sourceTree = "<group>"; };
+		D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramSurveyView.swift; sourceTree = "<group>"; };
+		D3D9F98B20347A200054F7FF /* Campaign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Campaign.swift; sourceTree = "<group>"; };
+		D3D9F98C20347A210054F7FF /* Passives.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Passives.swift; sourceTree = "<group>"; };
+		D3D9F98D20347A210054F7FF /* Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
+		D3D9F98E20347A210054F7FF /* Biz.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Biz.swift; sourceTree = "<group>"; };
+		D3D9F98F20347A210054F7FF /* QuestionTranslations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = QuestionTranslations.swift; sourceTree = "<group>"; };
+		D3D9F99020347A220054F7FF /* Static_texts.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Static_texts.swift; sourceTree = "<group>"; };
+		D3D9F99120347A220054F7FF /* Promoters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Promoters.swift; sourceTree = "<group>"; };
+		D3D9F99220347A220054F7FF /* All.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = All.swift; sourceTree = "<group>"; };
+		D3D9F99320347A220054F7FF /* Nps_settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Nps_settings.swift; sourceTree = "<group>"; };
+		D3D9F99420347A220054F7FF /* Placeholders.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Placeholders.swift; sourceTree = "<group>"; };
+		D3D9F99520347A220054F7FF /* Thank_you_and_redirect_settings_translations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thank_you_and_redirect_settings_translations.swift; sourceTree = "<group>"; };
+		D3D9F99620347A230054F7FF /* Widget.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Widget.swift; sourceTree = "<group>"; };
+		D3D9F99720347A230054F7FF /* Text.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Text.swift; sourceTree = "<group>"; };
+		D3D9F99820347A230054F7FF /* Request_reason_settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Request_reason_settings.swift; sourceTree = "<group>"; };
+		D3D9F99920347A230054F7FF /* Detractors.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Detractors.swift; sourceTree = "<group>"; };
+		D3D9F99A20347A240054F7FF /* Language.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Language.swift; sourceTree = "<group>"; };
+		D3D9F99B20347A240054F7FF /* Thank_you_and_redirect_settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Thank_you_and_redirect_settings.swift; sourceTree = "<group>"; };
+		D3D9F99C20347A240054F7FF /* Welcome_message_translations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Welcome_message_translations.swift; sourceTree = "<group>"; };
+		D3D9F99D20347A240054F7FF /* Question.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
+		D3D9F99E20347A250054F7FF /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
+		D3D9F99F20347A250054F7FF /* SettingsTranslations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTranslations.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -184,8 +228,29 @@
 		D36D532D202DA09400258DCA /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				D3C21B232032F052002FB1EE /* Campaign.swift */,
-				D3C21B252032F0BD002FB1EE /* Biz.swift */,
+				D32AD91E2035A0F400B3061D /* LabelTranslations.swift */,
+				D32AD91D2035A0F300B3061D /* Labels.swift */,
+				D3D9F99220347A220054F7FF /* All.swift */,
+				D3D9F98E20347A210054F7FF /* Biz.swift */,
+				D3D9F98D20347A210054F7FF /* Custom.swift */,
+				D3D9F99920347A230054F7FF /* Detractors.swift */,
+				D3D9F98B20347A200054F7FF /* Campaign.swift */,
+				D3D9F99320347A220054F7FF /* Nps_settings.swift */,
+				D3D9F98C20347A210054F7FF /* Passives.swift */,
+				D3D9F99420347A220054F7FF /* Placeholders.swift */,
+				D3D9F99120347A220054F7FF /* Promoters.swift */,
+				D3D9F98F20347A210054F7FF /* QuestionTranslations.swift */,
+				D3D9F99D20347A240054F7FF /* Question.swift */,
+				D3D9F99820347A230054F7FF /* Request_reason_settings.swift */,
+				D3D9F99F20347A250054F7FF /* SettingsTranslations.swift */,
+				D3D9F99E20347A250054F7FF /* Settings.swift */,
+				D3D9F99020347A220054F7FF /* Static_texts.swift */,
+				D3D9F99720347A230054F7FF /* Text.swift */,
+				D3D9F99520347A220054F7FF /* Thank_you_and_redirect_settings_translations.swift */,
+				D3D9F99B20347A240054F7FF /* Thank_you_and_redirect_settings.swift */,
+				D3D9F99A20347A240054F7FF /* Language.swift */,
+				D3D9F99C20347A240054F7FF /* Welcome_message_translations.swift */,
+				D3D9F99620347A230054F7FF /* Widget.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -195,7 +260,8 @@
 			children = (
 				D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */,
 				D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */,
-				D3C21B212032E44B002FB1EE /* LoyagramSingleSelectView.swift */,
+				D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */,
+				D32AD9212035B5BA00B3061D /* LoyagramRadioButton.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -503,12 +569,34 @@
 			buildActionMask = 2147483647;
 			files = (
 				D3064AD9203158E20015E35B /* CampaignViewController.swift in Sources */,
-				D3C21B242032F052002FB1EE /* Campaign.swift in Sources */,
 				D3064AE22031C0310015E35B /* LanguageTableViewCell.swift in Sources */,
-				D3C21B262032F0BD002FB1EE /* Biz.swift in Sources */,
+				D3D9F9A920347A250054F7FF /* Placeholders.swift in Sources */,
+				D3D9F9AA20347A250054F7FF /* Thank_you_and_redirect_settings_translations.swift in Sources */,
+				D32AD9202035A0F400B3061D /* LabelTranslations.swift in Sources */,
+				D3D9F9AF20347A250054F7FF /* Language.swift in Sources */,
+				D3D9F9AC20347A250054F7FF /* Text.swift in Sources */,
+				D3D9F9A820347A250054F7FF /* Nps_settings.swift in Sources */,
+				D3D9F9A220347A250054F7FF /* Custom.swift in Sources */,
 				D36D5332202DA26200258DCA /* LoyagramCampaignView.swift in Sources */,
-				D3C21B222032E44B002FB1EE /* LoyagramSingleSelectView.swift in Sources */,
+				D3D9F9B320347A250054F7FF /* Settings.swift in Sources */,
+				D3C21B222032E44B002FB1EE /* LoyagramSurveyView.swift in Sources */,
+				D3D9F9A120347A250054F7FF /* Passives.swift in Sources */,
+				D3D9F9AD20347A250054F7FF /* Request_reason_settings.swift in Sources */,
 				D3064AD7203157BF0015E35B /* LoyagramCampaignManager.swift in Sources */,
+				D32AD91F2035A0F400B3061D /* Labels.swift in Sources */,
+				D3D9F9A420347A250054F7FF /* QuestionTranslations.swift in Sources */,
+				D3D9F9A720347A250054F7FF /* All.swift in Sources */,
+				D3D9F9B420347A250054F7FF /* SettingsTranslations.swift in Sources */,
+				D3D9F9A320347A250054F7FF /* Biz.swift in Sources */,
+				D3D9F9AB20347A250054F7FF /* Widget.swift in Sources */,
+				D3D9F9A620347A250054F7FF /* Promoters.swift in Sources */,
+				D3D9F9A020347A250054F7FF /* Campaign.swift in Sources */,
+				D32AD9222035B5BA00B3061D /* LoyagramRadioButton.swift in Sources */,
+				D3D9F9B120347A250054F7FF /* Welcome_message_translations.swift in Sources */,
+				D3D9F9B020347A250054F7FF /* Thank_you_and_redirect_settings.swift in Sources */,
+				D3D9F9B220347A250054F7FF /* Question.swift in Sources */,
+				D3D9F9AE20347A250054F7FF /* Detractors.swift in Sources */,
+				D3D9F9A520347A250054F7FF /* Static_texts.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
