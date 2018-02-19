@@ -487,7 +487,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     func setCampaign(campaign:Campaign) {
         
         self.campaign = campaign
-        currentQuestion = campaign.questions[1]
+        currentQuestion = campaign.questions[2]
         loadLanguages()
     }
     

@@ -16,6 +16,8 @@
 		D32AD91F2035A0F400B3061D /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD91D2035A0F300B3061D /* Labels.swift */; };
 		D32AD9202035A0F400B3061D /* LabelTranslations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD91E2035A0F400B3061D /* LabelTranslations.swift */; };
 		D32AD9222035B5BA00B3061D /* LoyagramRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD9212035B5BA00B3061D /* LoyagramRadioButton.swift */; };
+		D33CFA24203A9F7E005E643A /* LoyagramCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CFA23203A9F7E005E643A /* LoyagramCheckBox.swift */; };
+		D33CFA26203AD690005E643A /* LoyagramRatingBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CFA25203AD690005E643A /* LoyagramRatingBar.swift */; };
 		D33E8F3C202DDE8B00BDF83C /* campaign_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; };
 		D36D5332202DA26200258DCA /* LoyagramCampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */; };
 		D3B0800C202B0068009B046B /* campaign_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; };
@@ -109,6 +111,8 @@
 		D32AD91D2035A0F300B3061D /* Labels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		D32AD91E2035A0F400B3061D /* LabelTranslations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelTranslations.swift; sourceTree = "<group>"; };
 		D32AD9212035B5BA00B3061D /* LoyagramRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramRadioButton.swift; sourceTree = "<group>"; };
+		D33CFA23203A9F7E005E643A /* LoyagramCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCheckBox.swift; sourceTree = "<group>"; };
+		D33CFA25203AD690005E643A /* LoyagramRatingBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramRatingBar.swift; sourceTree = "<group>"; };
 		D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCampaignView.swift; sourceTree = "<group>"; };
 		D3B08002202B0068009B046B /* campaign_sdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = campaign_sdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3B08005202B0068009B046B /* campaign_sdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = campaign_sdk.h; sourceTree = "<group>"; };
@@ -262,6 +266,8 @@
 				D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */,
 				D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */,
 				D32AD9212035B5BA00B3061D /* LoyagramRadioButton.swift */,
+				D33CFA23203A9F7E005E643A /* LoyagramCheckBox.swift */,
+				D33CFA25203AD690005E643A /* LoyagramRatingBar.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -574,6 +580,7 @@
 				D3D9F9AA20347A250054F7FF /* Thank_you_and_redirect_settings_translations.swift in Sources */,
 				D32AD9202035A0F400B3061D /* LabelTranslations.swift in Sources */,
 				D3D9F9AF20347A250054F7FF /* Language.swift in Sources */,
+				D33CFA24203A9F7E005E643A /* LoyagramCheckBox.swift in Sources */,
 				D3D9F9AC20347A250054F7FF /* Text.swift in Sources */,
 				D3D9F9A820347A250054F7FF /* Nps_settings.swift in Sources */,
 				D3D9F9A220347A250054F7FF /* Custom.swift in Sources */,
@@ -592,6 +599,7 @@
 				D3D9F9A620347A250054F7FF /* Promoters.swift in Sources */,
 				D3D9F9A020347A250054F7FF /* Campaign.swift in Sources */,
 				D32AD9222035B5BA00B3061D /* LoyagramRadioButton.swift in Sources */,
+				D33CFA26203AD690005E643A /* LoyagramRatingBar.swift in Sources */,
 				D3D9F9B120347A250054F7FF /* Welcome_message_translations.swift in Sources */,
 				D3D9F9B020347A250054F7FF /* Thank_you_and_redirect_settings.swift in Sources */,
 				D3D9F9B220347A250054F7FF /* Question.swift in Sources */,

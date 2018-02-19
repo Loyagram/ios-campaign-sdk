@@ -27,7 +27,8 @@ class LoyagramSurveyView: UIView {
         primaryColor = color
         initSurveyView()
         setQuestion()
-        showOptions()
+        //showSingleSelect()
+        showMultiSelect()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -84,7 +85,7 @@ class LoyagramSurveyView: UIView {
         
     }
     
-    @objc func showOptions() {
+    @objc func showSingleSelect() {
         let labels = currentQuestion.labels
         var topConstant = 0.0
         let scrollViewContent = UIView()
@@ -141,7 +142,6 @@ class LoyagramSurveyView: UIView {
             let labelCenterVertically = NSLayoutConstraint(item: radioLabel, attribute: .centerY, relatedBy: .equal, toItem: radioButtonContainer, attribute: .centerY, multiplier: 1.0, constant: 0.0)
 
             NSLayoutConstraint.activate([labelTop,labelLeading, labelTrailing, labelHeight, labelCenterVertically])
-            radioLabel.text = "test data"
             radioButton.addTarget(self, action: #selector(radioButtonAction(sender:)), for: .touchUpInside)
             radioGroup.append(radioButton)
             topConstant += 30.0
@@ -163,6 +163,63 @@ class LoyagramSurveyView: UIView {
             $0.isSelected = false
         }
         sender.isSelected = !sender.isSelected
+    }
+    
+    @objc func checkBoxAction (sender: LoyagramRadioButton) {
+        
+        
+    }
+    
+    @objc func showMultiSelect() {
+        let labels = currentQuestion.labels
+        var topConstant = 0.0
+        let scrollViewContent = UIView()
+        scrollViewContent.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.addSubview(scrollViewContent)
+        scrollView.isUserInteractionEnabled = true
+        scrollView.isExclusiveTouch = true
+        let contentTop = NSLayoutConstraint(item: scrollViewContent, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .top, multiplier: 1.0, constant: 40.0)
+        let contentLeading = NSLayoutConstraint(item: scrollViewContent, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        let contentTrailing = NSLayoutConstraint(item: scrollViewContent, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let contentBottom = NSLayoutConstraint(item: scrollViewContent, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([contentTop,contentLeading, contentTrailing, contentBottom])
+        for label in labels! {
+            let chkContainer = UIView()
+            scrollViewContent.addSubview(chkContainer)
+            let rect = CGRect(x: 0, y: 0, width: 250, height: 30)
+//            let chk = LoyagramCheckBox(frame: rect)
+//            chk.showTextLabel = true
+//            chkContainer.addSubview(chk)
+            chkContainer.translatesAutoresizingMaskIntoConstraints = false
+  
+            //Radio Button Container constrains
+            let containerTop = NSLayoutConstraint(item: chkContainer, attribute: .top, relatedBy: .equal, toItem: scrollViewContent, attribute: .top, multiplier: 1.0, constant: CGFloat(topConstant+10.0))
+            let contentWidth = NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 280.0)
+            let containerHeight = NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
+            
+            let contentCenterVertically = NSLayoutConstraint(item: chkContainer, attribute: .centerX, relatedBy: .equal, toItem: scrollViewContent, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+            
+            NSLayoutConstraint.activate([containerTop, contentWidth, containerHeight, contentCenterVertically])
+            
+            
+        
+//            chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
+//            topConstant += 40.0
+//
+//            let labelTranslations = label.label_translations
+//            let langCode = currentLanguage.language_code
+//            for labelTranslation in labelTranslations! {
+//                if(labelTranslation.language_code == langCode) {
+//                    chk.text = labelTranslation.text
+//                    break
+//                }
+//            }
+            
+            let rating = LoyagramRatingBar(starSize: CGSize(width: 40, height:40), numberOfStars: 2, rating: 0, fillColor: UIColor.red, unfilledColor: UIColor.red, strokeColor: UIColor.red)
+            chkContainer.addSubview(rating)
+            
+        }
     }
     
 }
