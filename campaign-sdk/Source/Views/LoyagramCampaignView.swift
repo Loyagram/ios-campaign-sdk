@@ -416,9 +416,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func showQuestion() {
     
-        let campaignContentView = LoyagramSurveyView(frame: campaignView.frame, question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
+        let campaignContentView = LoyagramTextView(frame: campaignView.frame, question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
         campaignView.addSubview(campaignContentView)
         
+        //campaignContentView.center = campaignView.center
     
     }
     @objc func nextButtonAction(sender:UIButton!) {
@@ -487,7 +488,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     func setCampaign(campaign:Campaign) {
         
         self.campaign = campaign
-        currentQuestion = campaign.questions[2]
+        currentQuestion = campaign.questions[5]
         loadLanguages()
     }
     

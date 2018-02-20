@@ -8,17 +8,17 @@
 
 import UIKit
 
-protocol DJWStarRatingViewDelegate: class {
+protocol LoyagramRatingViewDelegate: class {
     
-    func djwStarRatingChangedValue(ratingBar: LoyagramRatingBar)
+    func ratingChangedValue(ratingBar: LoyagramRatingBar)
 }
 
 class LoyagramRatingBar: UIView {
     
     
     var  starSize : CGSize!
-    var  numberOfStars : Int!
-    var  rating : CGFloat!
+    var  numberOfStars : NSInteger!
+    var  rating : Float!
     var  fillColor : UIColor!
     var  unfilledColor : UIColor!
     var  strokeColor : UIColor!
@@ -29,8 +29,9 @@ class LoyagramRatingBar: UIView {
     var  allowsTapWhenEditable : Bool!
     var  allowsSwipeWhenEditable : Bool!
     var  allowsHalfIntegralRatings : Bool!
+    var  delegate: LoyagramRatingViewDelegate!
     
-    init(starSize: CGSize, numberOfStars: Int, rating: CGFloat, fillColor: UIColor, unfilledColor: UIColor, strokeColor: UIColor) {
+    init(starSize: CGSize, numberOfStars: NSInteger, rating: Float, fillColor: UIColor, unfilledColor: UIColor, strokeColor: UIColor) {
         super.init(frame: CGRect.zero)
         self.starSize = starSize;
         self.numberOfStars = numberOfStars;
@@ -38,11 +39,11 @@ class LoyagramRatingBar: UIView {
         self.fillColor = fillColor;
         self.unfilledColor = unfilledColor;
         self.strokeColor = strokeColor;
-        self.padding = 2.0
-        self.lineWidth = 2
+        self.padding = self.starSize.width / 5.0
+        self.lineWidth = 1.0
         self.allowsSwipeWhenEditable = true;
         self.allowsTapWhenEditable = true;
-        self.allowsHalfIntegralRatings = true;
+        self.allowsHalfIntegralRatings = false;
         self.isEditable = true
         self.backgroundColor = UIColor.clear
         self.frame = CGRect(x:0, y:0, width:self.intrinsicContentSize.width, height:self.intrinsicContentSize.height);
@@ -63,49 +64,44 @@ class LoyagramRatingBar: UIView {
     }
     
     @objc func processGestureRecogniser(gesture: UIGestureRecognizer) {
-        if(self.isEditable) {
-            
-            if(gesture.isKind(of: UITapGestureRecognizer.self) && !self.allowsTapWhenEditable){
-                return
-            }
-            if(gesture.isKind(of: UIPanGestureRecognizer.self) && !self.allowsSwipeWhenEditable){
-                return
-            }
-            
-            let point = gesture.location(in: self)
-            self.rating = ratingAtPoint(point: point)
-            //self.setNeedsLayout()
+        if !isEditable {
+            return
         }
-        
+        if (gesture is UITapGestureRecognizer) && !allowsTapWhenEditable {
+            return
+        }
+        if (gesture is UIPanGestureRecognizer) && !allowsSwipeWhenEditable {
+            return
+        }
+        let point: CGPoint = gesture.location(in: self)
+        self.rating = ratingAtPoint(point: point)
+        self.setNeedsDisplay()
+        if (delegate != nil)  {
+            delegate.ratingChangedValue(ratingBar:self)
+        }
     }
     
-    @objc func ratingAtPoint(point: CGPoint) -> CGFloat{
-        let x = point.x;
-        let starWidthWithPadding = starSize.width + self.padding;
-        
-        var currentRating = CGFloat((x / starWidthWithPadding) + 1);
-        var fractional = CGFloat(fmodf((Float(CGFloat(currentRating))), 1))
-        fractional = CGFloat(roundf(Float(fractional * 2.0)) / 2.0);
+    @objc func ratingAtPoint(point: CGPoint) -> Float{
+        let x: CGFloat = point.x;
+        let starWidthWithPadding: CGFloat = starSize.width + self.padding;
+        var currentRating:CGFloat = (x / starWidthWithPadding) + 1;
+        var fractional:CGFloat = CGFloat(fmodf(Float(currentRating), 1))
+        fractional = CGFloat(roundf(Float(fractional) * 2.0) / 2.0);
         
         if (!self.allowsHalfIntegralRatings) {
             fractional = 0.5;
         }
-        
-        //currentRating = currentRating
-        currentRating = currentRating + fractional - 0.5;
-        
+        let newRating = Int(currentRating)
+        currentRating = CGFloat(newRating) + fractional - 0.5;
         currentRating = max(1, min(currentRating, CGFloat(numberOfStars)))
-        //currentRating = MAX(1, MIN(currentRating, self.numberOfStars));
-        return currentRating;
+        return Float(currentRating);
         
     }
     
     override func draw(_ rect: CGRect) {
         
         var drawPoint = CGPoint(x: self.padding, y: 0)
-        
         for i in 0..<numberOfStars {
-            print("hi")
             let starRect = CGRect(x:drawPoint.x, y:drawPoint.y, width:self.starSize.width, height:self.starSize.height);
             self.drawStarAtPoint(frame: starRect, starNumber: i)
             drawPoint.x = drawPoint.x + (self.starSize.width + self.padding);
@@ -115,13 +111,9 @@ class LoyagramRatingBar: UIView {
     }
     
     @objc func drawStarAtPoint(frame: CGRect, starNumber: Int) {
-        
-        let context = UIGraphicsGetCurrentContext()!;
-        
+        let context: CGContext = UIGraphicsGetCurrentContext()!
         // Star Drawing
         let starPath = UIBezierPath()
-        
-        
         starPath.move(to: CGPoint(x: frame.minX + 0.50000 * frame.width, y: frame.minY + 0.00000 * frame.height))
         starPath.addLine(to: CGPoint(x: frame.minX + 0.60940 * frame.width, y: frame.minY + 0.34942 * frame.height))
         starPath.addLine(to: CGPoint(x: frame.minX + 0.97553 * frame.width, y: frame.minY + 0.34549 * frame.height))
@@ -135,15 +127,11 @@ class LoyagramRatingBar: UIView {
         starPath.close()
         context.saveGState()
         starPath.addClip()
-     
-        //gradientFillForStar(starBounds: starPath.cgPath.boundingBox, starNumber:starNumber);
-        context.saveGState()
-        //fillColor.setFill()
-        //self.setNeedsDisplay()
-     
-        starPath.lineWidth = self.lineWidth;
+        gradientFillForStar(starBounds: starPath.cgPath.boundingBox, starNumber:starNumber);
+        context.restoreGState()
+        strokeColor.setStroke()
+        starPath.lineWidth = lineWidth
         starPath.stroke()
-           self.setNeedsDisplay()
         
     }
     @objc func gradientFillForStar(starBounds : CGRect, starNumber: Int) {
@@ -152,18 +140,18 @@ class LoyagramRatingBar: UIView {
         let endColor: UIColor? = unfilledColor
         let context: CGContext? = UIGraphicsGetCurrentContext()
         let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
-        let gradientColors = [(startColor?.cgColor as? Any), (endColor?.cgColor as? Any), (endColor?.cgColor as? Any)]
+        let gradientColors = [startColor?.cgColor, endColor?.cgColor, endColor?.cgColor]
         let gradientLocations = [fillPercentage, fillPercentage, fillPercentage]
         let gradient: CGGradient = CGGradient(colorsSpace: colorSpace, colors: (gradientColors as? CFArray)!, locations: gradientLocations)!
         context?.drawLinearGradient(gradient, start: CGPoint(x: starBounds.minX, y: starBounds.midY), end: CGPoint(x: starBounds.maxX, y: starBounds.midY), options: [])
     }
     
-    @objc func fillPercentage(forStarNumber starNumber: Int) -> CGFloat {
-        let star = CGFloat(starNumber) + 1
+    func fillPercentage(forStarNumber starNumber: Int) -> CGFloat {
+        let star = Float(starNumber) + 1
         if star <= rating {
             return 1.0
         }
-        else if CGFloat(star - 0.5) <= rating {
+        else if Float(star - 0.5) <= rating {
             return 0.5
         }
         else {
@@ -171,7 +159,7 @@ class LoyagramRatingBar: UIView {
         }
     }
     
-
+    
     override var intrinsicContentSize: CGSize {
         var starSize: CGSize = self.starSize
         starSize = CGSize(width: starSize.width + 1, height: starSize.width + 1)
@@ -179,5 +167,5 @@ class LoyagramRatingBar: UIView {
         
         return CGSize(width: width, height: starSize.height)
     }
-
+    
 }
