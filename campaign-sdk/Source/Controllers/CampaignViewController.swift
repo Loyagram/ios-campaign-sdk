@@ -35,7 +35,9 @@ class CampaignViewController: UIViewController {
                 let jsonDecoder = JSONDecoder()
                 let campaign = try jsonDecoder.decode(Campaign.self, from: data!)
                 print(campaign.brand_title ?? "not parsed!!!")
-                campaignView.setCampaign(campaign: campaign)
+                DispatchQueue.main.async() {
+                    campaignView.setCampaign(campaign: campaign)
+                }
                 
             } catch let error {
                 print(error.localizedDescription)

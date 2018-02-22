@@ -18,6 +18,7 @@ var scrollView : UIScrollView!
 var radioGroup = [LoyagramRadioButton] ()
 
 class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate {
+    
     func ratingChangedValue(ratingBar: LoyagramRatingBar) {
         print(ratingBar.rating)
     }
@@ -59,11 +60,11 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate {
         
         let txtQuestionTrailing = NSLayoutConstraint(item: txtQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let txtQuestionHeight = NSLayoutConstraint(item: txtQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        let txtQuestionHeight = NSLayoutConstraint(item: txtQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0)
         
         NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
         
-        //TextView Question constraints
+        //ScrollView Question constraints
         let scrollViewTop = NSLayoutConstraint(item: scrollView, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .top, multiplier: 1.0, constant: 0.0)
         
         let scrollViewLeading = NSLayoutConstraint(item: scrollView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
@@ -168,11 +169,6 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate {
         sender.isSelected = !sender.isSelected
     }
     
-    @objc func checkBoxAction (sender: LoyagramRadioButton) {
-        
-        
-    }
-    
     @objc func showMultiSelect() {
         let labels = currentQuestion.labels
         var topConstant = 0.0
@@ -215,9 +211,12 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate {
                     break
                 }
             }
-            
-            
         }
+    }
+    
+    @objc func checkBoxAction (sender: LoyagramRadioButton) {
+        
+        
     }
     
 }
