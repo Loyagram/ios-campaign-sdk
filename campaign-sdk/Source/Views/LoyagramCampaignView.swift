@@ -17,8 +17,6 @@ protocol LoyagramCampaignButtonDelegate: class {
 
 public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCSATCESDelegate, LoyagramNPSDelegate {
     
-    
- 
     var headerView: UIView!
     var contentView: UIView!
     var footerView: UIView!
@@ -32,6 +30,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var btnLanguage: UIButton!
     var viewController : UIViewController!
     var tableViewLanguage : UITableView!
+    var tableViewContainer : UIView!
     var languages:NSArray = ["English", "Spanish", "Portugeese", "Hindi", "xyz"]
     var primaryColor : UIColor!
     var currentLang : Int!
@@ -51,9 +50,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var buttonCampaignButtonDelegate: LoyagramCampaignButtonDelegate!
     var followUpIterator: Int = 0
     
-    override public init(frame: CGRect){
+    public override init(frame: CGRect){
         super.init(frame: frame)
         primaryColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+        self.layoutIfNeeded()
+        
         initHeaderView()
         initFooterView()
         initContentView()
@@ -74,10 +75,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         tableViewLanguage.dataSource = self
         tableViewLanguage.tableFooterView = UIView()
         tableViewLanguage.layer.zPosition = 1
-        
         currentLang = 0
-        
-        
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -86,7 +84,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     override public func layoutSubviews() {
         super.layoutSubviews()
+
+        layoutIfNeeded()
+        
     }
+    
     
     @objc func setViewController(vc:UIViewController!) {
         self.viewController = vc
@@ -150,7 +152,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //Top
         let headerTop = NSLayoutConstraint(item: headerView, attribute: .top, relatedBy: .equal, toItem: self,  attribute: .top, multiplier: 1.0, constant: 0.0)
         //Height
-        let headerHeight = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 190.0)
+        let headerHeight = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 150.0)
         
         NSLayoutConstraint.activate([headerLeading, headerTrailing, headerTop, headerHeight])
         
@@ -163,9 +165,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //Width
         let lblQuestionCountWidth = NSLayoutConstraint(item: lblQuestionCount, attribute: .width,  relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,   multiplier: 1.0, constant: 40.0)
         
-        let lblQuestionCountBottom = NSLayoutConstraint(item: lblQuestionCount, attribute: .bottom,  relatedBy: .equal,  toItem: headerView,  attribute: .bottom, multiplier: 1.0, constant: -10.0)
+        let lblQuestionCountBottom = NSLayoutConstraint(item: lblQuestionCount, attribute: .bottom,  relatedBy: .equal,  toItem: headerView,  attribute: .bottom, multiplier: 1.0, constant: -5.0)
         
-        let lblQuestionCountTrailing = NSLayoutConstraint(item: lblQuestionCount, attribute: .trailing,  relatedBy: .equal,  toItem: headerView,  attribute: .trailing,   multiplier: 1.0,  constant: -15.0)
+        let lblQuestionCountTrailing = NSLayoutConstraint(item: lblQuestionCount, attribute: .trailing,  relatedBy: .equal,  toItem: headerView,  attribute: .trailing,   multiplier: 1.0,  constant: -5.0)
         
         NSLayoutConstraint.activate([lblQuestionCountHeight, lblQuestionCountWidth, lblQuestionCountBottom, lblQuestionCountTrailing])
         
@@ -177,13 +179,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         //Width
         let btnLanguageWidth = NSLayoutConstraint(item: btnLanguage,
-                                                  attribute: .width, relatedBy: .equal,  toItem: nil,  attribute: .notAnAttribute,  multiplier: 1.0, constant: 100.0)
+                                                  attribute: .width, relatedBy: .equal,  toItem: nil,  attribute: .notAnAttribute,  multiplier: 1.0, constant: 120.0)
         
         let btnLanguageBottom = NSLayoutConstraint(item: btnLanguage,
-                                                   attribute: .bottom, relatedBy: .equal, toItem: headerView, attribute: .bottom,  multiplier: 1.0,  constant: -10.0)
+                                                   attribute: .bottom, relatedBy: .equal, toItem: headerView, attribute: .bottom,  multiplier: 1.0,  constant: -5.0)
         
         let btnLanguageLeading = NSLayoutConstraint(item: btnLanguage,
-                                                    attribute: .leading, relatedBy: .equal, toItem: headerView, attribute: .leading, multiplier: 1.0, constant: 15.0)
+                                                    attribute: .leading, relatedBy: .equal, toItem: headerView, attribute: .leading, multiplier: 1.0, constant: 5.0)
         
         NSLayoutConstraint.activate([btnLanguageHeight, btnLanguageWidth, btnLanguageBottom, btnLanguageLeading])
         
@@ -206,9 +208,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //BrandView Constraints
         let brandCenterHorizontally = NSLayoutConstraint(item: brandView, attribute: .centerX, relatedBy: .equal, toItem: headerView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let brandTop = NSLayoutConstraint(item: brandView, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 40.0)
+        let brandTop = NSLayoutConstraint(item: brandView, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 20.0)
+        
         //Height
-        let brandHeight = NSLayoutConstraint(item: brandView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 120.0)
+        let brandHeight = NSLayoutConstraint(item: brandView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0)
         
         //Height
         let brandWidth = NSLayoutConstraint(item: brandView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 100.0)
@@ -220,7 +223,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let imgBrandCenterHorizontally = NSLayoutConstraint(item: imageViewBrand, attribute: .centerX, relatedBy: .equal, toItem: brandView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let imgBrandTop =  NSLayoutConstraint(item: imageViewBrand, attribute: .top, relatedBy: .equal,  toItem: brandView,  attribute: .top, multiplier: 1.0, constant: -25.0)
+        let imgBrandTop =  NSLayoutConstraint(item: imageViewBrand, attribute: .top, relatedBy: .equal,  toItem: brandView,  attribute: .top, multiplier: 1.0, constant: -30.0)
         
         
         let imgBrandWidth = NSLayoutConstraint(item: imageViewBrand, attribute: .width, relatedBy: .equal,  toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
@@ -237,46 +240,65 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let lblBrandCenterHorizontally = NSLayoutConstraint(item: lblBrand, attribute: .centerX, relatedBy: .equal, toItem: brandView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let lblBrandBottom =  NSLayoutConstraint(item: lblBrand, attribute: .bottom, relatedBy: .equal, toItem: brandView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .bottom, relatedBy: .equal, toItem: brandView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
-        NSLayoutConstraint.activate([lblBrandWidth, lblBrandHeight, lblBrandCenterHorizontally, lblBrandBottom])
-        
+        NSLayoutConstraint.activate([lblBrandWidth, lblBrandHeight, lblBrandCenterHorizontally, lblBrandTop])
+    
     }
     
     
     @objc func initTableView() {
         
+        tableViewContainer = UIView()
+        tableViewContainer.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(tableViewContainer)
+        
         tableViewLanguage = UITableView()
         tableViewLanguage.translatesAutoresizingMaskIntoConstraints = false
         tableViewLanguage.isScrollEnabled = true
-        self.addSubview(tableViewLanguage)
+        tableViewLanguage.bounces = false
+        tableViewContainer.addSubview(tableViewLanguage)
         tableViewLanguage.separatorStyle = .none
-        tableViewLanguage.isHidden = true
-        tableViewLanguage.superview?.bringSubview(toFront: tableViewLanguage)
+        tableViewContainer.isHidden = true
         tableViewLanguage.allowsSelection = true;
         tableViewLanguage.isUserInteractionEnabled = true
-        tableViewLanguage.clipsToBounds = false;
-        //Table View shadow effects
-        tableViewLanguage.layer.masksToBounds = false
-        tableViewLanguage.layer.shadowOffset = CGSize(width:1, height:1);
-        tableViewLanguage.layer.shadowRadius = 5
-        tableViewLanguage.layer.shadowOpacity = 0.6
-        tableViewLanguage.layer.shadowColor = UIColor.darkGray.cgColor
+        tableViewContainer.layer.shadowOffset = CGSize(width:1, height:1);
+        tableViewContainer.layer.shadowRadius = 5
+        tableViewContainer.layer.shadowOpacity = 0.6
+        tableViewContainer.layer.shadowColor = UIColor.darkGray.cgColor
+        
+        tableViewLanguage.showsVerticalScrollIndicator = false
+        tableViewLanguage.showsHorizontalScrollIndicator = false
+        
         
         //Table view cosntraints
-        let tableViewLangHeight = NSLayoutConstraint(item: tableViewLanguage, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0)
+        let containerHeight = NSLayoutConstraint(item: tableViewContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0)
         
-        let tableViewLangWidth = NSLayoutConstraint(item: tableViewLanguage, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0)
+        let containerWidth = NSLayoutConstraint(item: tableViewContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0)
         
         
-        let tableViewLangTop =  NSLayoutConstraint(item: tableViewLanguage, attribute: .top, relatedBy: .equal, toItem: btnLanguage, attribute: .top, multiplier: 1.0, constant: 0.0)
+        let containerTop =  NSLayoutConstraint(item: tableViewContainer, attribute: .top, relatedBy: .equal, toItem: btnLanguage, attribute: .top, multiplier: 1.0, constant: 0.0)
         
-        let tableViewLangLeading = NSLayoutConstraint(item: tableViewLanguage, attribute: .leading, relatedBy: .equal, toItem: headerView, attribute: .leading, multiplier: 1.0, constant: 15.0)
+        let containerLeading = NSLayoutConstraint(item: tableViewContainer, attribute: .leading, relatedBy: .equal, toItem: headerView, attribute: .leading, multiplier: 1.0, constant: 15.0)
         
-        NSLayoutConstraint.activate([tableViewLangHeight, tableViewLangWidth, tableViewLangTop, tableViewLangLeading])
+        NSLayoutConstraint.activate([containerHeight,containerWidth, containerTop, containerLeading])
         
+        
+        //NSLayoutConstraint.activate([tableViewLangHeight, tableViewLangWidth, tableViewLangTop, tableViewLangLeading])
+        let tblBottom = NSLayoutConstraint(item: tableViewLanguage, attribute: .bottom, relatedBy: .equal, toItem: tableViewContainer, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        let tbltrailing = NSLayoutConstraint(item: tableViewLanguage, attribute: .trailing, relatedBy: .equal, toItem: tableViewContainer, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        
+        
+        let tblTop =  NSLayoutConstraint(item: tableViewLanguage, attribute: .top, relatedBy: .equal, toItem: tableViewContainer, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        let tblleading = NSLayoutConstraint(item: tableViewLanguage, attribute: .leading, relatedBy: .equal, toItem: tableViewContainer, attribute: .leading, multiplier: 1.0, constant: 0)
+        
+        NSLayoutConstraint.activate([tblBottom,tbltrailing, tblTop, containerLeading, tblleading])
         
     }
+    
+
     
     @objc func initContentView() {
         contentView = UIView()
@@ -331,6 +353,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let contentBottom = NSLayoutConstraint(item: contentView, attribute: .bottom, relatedBy: .equal, toItem: footerView, attribute: .top, multiplier: 1.0, constant: 0.0)
         //Top
         let contentTop = NSLayoutConstraint(item: contentView, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
         
         NSLayoutConstraint.activate([contentLeading, contentTrailing, contentBottom, contentTop])
         
@@ -474,6 +497,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         currentQuestion = campaign.questions[questionNumber-1]
         let campaignType = campaign.type
+        if(campaignType != nil) {
         if(campaignType == "CSAT" ) {
             showCSATCESView(isCSAT: true)
         } else if(campaignType == "CES") {
@@ -511,7 +535,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             }
         }
-        
+        }
     }
     
     //MARK : Show Question Views
@@ -650,10 +674,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func languageButtonAction(sender:UIButton!) {
         
-        tableViewLanguage.isHidden = !tableViewLanguage.isHidden
-        self.bringSubview(toFront: tableViewLanguage)
+        tableViewContainer.isHidden = !tableViewContainer.isHidden
+        //tableViewLanguage.isHidden = !tableViewLanguage.isHidden
+        //self.bringSubview(toFront: tableViewContainer)
         //tableViewLanguage.reloadData()
-        self.sendSubview(toBack: contentView)
+        //self.sendSubview(toBack: contentView)
     }
     
     // MARK:-
@@ -682,7 +707,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     public func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         //
-        tableViewLanguage.isHidden = !tableViewLanguage.isHidden
+        tableViewContainer.isHidden = !tableViewContainer.isHidden
         currentLang = indexPath.row
         let cell = tableViewLanguage.cellForRow(at: indexPath) as! LanguageTableViewCell
         cell.backgroundColor = UIColor.white
