@@ -6,12 +6,12 @@
 //  Copyright © 2018 loyagram. All rights reserved.
 //
 
-import UIKit
 
 class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegate, UITableViewDataSource {
     
     func ratingChangedValue(ratingBar: LoyagramRatingBar) {
         
+        print("current rating\(ratingBar.rating)")
     }
     
     var mainView: UIView!
@@ -32,10 +32,12 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         currentLanguage = currentLang
         primaryLanguage = primaryLang
         primaryColor = color
-        
+        self.autoresizesSubviews = true
+        self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        //self.layoutIfNeeded()
         initRatingView()
         setQuestion()
-       // self.layoutIfNeeded()
+        // self.layoutIfNeeded()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -57,7 +59,6 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     @objc func initRatingView() {
         txtQuestion = UITextView()
         tableView = UITableView()
-        tableView.backgroundColor = UIColor.red
         tableView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(tableView)
         self.addSubview(txtQuestion)
@@ -65,85 +66,106 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         tableView.dataSource = self
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
-    
+        
         tableView.isScrollEnabled = true
         tableView.bounces = false
         tableView.separatorStyle = .none
         tableView.allowsSelection = true;
         tableView.isUserInteractionEnabled = true
+        tableView.showsVerticalScrollIndicator = false
+        tableView.showsHorizontalScrollIndicator = false
         
         txtQuestion.translatesAutoresizingMaskIntoConstraints = false
         txtQuestion.text = " "
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
         txtQuestion.font = txtQuestion.font?.withSize(16)
-
+        
         
         //TextView Question constraints
-        let txtQuestionTop = NSLayoutConstraint(item: txtQuestion, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 10.0)
-
+        let txtQuestionTop = NSLayoutConstraint(item: txtQuestion, attribute: .bottom, relatedBy: .equal, toItem: tableView, attribute: .top, multiplier: 1.0, constant: -10.0)
+        
         let txtQuestionLeading = NSLayoutConstraint(item: txtQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
-
+        
         let txtQuestionTrailing = NSLayoutConstraint(item: txtQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
-        
-        let centerX = NSLayoutConstraint(item: txtQuestion, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
-        
-//        let centerY = NSLayoutConstraint(item: txtQuestion, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0.0)
-        
+  
         let txtQuestionHeight = NSLayoutConstraint(item: txtQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
         
-        NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight, centerX])
-    
-        txtQuestion.backgroundColor = UIColor.red
+        NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
+        
+        
         //Table View constrinats
         
+        //let tableViewWidth =  NSLayoutConstraint(item: tableView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 280.0)
         
-        let tblLeading = NSLayoutConstraint(item: tableView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
-
-        let tblTrailing = NSLayoutConstraint(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let tblLeading = NSLayoutConstraint(item: tableView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
-        let tblTop = NSLayoutConstraint(item: tableView, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        let tblTrailing = NSLayoutConstraint(item: tableView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let tblBottom = NSLayoutConstraint(item: tableView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+         let centerX = NSLayoutConstraint(item: tableView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
+         let centerY = NSLayoutConstraint(item: tableView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 30.0)
         
-        NSLayoutConstraint.activate([tblLeading, tblTrailing, tblTop, tblBottom])
- 
+        tblHeight = NSLayoutConstraint(item: tableView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([tblLeading, tblTrailing, tblHeight, centerX, centerY])
+        
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
+
         let label = currentQuestion.labels[indexPath.row]
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell")
+        let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
         
-        cell?.translatesAutoresizingMaskIntoConstraints = false
+        cell.translatesAutoresizingMaskIntoConstraints = false
         
-       
-        let ratingLabel = UILabel(frame:CGRect(x: 0, y: 0, width: 80, height: 30))
+        cell.selectionStyle = .none
+        let ratingLabel = UITextView(frame:CGRect(x: 0, y: 0, width: 80, height: 30))
+        ratingLabel.isEditable = false
+        ratingLabel.showsVerticalScrollIndicator = false
         let ratingBar = LoyagramRatingBar(starSize: CGSize(width: 30, height:30), numberOfStars: 5, rating: 1.0, fillColor: primaryColor, unfilledColor: UIColor.clear, strokeColor: primaryColor)
-        cell?.contentView.addSubview(ratingBar)
-        cell?.contentView.addSubview(ratingLabel)
+        ratingLabel.font = GlobalConstants.FONT_MEDIUM
         ratingLabel.translatesAutoresizingMaskIntoConstraints = false
         ratingBar.translatesAutoresizingMaskIntoConstraints = false
         ratingBar.isEditable = true
         ratingBar.delegate = self
         
-        let labelLeading = NSLayoutConstraint(item: ratingLabel, attribute: .leading, relatedBy: .equal, toItem: cell?.contentView, attribute: .leading, multiplier: 1.0, constant: 10.0)
+        //ContentView constrinats
         
-        let labelTop = NSLayoutConstraint(item: ratingLabel, attribute: .top, relatedBy: .equal, toItem: cell?.contentView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        let cellContent = UIView()
+        
+        cell.contentView.addSubview(cellContent)
+        
+        cellContent.addSubview(ratingBar)
+        cellContent.addSubview(ratingLabel)
+        
+        cellContent.translatesAutoresizingMaskIntoConstraints = false
+        
+        let centerX = NSLayoutConstraint(item: cellContent, attribute: .centerX, relatedBy: .equal, toItem: cell.contentView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+
+        let centerY = NSLayoutConstraint(item: cellContent, attribute: .centerY, relatedBy: .equal, toItem: cell.contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0)
+
+        let cellContentWidth = NSLayoutConstraint(item: cellContent, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 280.0)
+        
+        let cellContentHeight = NSLayoutConstraint(item: cellContent, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35.0)
+        
+        
+        NSLayoutConstraint.activate([cellContentWidth, cellContentHeight, centerX, centerY])
+        
+        
+        let labelLeading = NSLayoutConstraint(item: ratingLabel, attribute: .leading, relatedBy: .equal, toItem: cellContent, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let labelTop = NSLayoutConstraint(item: ratingLabel, attribute: .top, relatedBy: .equal, toItem: cellContent, attribute: .top, multiplier: 1.0, constant: 0.0)
         let labelWidth = NSLayoutConstraint(item: ratingLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
         let labelHeight = NSLayoutConstraint(item: ratingLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
         
         
-//        let labelCenterVertically = NSLayoutConstraint(item: ratingLabel, attribute: .centerY, relatedBy: .equal, toItem: cell, attribute: .centerY, multiplier: 1.0, constant: 0.0)
-        
         NSLayoutConstraint.activate([labelLeading, labelWidth, labelHeight, labelTop])
-
+        
         let ratingLeading = NSLayoutConstraint(item: ratingBar, attribute: .leading, relatedBy: .equal, toItem: ratingLabel, attribute: .trailing, multiplier: 1.0, constant: 10.0)
         
-        let ratingTop = NSLayoutConstraint(item: ratingLabel, attribute: .top, relatedBy: .equal, toItem: cell?.contentView, attribute: .top, multiplier: 1.0, constant: 0.0)
-        
+        let ratingTop = NSLayoutConstraint(item: ratingLabel, attribute: .top, relatedBy: .equal, toItem: cellContent, attribute: .top, multiplier: 1.0, constant: 0.0)
         
         NSLayoutConstraint.activate([ ratingLeading, ratingTop])
         let labelTranslations = label.label_translations
@@ -154,24 +176,35 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
                 break
             }
         }
-        
-        return cell!
+        return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
         return currentQuestion.labels.count
     }
     
-//    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//
-//        //if(self.frame.size.height)
-//        return 40.0
-//
-//    }
-    
-    @objc func showRatingView() {
-
-
-        
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 35.0
     }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        
+        return 35.0
+    }
+    
+    override public func layoutSubviews() {
+        super.layoutSubviews()
+        //self.tableView.reloadData()
+        let viewHeight = self.frame.height
+        let requiredHeight = CGFloat(currentQuestion.labels.count) * 35
+        
+        if(requiredHeight <= viewHeight - 50) {
+            tblHeight.constant = requiredHeight
+        } else {
+            tblHeight.constant = viewHeight - 50
+        }
+        //self.layoutIfNeeded()
+    }
+    
 }

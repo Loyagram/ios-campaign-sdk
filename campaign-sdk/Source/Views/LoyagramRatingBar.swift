@@ -47,7 +47,8 @@ class LoyagramRatingBar: UIView {
         self.isEditable = true
         self.backgroundColor = UIColor.clear
         self.frame = CGRect(x:0, y:0, width:self.intrinsicContentSize.width, height:self.intrinsicContentSize.height);
-        self.setNeedsDisplay()
+        
+        
         
         self.initializeGestureRecognizers()
     }
@@ -107,6 +108,7 @@ class LoyagramRatingBar: UIView {
             drawPoint.x = drawPoint.x + (self.starSize.width + self.padding);
             
         }
+        self.setNeedsDisplay()
         
     }
     
@@ -168,4 +170,8 @@ class LoyagramRatingBar: UIView {
         return CGSize(width: width, height: starSize.height)
     }
     
+    override func layoutSubviews() {
+        super.layoutSubviews()
+        self.layoutIfNeeded()
+    }
 }

@@ -21,6 +21,7 @@
 		D33E8F3C202DDE8B00BDF83C /* campaign_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; };
 		D344BC6B203C123900B5C235 /* LoyagramRatingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D344BC6A203C123900B5C235 /* LoyagramRatingView.swift */; };
 		D344BC6D203C1F6600B5C235 /* LoyagramTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D344BC6C203C1F6600B5C235 /* LoyagramTextView.swift */; };
+		D345F6F32046A058002801E8 /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = D345F6F22046A058002801E8 /* General.swift */; };
 		D36D5332202DA26200258DCA /* LoyagramCampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */; };
 		D38D18602045560F00505EC8 /* RatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38D185F2045560F00505EC8 /* RatingTableViewCell.swift */; };
 		D38D1862204571AD00505EC8 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = D38D1861204571AD00505EC8 /* View.xib */; };
@@ -121,6 +122,7 @@
 		D33CFA25203AD690005E643A /* LoyagramRatingBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramRatingBar.swift; sourceTree = "<group>"; };
 		D344BC6A203C123900B5C235 /* LoyagramRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramRatingView.swift; sourceTree = "<group>"; };
 		D344BC6C203C1F6600B5C235 /* LoyagramTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramTextView.swift; sourceTree = "<group>"; };
+		D345F6F22046A058002801E8 /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCampaignView.swift; sourceTree = "<group>"; };
 		D38D185F2045560F00505EC8 /* RatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingTableViewCell.swift; sourceTree = "<group>"; };
 		D38D1861204571AD00505EC8 /* View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
@@ -228,9 +230,18 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		D345F6F12046A02A002801E8 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				D345F6F22046A058002801E8 /* General.swift */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		D36D532C202DA01700258DCA /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				D345F6F12046A02A002801E8 /* Utils */,
 				D3064ADA203178820015E35B /* Images */,
 				D36D5333202DA44A00258DCA /* UI */,
 				D36D5330202DA12E00258DCA /* Controllers */,
@@ -625,6 +636,7 @@
 				D33CFA26203AD690005E643A /* LoyagramRatingBar.swift in Sources */,
 				D3D9F9B120347A250054F7FF /* Welcome_message_translations.swift in Sources */,
 				D3942249203D3F4300BEB61F /* LoyagramCSATCESView.swift in Sources */,
+				D345F6F32046A058002801E8 /* General.swift in Sources */,
 				D3D9F9B020347A250054F7FF /* Thank_you_and_redirect_settings.swift in Sources */,
 				D3D9F9B220347A250054F7FF /* Question.swift in Sources */,
 				D3D9F9AE20347A250054F7FF /* Detractors.swift in Sources */,

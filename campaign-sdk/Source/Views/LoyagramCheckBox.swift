@@ -65,16 +65,17 @@ class LoyagramCheckBox: UIControl {
         
         if(showTextLabel) {
             if(!textIsSet) {
-                label = UILabel(frame: CGRect(x: self.frame.minX + 40, y: 0, width: self.frame.size.width - 40, height: self.frame.size.height))
+                label = UILabel(frame: CGRect(x: self.frame.minX + 35, y: 0, width: self.frame.size.width - 30, height: self.frame.size.height))
                 label.backgroundColor = UIColor.clear
                 self.addSubview(label)
+                //label.textAlignment = .left
                 textIsSet  = true
             }
             
             label.font = labelFont;
             label.textColor = labelTextColor;
             label.text = text
-            let boxPath = UIBezierPath(roundedRect: CGRect(x: 2, y: 2, width: 25, height: 25), cornerRadius: 2)
+            let boxPath = UIBezierPath(roundedRect: CGRect(x: 2, y: 7, width: 20, height: 20), cornerRadius: 2)
             boxPath.lineWidth = 2
             boxPath.stroke()
             
@@ -84,8 +85,8 @@ class LoyagramCheckBox: UIControl {
                 let checkPath = UIBezierPath()
                 checkPath.lineWidth = 3
                 checkPath.move(to: CGPoint(x: 5, y: 15))
-                checkPath.addLine(to: CGPoint(x: 12, y: 22))
-                checkPath.addLine(to: CGPoint(x: 23, y: 10))
+                checkPath.addLine(to: CGPoint(x: 12, y: 20))
+                checkPath.addLine(to: CGPoint(x: 20, y: 10))
                 checkColor.setStroke()
                 checkPath.stroke()
                 

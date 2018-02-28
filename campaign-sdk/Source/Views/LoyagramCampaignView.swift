@@ -31,7 +31,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var viewController : UIViewController!
     var tableViewLanguage : UITableView!
     var tableViewContainer : UIView!
-    var languages:NSArray = ["English", "Spanish", "Portugeese", "Hindi", "xyz"]
+    var languages:NSArray = ["English", "Spanish", "Portugeese"]
     var primaryColor : UIColor!
     var currentLang : Int!
     var nextPrevButtonView: UIView!
@@ -82,12 +82,12 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         fatalError("init(coder:) has not been implemented")
     }
     
-    override public func layoutSubviews() {
-        super.layoutSubviews()
-
-        layoutIfNeeded()
-        
-    }
+//    override public func layoutSubviews() {
+//        super.layoutSubviews()
+//        //self.layoutSubviews()
+//        //layoutIfNeeded()
+//
+//    }
     
     
     @objc func setViewController(vc:UIViewController!) {
@@ -540,29 +540,81 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     //MARK : Show Question Views
     @objc func showSurveyView() {
-        let campaignContentView = LoyagramSurveyView(frame: campaignView.frame, question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
+        let campaignContentView = LoyagramSurveyView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
         campaignView.addSubview(campaignContentView)
+        
+        campaignContentView.translatesAutoresizingMaskIntoConstraints = false
+        //CampaignContentView cosntraints
+        let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let campaignViewLeading  = NSLayoutConstraint(item: campaignContentView, attribute: .leading, relatedBy: .equal, toItem: campaignView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewTop  = NSLayoutConstraint(item: campaignContentView, attribute: .top, relatedBy: .equal, toItem: campaignView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewBottom  = NSLayoutConstraint(item: campaignContentView, attribute: .bottom, relatedBy: .equal, toItem: campaignView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     @objc func showRatingView() {
-        let campaignContentView = LoyagramRatingView(frame: campaignView.frame, question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
+        let campaignContentView = LoyagramRatingView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
         campaignView.addSubview(campaignContentView)
+        
+        campaignContentView.translatesAutoresizingMaskIntoConstraints = false
+        //CampaignContentView cosntraints
+        let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let campaignViewLeading  = NSLayoutConstraint(item: campaignContentView, attribute: .leading, relatedBy: .equal, toItem: campaignView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewTop  = NSLayoutConstraint(item: campaignContentView, attribute: .top, relatedBy: .equal, toItem: campaignView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewBottom  = NSLayoutConstraint(item: campaignContentView, attribute: .bottom, relatedBy: .equal, toItem: campaignView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
         
     }
     @objc func showNPSView() {
         let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramNPSView(frame: campaignView.frame, question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self)
+        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self)
         campaignView.addSubview(campaignContentView)
         campaignContentView.delegate = self
+        campaignContentView.translatesAutoresizingMaskIntoConstraints = false
+        //CampaignContentView cosntraints
+        let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let campaignViewLeading  = NSLayoutConstraint(item: campaignContentView, attribute: .leading, relatedBy: .equal, toItem: campaignView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewTop  = NSLayoutConstraint(item: campaignContentView, attribute: .top, relatedBy: .equal, toItem: campaignView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewBottom  = NSLayoutConstraint(item: campaignContentView, attribute: .bottom, relatedBy: .equal, toItem: campaignView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     @objc func showTextView() {
-        let campaignContentView = LoyagramTextView(frame: campaignView.frame, question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
+        let campaignContentView = LoyagramTextView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
         campaignView.addSubview(campaignContentView)
+        campaignContentView.translatesAutoresizingMaskIntoConstraints = false
+        //CampaignContentView cosntraints
+        let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let campaignViewLeading  = NSLayoutConstraint(item: campaignContentView, attribute: .leading, relatedBy: .equal, toItem: campaignView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewTop  = NSLayoutConstraint(item: campaignContentView, attribute: .top, relatedBy: .equal, toItem: campaignView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewBottom  = NSLayoutConstraint(item: campaignContentView, attribute: .bottom, relatedBy: .equal, toItem: campaignView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     @objc func showCSATCESView(isCSAT: Bool) {
         let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramCSATCESView(frame: campaignView.frame, question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self)
+        let campaignContentView = LoyagramCSATCESView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self)
         campaignContentView.delegate = self
         campaignView.addSubview(campaignContentView)
+        campaignContentView.translatesAutoresizingMaskIntoConstraints = false
+        //CampaignContentView cosntraints
+        let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let campaignViewLeading  = NSLayoutConstraint(item: campaignContentView, attribute: .leading, relatedBy: .equal, toItem: campaignView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewTop  = NSLayoutConstraint(item: campaignContentView, attribute: .top, relatedBy: .equal, toItem: campaignView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        let campaignViewBottom  = NSLayoutConstraint(item: campaignContentView, attribute: .bottom, relatedBy: .equal, toItem: campaignView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     
     //MARK :- Question Navigation
@@ -620,7 +672,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             btnPrev.backgroundColor = UIColor.white
             questionNumber += 1
             if(questionNumber <= noOfQuestions) {
-                let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
+                let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
                 lblQuestionCount.text = questionCount
                 for subView in self.campaignView.subviews as [UIView] {
                     subView.removeFromSuperview()

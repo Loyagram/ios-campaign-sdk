@@ -12,16 +12,19 @@ protocol LoyagramNPSDelegate: class {
     func setNPS()
 }
 
-class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
+class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCampaignButtonDelegate {
     
-    var txtQuestion: UITextView!
+    
+    var txtQuestion : UITextView!
+    var txtFollowUpQuestion : UITextView!
+    var txtFeedBackQuestion : UITextView!
     var currentQuestion : Question!
     var followUpQuestion : Question!
     var currentLanguage : Language!
     var primaryLanguage : Language!
     var primaryColor : UIColor!
     var npsContainer : UIView!
-    var followUpScrollView : UIScrollView!
+    var followUpTableView : UITableView!
     var feedbackContainer : UIView!
     var chk: LoyagramCheckBox!
     var feedbackTextField: UITextField!
@@ -38,9 +41,15 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
         primaryColor = color
         self.campaignView = campaignView
         campaignView.buttonCampaignButtonDelegate = self
+        
+        self.autoresizesSubviews = true
+        self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        
         initNPSView()
-        initFeedbackView()
         addNPSButtons()
+        initFeedbackView()
+        
         initFollowUpView()
         setQuestion()
         
@@ -64,7 +73,11 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
     
     @objc func initNPSView() {
         txtQuestion = UITextView()
+        txtQuestion.isEditable = false
         //scrollView = UIScrollView()
+        npsContainer = UIView()
+        npsContainer.translatesAutoresizingMaskIntoConstraints = false
+        self.addSubview(npsContainer)
         
         self.addSubview(txtQuestion)
         txtQuestion.translatesAutoresizingMaskIntoConstraints = false
@@ -74,7 +87,7 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
         txtQuestion.font = txtQuestion.font?.withSize(16)
         
         //TextView Question constraints
-        let txtQuestionTop = NSLayoutConstraint(item: txtQuestion, attribute: .top, relatedBy: .equal, toItem: self, attribute: .top, multiplier: 1.0, constant: 10.0)
+        let txtQuestionTop = NSLayoutConstraint(item: txtQuestion, attribute: .bottom, relatedBy: .equal, toItem: npsContainer, attribute: .top, multiplier: 1.0, constant: -10.0)
         
         let txtQuestionLeading = NSLayoutConstraint(item: txtQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
@@ -87,48 +100,91 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
     
     @objc func initFollowUpView() {
         //ScrollView Question constraints
-        followUpScrollView = UIScrollView()
-        followUpScrollView.isHidden = true
-        followUpScrollView.translatesAutoresizingMaskIntoConstraints = false
-        followUpScrollView.isHidden = true
-        self.addSubview(followUpScrollView)
-        let scrollViewTop = NSLayoutConstraint(item: followUpScrollView, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .top, multiplier: 1.0, constant: 0.0)
+        followUpTableView = UITableView()
+        txtFollowUpQuestion = UITextView()
+        txtFollowUpQuestion.isEditable = false
         
-        let scrollViewLeading = NSLayoutConstraint(item: followUpScrollView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
         
-        let scrollViewTrailing = NSLayoutConstraint(item: followUpScrollView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        followUpTableView.isHidden = true
+        followUpTableView.translatesAutoresizingMaskIntoConstraints = false
+        txtFollowUpQuestion.isHidden = true
+        self.addSubview(followUpTableView)
+        self.addSubview(txtFollowUpQuestion)
+        followUpTableView.delegate = self
+        followUpTableView.dataSource = self
+        followUpTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
-        let scrollViewBottom = NSLayoutConstraint(item: followUpScrollView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
-        NSLayoutConstraint.activate([scrollViewTop,scrollViewLeading, scrollViewTrailing, scrollViewBottom])
-        showFollowUp()
+        followUpTableView.isScrollEnabled = true
+        followUpTableView.bounces = false
+        followUpTableView.separatorStyle = .none
+        followUpTableView.allowsSelection = true;
+        followUpTableView.isUserInteractionEnabled = true
+        followUpTableView.showsVerticalScrollIndicator = false
+        followUpTableView.showsHorizontalScrollIndicator = false
+        
+        txtFollowUpQuestion.translatesAutoresizingMaskIntoConstraints = false
+        txtFollowUpQuestion.text = " "
+        txtFollowUpQuestion.textColor = UIColor.black
+        txtFollowUpQuestion.textAlignment = .center
+        txtFollowUpQuestion.font = GlobalConstants.FONT_MEDIUM
+        
+        
+        //TextView Question constraints
+        let txtQuestionTop = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .bottom, relatedBy: .equal, toItem: followUpTableView, attribute: .top, multiplier: 1.0, constant: -10.0)
+        
+        let txtQuestionLeading = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
+        
+        let txtQuestionTrailing = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
+        
+        let txtQuestionHeight = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        
+        NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
+        
+        
+        //Table View constrinats
+        
+        //let tableViewWidth =  NSLayoutConstraint(item: tableView, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 280.0)
+        
+        let tblLeading = NSLayoutConstraint(item: followUpTableView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
+        
+        let tblTrailing = NSLayoutConstraint(item: followUpTableView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
+        
+        let centerX = NSLayoutConstraint(item: followUpTableView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+        
+        let centerY = NSLayoutConstraint(item: followUpTableView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 30.0)
+        
+        tblHeight = NSLayoutConstraint(item: followUpTableView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([tblLeading, tblTrailing, tblHeight, centerX, centerY])
+        
+        //showFollowUp()
     }
     
     @objc func addNPSButtons() {
-        
-        npsContainer = UIView()
-        npsContainer.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(npsContainer)
-        //npsContainer.backgroundColor = UIColor.red
-        
-        
+    
+        let buttonWidth:CGFloat = 25.0
         //NPS Container Constraints
         let containerTop = NSLayoutConstraint(item: npsContainer, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 10.0)
-        let containerWidth = NSLayoutConstraint(item: npsContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 300.0)
+        let containerWidth = NSLayoutConstraint(item: npsContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 295)
         
-        let containerHeight = NSLayoutConstraint(item: npsContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 25.0)
+        let containerHeight = NSLayoutConstraint(item: npsContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: buttonWidth)
         
         let centerHorizontal = NSLayoutConstraint(item: npsContainer, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)
         
-        NSLayoutConstraint.activate([containerTop, containerWidth, containerHeight, centerHorizontal])
+        let centerVertical = NSLayoutConstraint(item: npsContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 30)
         
-        var xPoint:CGFloat = 1
+        NSLayoutConstraint.activate([containerTop, containerWidth, containerHeight, centerHorizontal, centerVertical])
+        
+        
+        var xPoint:CGFloat = 0
         for i in 0..<11 {
-            let frame = CGRect(x: CGFloat(xPoint), y: 0, width: 25, height: 25)
+            
+            let frame = CGRect(x: CGFloat(xPoint), y: 0, width: buttonWidth, height: buttonWidth)
             let npsButton = UIButton(type: .system)
             npsButton.frame = frame
-            xPoint += 25 + 2
-            npsButton.layer.cornerRadius = 0.5*25
+            xPoint += buttonWidth + 2
+            npsButton.layer.cornerRadius = 0.5*buttonWidth
             npsButton.setTitle(String(i), for: .normal)
             npsButton.layer.borderWidth = 1.0
             npsButton.layer.borderColor = primaryColor.cgColor
@@ -150,12 +206,14 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
         case 0:
             break
         case 1:
-            followUpScrollView.isHidden = true
+            followUpTableView.isHidden = true
+            txtFollowUpQuestion.isHidden = true
             npsContainer.isHidden = false
             break
         case 2:
             feedbackContainer.isHidden = true
-            followUpScrollView.isHidden = false
+            followUpTableView.isHidden = false
+            txtFollowUpQuestion.isHidden = false
             break
         default:
             break
@@ -166,10 +224,12 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
         switch iterator {
         case 0:
             npsContainer.isHidden = true
-            followUpScrollView.isHidden = false
+            followUpTableView.isHidden = false
+            txtFollowUpQuestion.isHidden = false
             break
         case 1:
-            followUpScrollView.isHidden = true
+            followUpTableView.isHidden = true
+            txtFollowUpQuestion.isHidden = true
             feedbackContainer.isHidden = false
             break
         case 2:
@@ -182,6 +242,7 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
     @objc func initFeedbackView() {
         
         feedbackContainer = UIView()
+        txtFeedBackQuestion = UITextView()
         self.addSubview(feedbackContainer)
         feedbackContainer.translatesAutoresizingMaskIntoConstraints = false
         feedbackContainer.isHidden = true
@@ -262,7 +323,7 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        setBorderForTextField()
+       // setBorderForTextField()
     }
     
     @objc func setBorderForTextField() {
@@ -281,9 +342,11 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
         var topConstant = 0.0
         let scrollViewContent = UIView()
         scrollViewContent.translatesAutoresizingMaskIntoConstraints = false
-        followUpScrollView.addSubview(scrollViewContent)
-        followUpScrollView.isUserInteractionEnabled = true
-        followUpScrollView.isExclusiveTouch = true
+        
+        //followUpScrollView.addSubview(scrollViewContent)
+        //followUpScrollView.isUserInteractionEnabled = true
+        //followUpScrollView.isExclusiveTouch = true
+        
         let contentTop = NSLayoutConstraint(item: scrollViewContent, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 10.0)
         let contentLeading = NSLayoutConstraint(item: scrollViewContent, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
         let contentTrailing = NSLayoutConstraint(item: scrollViewContent, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
@@ -324,5 +387,52 @@ class LoyagramNPSView: UIView, LoyagramCampaignButtonDelegate {
     @objc func checkBoxAction (sender: LoyagramRadioButton) {
         
         
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        
+        
+        let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
+        
+        
+        cell.translatesAutoresizingMaskIntoConstraints = false
+        
+        cell.selectionStyle = .none
+        
+        //ContentView constrinats
+        
+        let cellContent = UIView()
+        
+        cell.contentView.addSubview(cellContent)
+        
+        
+        cellContent.translatesAutoresizingMaskIntoConstraints = false
+        
+        let centerX = NSLayoutConstraint(item: cellContent, attribute: .centerX, relatedBy: .equal, toItem: cell.contentView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+        
+        let centerY = NSLayoutConstraint(item: cellContent, attribute: .centerY, relatedBy: .equal, toItem: cell.contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0)
+        
+        let cellContentWidth = NSLayoutConstraint(item: cellContent, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 220.0)
+        
+        let cellContentHeight = NSLayoutConstraint(item: cellContent, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        
+        NSLayoutConstraint.activate([cellContentWidth, cellContentHeight, centerX, centerY])
+        
+        
+    
+        return cell
+    }
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        
+        return currentQuestion.labels.count
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 35.0
+    }
+    
+    func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 35.0
     }
 }
