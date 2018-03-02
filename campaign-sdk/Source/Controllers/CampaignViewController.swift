@@ -49,10 +49,10 @@ class CampaignViewController: UIViewController {
         //let url = URL(string: "https://loyagram.com/in-store/1020-49bd1a50-1c51-445d-8043-fa8f907a0078?lang=all")
         
         //Survey
-        let url = URL(string: "https://loyagram.com/in-store/1020-80c64203-5484-4a52-b41d-5ef485cc80f1?lang=all")
+        //let url = URL(string: "https://loyagram.com/in-store/1020-80c64203-5484-4a52-b41d-5ef485cc80f1?lang=all")
         
         //CSAT
-        //let url = URL(string: "https://loyagram.com/in-store/1020-2d06b020-aeb6-472b-8321-556f3d4ec510?lang=all")
+        let url = URL(string: "https://loyagram.com/in-store/1020-2d06b020-aeb6-472b-8321-556f3d4ec510?lang=all")
         
         //CES
         //let url = URL(string: "https://loyagram.com/in-store/1020-193be5eb-870d-4d27-971a-268cff4add88?lang=all")
@@ -62,7 +62,7 @@ class CampaignViewController: UIViewController {
             do {
                 let jsonDecoder = JSONDecoder()
                 let campaign = try jsonDecoder.decode(Campaign.self, from: data!)
-                print(campaign.brand_title ?? "not parsed!!!")
+                //print(campaign.brand_title ?? "not parsed!!!")
                 DispatchQueue.main.async() {
                     campaignView.setCampaign(campaign: campaign)
                 }

@@ -49,12 +49,17 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var startButtonContainerView: UIView!
     var buttonCampaignButtonDelegate: LoyagramCampaignButtonDelegate!
     var followUpIterator: Int = 0
+    var bottomConstraint : NSLayoutConstraint!
+    var topConstraint : NSLayoutConstraint!
+    var mainView : UIView!
     
     public override init(frame: CGRect){
         super.init(frame: frame)
         primaryColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
         self.layoutIfNeeded()
+        self.isUserInteractionEnabled = true
         
+        initMainView()
         initHeaderView()
         initFooterView()
         initContentView()
@@ -94,7 +99,29 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         self.viewController = vc
     }
     
-    
+    @objc func initMainView() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: NSNotification.Name.UIKeyboardWillHide, object: nil)
+        
+        mainView = UIView()
+        mainView.translatesAutoresizingMaskIntoConstraints = false
+        mainView.isUserInteractionEnabled = true
+        self.addSubview(mainView)
+        
+        NSLayoutConstraint(item: mainView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0).isActive = true
+        
+        NSLayoutConstraint(item: mainView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0).isActive = true
+        
+       topConstraint = NSLayoutConstraint(item: mainView, attribute: .top, relatedBy: .equal, toItem: self,  attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        bottomConstraint = NSLayoutConstraint(item: mainView, attribute: .bottom, relatedBy: .equal, toItem: self,  attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        mainView.backgroundColor = UIColor.red
+        NSLayoutConstraint.activate([bottomConstraint, topConstraint])
+        
+    }
+    override public func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.endEditing(true)
+    }
     // MARK: UI Initialization
     @objc func initHeaderView () {
         headerView = UIView()
@@ -118,7 +145,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         headerView.addSubview(btnLanguage)
         //headerView.addSubview(imageViewArrow)
         headerView.addSubview(lblQuestionCount)
-        self.addSubview(headerView)
+        mainView.addSubview(headerView)
         
         headerView.backgroundColor = primaryColor
         headerView.translatesAutoresizingMaskIntoConstraints = false
@@ -144,13 +171,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         // Constriants to headerView
         
         //Leading
-        let headerLeading  = NSLayoutConstraint(item: headerView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0)
+        let headerLeading  = NSLayoutConstraint(item: headerView, attribute: .leading, relatedBy: .equal, toItem: mainView, attribute: .leading, multiplier: 1, constant: 0)
         
         //Trailing
-        let headerTrailing  = NSLayoutConstraint(item: headerView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0)
+        let headerTrailing  = NSLayoutConstraint(item: headerView, attribute: .trailing, relatedBy: .equal, toItem: mainView, attribute: .trailing, multiplier: 1, constant: 0)
         
         //Top
-        let headerTop = NSLayoutConstraint(item: headerView, attribute: .top, relatedBy: .equal, toItem: self,  attribute: .top, multiplier: 1.0, constant: 0.0)
+        let headerTop = NSLayoutConstraint(item: headerView, attribute: .top, relatedBy: .equal, toItem: mainView,  attribute: .top, multiplier: 1.0, constant: 0.0)
         //Height
         let headerHeight = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 150.0)
         
@@ -251,7 +278,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         tableViewContainer = UIView()
         tableViewContainer.translatesAutoresizingMaskIntoConstraints = false
-        self.addSubview(tableViewContainer)
+        mainView.addSubview(tableViewContainer)
         
         tableViewLanguage = UITableView()
         tableViewLanguage.translatesAutoresizingMaskIntoConstraints = false
@@ -302,13 +329,15 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func initContentView() {
         contentView = UIView()
+        contentView.isUserInteractionEnabled = true
         nextPrevButtonView = UIView()
         nextPrevButtonView.isHidden = true
         campaignView = UIView()
         btnNext = UIButton(type: .system)
         btnPrev = UIButton(type: .system)
         
-        self.addSubview(contentView)
+        //nextPrevButtonView.backgroundColor = UIColor.red
+        mainView.addSubview(contentView)
         contentView.backgroundColor = UIColor.white
         nextPrevButtonView.addSubview(btnPrev)
         nextPrevButtonView.addSubview(btnNext)
@@ -320,6 +349,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnPrev.translatesAutoresizingMaskIntoConstraints = false;
         btnNext.translatesAutoresizingMaskIntoConstraints = false;
         campaignView.translatesAutoresizingMaskIntoConstraints = false
+        campaignView.isUserInteractionEnabled = true
         
         btnPrev.addTarget(self, action: #selector(prevButtonAction(sender:)), for: .touchUpInside)
         btnNext.addTarget(self, action: #selector(nextButtonAction(sender:)), for: .touchUpInside)
@@ -344,10 +374,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //Content View constraints
         
         //Leading
-        let contentLeading  = NSLayoutConstraint(item: contentView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0)
+        let contentLeading  = NSLayoutConstraint(item: contentView, attribute: .leading, relatedBy: .equal, toItem: mainView, attribute: .leading, multiplier: 1, constant: 0)
         
         //Trailing
-        let contentTrailing  = NSLayoutConstraint(item: contentView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0)
+        let contentTrailing  = NSLayoutConstraint(item: contentView, attribute: .trailing, relatedBy: .equal, toItem: mainView, attribute: .trailing, multiplier: 1, constant: 0)
         
         //Top
         let contentBottom = NSLayoutConstraint(item: contentView, attribute: .bottom, relatedBy: .equal, toItem: footerView, attribute: .top, multiplier: 1.0, constant: 0.0)
@@ -373,8 +403,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             toItem: contentView,
             attribute: .bottom,
             multiplier: 1.0,
-            constant: -10.0)
-        let buttonViewHeight = NSLayoutConstraint(item: nextPrevButtonView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant:40.0)
+            constant: -5.0)
+        let buttonViewHeight = NSLayoutConstraint(item: nextPrevButtonView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant:35.0)
         
         NSLayoutConstraint.activate([buttonViewLeading, buttonViewTrailing, buttonViewBottom, buttonViewHeight])
         
@@ -422,7 +452,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         footerView = UIView()
         footerView.backgroundColor = primaryColor
-        self.addSubview(footerView)
+        mainView.addSubview(footerView)
         lblPoweredBy = UILabel()
         lblPoweredBy.text = "Powered by Loyagram"
         lblPoweredBy.textColor = UIColor.white
@@ -436,13 +466,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([lblPoweredByCenterHorizontally, blPoweredByCenterVertically])
         //Leading
         footerView.translatesAutoresizingMaskIntoConstraints = false;
-        let footerLeading  = NSLayoutConstraint(item: footerView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1, constant: 0)
+        let footerLeading  = NSLayoutConstraint(item: footerView, attribute: .leading, relatedBy: .equal, toItem: mainView, attribute: .leading, multiplier: 1, constant: 0)
         
         //Trailing
-        let footerTrailing  = NSLayoutConstraint(item: footerView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0)
+        let footerTrailing  = NSLayoutConstraint(item: footerView, attribute: .trailing, relatedBy: .equal, toItem: mainView, attribute: .trailing, multiplier: 1, constant: 0)
         
         //Top
-        let footerBottom = NSLayoutConstraint(item: footerView, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom,  multiplier: 1.0, constant: 0.0)
+        let footerBottom = NSLayoutConstraint(item: footerView, attribute: .bottom, relatedBy: .equal, toItem: mainView, attribute: .bottom,  multiplier: 1.0, constant: 0.0)
         //Height
         let footerHeight = NSLayoutConstraint(item: footerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 30.0)
         
@@ -572,8 +602,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func showNPSView() {
         let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self)
+        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:campaign.type, question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint)
         campaignView.addSubview(campaignContentView)
+        campaignContentView.isUserInteractionEnabled = true
         campaignContentView.delegate = self
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
@@ -722,6 +753,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func closeButtonAction(sender:UIButton!) {
         self.viewController.dismiss(animated: true, completion: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
+        NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
     
     @objc func languageButtonAction(sender:UIButton!) {
@@ -787,6 +820,35 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             }
         }
+        
+    }
+    @objc func keyboardWillShow(notification:NSNotification) {
+        adjustingHeight(show: true, notification: notification)
+    }
+    
+    @objc func keyboardWillHide(notification:NSNotification) {
+        adjustingHeight(show: false, notification: notification)
+    }
+    
+    @objc func adjustingHeight(show:Bool, notification:NSNotification) {
+        
+        var userInfo = notification.userInfo!
+        let keyboardFrame:CGRect = (userInfo[UIKeyboardFrameBeginUserInfoKey] as! NSValue).cgRectValue
+        let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
+        var changeInHeight:CGFloat = 0.0
+        if(show) {
+            changeInHeight = CGFloat((keyboardFrame.height) * -1 )
+        } else {
+             changeInHeight = CGFloat((keyboardFrame.height) * 1 )
+        }
+        UIView.animate(withDuration: animationDurarion, animations: { () -> Void in
+            self.bottomConstraint.constant = changeInHeight
+            self.topConstraint.constant = changeInHeight
+            if(!show) {
+                self.bottomConstraint.constant = 0
+                self.topConstraint.constant  = 0
+            }
+        })
         
     }
 }

@@ -12,7 +12,7 @@ protocol LoyagramNPSDelegate: class {
     func setNPS()
 }
 
-class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCampaignButtonDelegate {
+class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCampaignButtonDelegate, UITextFieldDelegate, UITextViewDelegate {
     
     
     var txtQuestion : UITextView!
@@ -25,33 +25,44 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     var primaryColor : UIColor!
     var npsContainer : UIView!
     var followUpTableView : UITableView!
-    var feedbackContainer : UIView!
+    //var feedbackContainer : UIView!
+    var scrollView: UIScrollView!
     var chk: LoyagramCheckBox!
     var feedbackTextField: UITextField!
     var feedbackTextView:UITextView!
     var delegate: LoyagramNPSDelegate!
     var campaignView: LoyagramCampaignView!
+    var campaignType: String!
+    var tblHeight: NSLayoutConstraint!
+    var feedBackContainerCenterY: NSLayoutConstraint!
+    var scrollViewBottomConstraint : NSLayoutConstraint!
+    var bottomConstraint: NSLayoutConstraint!
+    var heightConsraint: NSLayoutConstraint!
     
-    public init(frame: CGRect, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView) {
+    public init(frame: CGRect, campaignType: String, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView, bottomConstraint:NSLayoutConstraint) {
         super.init(frame: frame)
         currentQuestion = question
+        self.campaignType = campaignType
         self.followUpQuestion = followUpQuestion
         currentLanguage = currentLang
         primaryLanguage = primaryLang
         primaryColor = color
         self.campaignView = campaignView
+        self.bottomConstraint = bottomConstraint
         campaignView.buttonCampaignButtonDelegate = self
-        
         self.autoresizesSubviews = true
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
-        
+        self.isUserInteractionEnabled = true
         
         initNPSView()
         addNPSButtons()
-        initFeedbackView()
-        
-        initFollowUpView()
         setQuestion()
+        if(campaignType == "NPS") {
+            initFeedbackView()
+            initFollowUpView()
+            
+        }
+        
         
     }
     
@@ -66,6 +77,31 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         for questionTranslation in questionTranslations! {
             if(questionTranslation.language_code == langCode) {
                 txtQuestion.text = questionTranslation.text
+                break
+            }
+        }
+    }
+    
+    @objc func setFollowUpQuestion() {
+        
+        let langCode = currentLanguage.language_code
+        let questionTranslations = followUpQuestion.question_translations
+        for questionTranslation in questionTranslations! {
+            if(questionTranslation.language_code == langCode) {
+                txtFollowUpQuestion.text = questionTranslation.text
+                break
+            }
+        }
+    }
+    
+    @objc func setFeedBackQuestion() {
+        let langCode = currentLanguage.language_code
+        let settingsTranslations = currentQuestion.settings_translations
+        for sT in settingsTranslations! {
+            if(sT.language_code == langCode) {
+                //txtFollowUpQuestion.text = questionTranslation.text
+                let requestReasonSettings = sT.text.settings.nps_settings.request_reason_settings
+                txtFeedBackQuestion.text = requestReasonSettings?.all.message
                 break
             }
         }
@@ -131,7 +167,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         
         //TextView Question constraints
-        let txtQuestionTop = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .bottom, relatedBy: .equal, toItem: followUpTableView, attribute: .top, multiplier: 1.0, constant: -10.0)
+        let txtQuestionTop = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .bottom, relatedBy: .equal, toItem: followUpTableView, attribute: .top, multiplier: 1.0, constant: -5.0)
         
         let txtQuestionLeading = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
@@ -157,12 +193,13 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         tblHeight = NSLayoutConstraint(item: followUpTableView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0.0)
         
         NSLayoutConstraint.activate([tblLeading, tblTrailing, tblHeight, centerX, centerY])
+        //followUpTableView.backgroundColor = UIColor.red
         
-        //showFollowUp()
+        setFollowUpQuestion()
     }
     
     @objc func addNPSButtons() {
-    
+        
         let buttonWidth:CGFloat = 25.0
         //NPS Container Constraints
         let containerTop = NSLayoutConstraint(item: npsContainer, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 10.0)
@@ -209,9 +246,10 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             followUpTableView.isHidden = true
             txtFollowUpQuestion.isHidden = true
             npsContainer.isHidden = false
+            txtQuestion.isHidden  = false
             break
         case 2:
-            feedbackContainer.isHidden = true
+            scrollView.isHidden = true
             followUpTableView.isHidden = false
             txtFollowUpQuestion.isHidden = false
             break
@@ -224,13 +262,14 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         switch iterator {
         case 0:
             npsContainer.isHidden = true
+            txtQuestion.isHidden  = true
             followUpTableView.isHidden = false
             txtFollowUpQuestion.isHidden = false
             break
         case 1:
             followUpTableView.isHidden = true
             txtFollowUpQuestion.isHidden = true
-            feedbackContainer.isHidden = false
+            scrollView.isHidden = false
             break
         case 2:
             break
@@ -239,23 +278,40 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         }
     }
     
+    func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        print("sdc")
+    }
     @objc func initFeedbackView() {
         
-        feedbackContainer = UIView()
+        
+        scrollView = UIScrollView()
+        self.addSubview(scrollView)
+        scrollView.isHidden = true
+        scrollView.bounces = false
+        scrollView.translatesAutoresizingMaskIntoConstraints = false
+        scrollView.isScrollEnabled = true
+        scrollView.isUserInteractionEnabled = true
+        scrollView.showsVerticalScrollIndicator = true;
+        scrollView.delegate = self
+        //scrollView.contentSize = CGSize(width: 250, height:200)
+        //scrollView.backgroundColor = UIColor.blue
+        
         txtFeedBackQuestion = UITextView()
-        self.addSubview(feedbackContainer)
-        feedbackContainer.translatesAutoresizingMaskIntoConstraints = false
-        feedbackContainer.isHidden = true
-        //feedbackContainer.backgroundColor = UIColor.red
+        txtFeedBackQuestion.translatesAutoresizingMaskIntoConstraints = false
+        txtFeedBackQuestion.font = GlobalConstants.FONT_MEDIUM
+        txtFeedBackQuestion.textAlignment = .center
+        
         feedbackTextView = UITextView()
         feedbackTextView.translatesAutoresizingMaskIntoConstraints = false
         feedbackTextView.layer.borderWidth = 1
+        feedbackTextView.layer.cornerRadius = 5
         feedbackTextView.layer.borderColor = UIColor.lightGray.cgColor
+        feedbackTextView.delegate = self
         
         let chkContainer = UIView()
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        let rect = CGRect(x: 0, y: 0, width: 250, height: 30)
+        let rect = CGRect(x: 0, y: 0, width: 250, height: 35)
         chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
         //chk.translatesAutoresizingMaskIntoConstraints = false
@@ -265,55 +321,79 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextField = UITextField()
         feedbackTextField.translatesAutoresizingMaskIntoConstraints = false
         feedbackTextField.isHidden = true
-        feedbackContainer.addSubview(feedbackTextField)
-        feedbackContainer.addSubview(feedbackTextView)
-        feedbackContainer.addSubview(chkContainer)
+        feedbackTextField.delegate = self
+        
+        scrollView.addSubview(txtFeedBackQuestion)
+        scrollView.addSubview(feedbackTextField)
+        scrollView.addSubview(feedbackTextView)
+        scrollView.addSubview(chkContainer)
         
         
-        //Feedback container constraints
-        let containerTop = NSLayoutConstraint(item: feedbackContainer, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        //ScroolView Constraint
         
-        let containerLeading = NSLayoutConstraint(item: feedbackContainer, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        NSLayoutConstraint(item: scrollView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: scrollView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: scrollView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: scrollView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0.0).isActive = true
+        heightConsraint = NSLayoutConstraint(item: scrollView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0.0)
         
-        let containerTrailing = NSLayoutConstraint(item: feedbackContainer, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        NSLayoutConstraint.activate([heightConsraint])
         
-        let containerBottom = NSLayoutConstraint(item: feedbackContainer, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
-        NSLayoutConstraint.activate([containerTop,containerLeading, containerTrailing, containerBottom])
+        
+        //TextView Question constraints
+        let txtQuestionTop = NSLayoutConstraint(item: txtFeedBackQuestion, attribute: .top, relatedBy: .equal, toItem: scrollView, attribute: .top, multiplier: 1.0, constant: 5.0)
+        
+        let txtQuestionLeading = NSLayoutConstraint(item: txtFeedBackQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
+        
+        let txtQuestionTrailing = NSLayoutConstraint(item: txtFeedBackQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
+        
+        let txtQuestionHeight = NSLayoutConstraint(item: txtFeedBackQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
+        
+        NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
+        
+        
         
         //TextField Constraints
-        let textViewTop = NSLayoutConstraint(item: feedbackTextView, attribute: .top, relatedBy: .equal, toItem: feedbackContainer, attribute: .top, multiplier: 1.0, constant: 0.0)
+        let textViewTop = NSLayoutConstraint(item: feedbackTextView, attribute: .top, relatedBy: .equal, toItem: txtFeedBackQuestion, attribute: .bottom, multiplier: 1.0, constant: 5.0)
         
-        let textViewLeading = NSLayoutConstraint(item: feedbackTextView, attribute: .leading, relatedBy: .equal, toItem: feedbackContainer, attribute: .leading, multiplier: 1.0, constant: 10.0)
+        let textViewLeading = NSLayoutConstraint(item: feedbackTextView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
-        let textViewTrailing = NSLayoutConstraint(item: feedbackTextView, attribute: .trailing, relatedBy: .equal, toItem: feedbackContainer, attribute: .trailing, multiplier: 1.0, constant: -10.0)
+        let textViewTrailing = NSLayoutConstraint(item: feedbackTextView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0)
+        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
         
         NSLayoutConstraint.activate([textViewTop,textViewLeading, textViewTrailing, textViewHeight])
         
         
-        //CheckBox Constraints
-        let chkTop = NSLayoutConstraint(item: chkContainer, attribute: .top, relatedBy: .equal, toItem: feedbackTextView, attribute: .bottom, multiplier: 1.0, constant: 10.0)
         
-        let chkLeading = NSLayoutConstraint(item: chkContainer, attribute: .leading, relatedBy: .equal, toItem: feedbackTextView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        //CheckBox Constraints
+        let chkTop = NSLayoutConstraint(item: chkContainer, attribute: .top, relatedBy: .equal, toItem: feedbackTextView, attribute: .bottom, multiplier: 1.0, constant: 5.0)
+        
+        let chkLeading = NSLayoutConstraint(item: chkContainer, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
         let chkWidth = NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 280.0)
-        let chkHeight = NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
+        let chkHeight = NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20.0)
         
         NSLayoutConstraint.activate([chkTop,chkLeading, chkWidth, chkHeight])
         
         //TextField Constraints
-        let textFieldTop = NSLayoutConstraint(item: feedbackTextField, attribute: .top, relatedBy: .equal, toItem: chkContainer, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
-        let textFieldLeading = NSLayoutConstraint(item: feedbackTextField, attribute: .leading, relatedBy: .equal, toItem: feedbackContainer, attribute: .leading, multiplier: 1.0, constant: 10.0)
+        let textFieldTop = NSLayoutConstraint(item: feedbackTextField, attribute: .top, relatedBy: .equal, toItem: chkContainer, attribute: .bottom, multiplier: 1.0, constant: 10.0)
         
-        let textFieldTrailing = NSLayoutConstraint(item: feedbackTextField, attribute: .trailing, relatedBy: .equal, toItem: feedbackContainer, attribute: .trailing, multiplier: 1.0, constant: -10.0)
+        let textFieldBottom = NSLayoutConstraint(item: feedbackTextField, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: -5.0)
         
-        let textFieldHeight = NSLayoutConstraint(item: feedbackTextField, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
+        let textFieldLeading = NSLayoutConstraint(item: feedbackTextField, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
-        NSLayoutConstraint.activate([textFieldTop,textFieldLeading, textFieldTrailing, textFieldHeight])
-        feedbackContainer.layoutIfNeeded()
+        let textFieldTrailing = NSLayoutConstraint(item: feedbackTextField, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
+        
+        let textFieldHeight = NSLayoutConstraint(item: feedbackTextField, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20.0)
+        
+        
+        NSLayoutConstraint.activate([textFieldTop, textFieldBottom, textFieldLeading, textFieldTrailing, textFieldHeight])
+        
+        setBorderForTextField()
+        setFeedBackQuestion()
     }
     
     @objc func followUpCheckBoxAction (sender: LoyagramRadioButton) {
@@ -323,7 +403,22 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     
     override func layoutSubviews() {
         super.layoutSubviews()
-       // setBorderForTextField()
+        let viewHeight = self.frame.height
+        let requiredHeight = CGFloat(followUpQuestion.labels.count) * 35
+        if(requiredHeight <= viewHeight - 50) {
+            tblHeight.constant = requiredHeight
+        } else {
+            tblHeight.constant = viewHeight - 60
+        }
+        if(campaignType == "NPS") {
+            let scrollViewHeight:CGFloat = 150.0
+            if(viewHeight <= scrollViewHeight) {
+                heightConsraint.constant = viewHeight
+            } else {
+                heightConsraint.constant = scrollViewHeight
+            }
+            setBorderForTextField()
+        }
     }
     
     @objc func setBorderForTextField() {
@@ -337,95 +432,38 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
     }
     
-    @objc func showFollowUp() {
-        let labels = followUpQuestion.labels
-        var topConstant = 0.0
-        let scrollViewContent = UIView()
-        scrollViewContent.translatesAutoresizingMaskIntoConstraints = false
-        
-        //followUpScrollView.addSubview(scrollViewContent)
-        //followUpScrollView.isUserInteractionEnabled = true
-        //followUpScrollView.isExclusiveTouch = true
-        
-        let contentTop = NSLayoutConstraint(item: scrollViewContent, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 10.0)
-        let contentLeading = NSLayoutConstraint(item: scrollViewContent, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
-        let contentTrailing = NSLayoutConstraint(item: scrollViewContent, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-        let contentBottom = NSLayoutConstraint(item: scrollViewContent, attribute: .bottom, relatedBy: .equal, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)
-        
-        NSLayoutConstraint.activate([contentTop,contentLeading, contentTrailing, contentBottom])
-        for label in labels! {
-            let chkContainer = UIView()
-            scrollViewContent.addSubview(chkContainer)
-            let rect = CGRect(x: 0, y: 0, width: 250, height: 30)
-            let chk = LoyagramCheckBox(frame: rect)
-            chk.showTextLabel = true
-            chkContainer.addSubview(chk)
-            chkContainer.translatesAutoresizingMaskIntoConstraints = false
-            
-            //Radio Button Container constrains
-            let containerTop = NSLayoutConstraint(item: chkContainer, attribute: .top, relatedBy: .equal, toItem: scrollViewContent, attribute: .top, multiplier: 1.0, constant: CGFloat(topConstant+10.0))
-            let contentWidth = NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 280.0)
-            let containerHeight = NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
-            
-            let contentCenterVertically = NSLayoutConstraint(item: chkContainer, attribute: .centerX, relatedBy: .equal, toItem: scrollViewContent, attribute: .centerX, multiplier: 1.0, constant: 0.0)
-            
-            NSLayoutConstraint.activate([containerTop, contentWidth, containerHeight, contentCenterVertically])
-            chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
-            topConstant += 40.0
-            
-            let labelTranslations = label.label_translations
-            let langCode = currentLanguage.language_code
-            for labelTranslation in labelTranslations! {
-                if(labelTranslation.language_code == langCode) {
-                    chk.text = labelTranslation.text
-                    break
-                }
-            }
-        }
-    }
-    
     @objc func checkBoxAction (sender: LoyagramRadioButton) {
         
         
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
-        
-        
         cell.translatesAutoresizingMaskIntoConstraints = false
-        
         cell.selectionStyle = .none
-        
         //ContentView constrinats
         
         let cellContent = UIView()
-        
         cell.contentView.addSubview(cellContent)
-        
-        
         cellContent.translatesAutoresizingMaskIntoConstraints = false
-        
         let centerX = NSLayoutConstraint(item: cellContent, attribute: .centerX, relatedBy: .equal, toItem: cell.contentView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
         let centerY = NSLayoutConstraint(item: cellContent, attribute: .centerY, relatedBy: .equal, toItem: cell.contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0)
         
         let cellContentWidth = NSLayoutConstraint(item: cellContent, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 220.0)
         
-        let cellContentHeight = NSLayoutConstraint(item: cellContent, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        let cellContentHeight = NSLayoutConstraint(item: cellContent, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35.0)
         
         NSLayoutConstraint.activate([cellContentWidth, cellContentHeight, centerX, centerY])
         
+        getMultiSelectCell(checkBoxContainer: cellContent, row: indexPath.row)
         
-    
         return cell
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return currentQuestion.labels.count
+        return followUpQuestion.labels.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -435,4 +473,28 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 35.0
     }
+    
+    @objc func getMultiSelectCell(checkBoxContainer: UIView, row:Int) {
+        let label = followUpQuestion.labels[row]
+        let rect = CGRect(x: 0, y: 0, width: 220, height: 35)
+        let chk = LoyagramCheckBox(frame: rect)
+        chk.showTextLabel = true
+        checkBoxContainer.addSubview(chk)
+        chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
+        let labelTranslations = label.label_translations
+        let langCode = currentLanguage.language_code
+        for labelTranslation in labelTranslations! {
+            if(labelTranslation.language_code == langCode) {
+                chk.text = labelTranslation.text
+                break
+            }
+        }
+        
+    }
+    
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        feedbackTextField.resignFirstResponder()
+        return true
+    }
+    
 }

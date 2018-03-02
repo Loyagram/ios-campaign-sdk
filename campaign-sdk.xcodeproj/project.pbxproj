@@ -12,10 +12,13 @@
 		D3064ADC20317AD10015E35B /* apple.png in Resources */ = {isa = PBXBuildFile; fileRef = D3064ADB20317AD10015E35B /* apple.png */; };
 		D3064ADE20318AC90015E35B /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = D3064ADD20318AC90015E35B /* close.png */; };
 		D3064AE22031C0310015E35B /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */; };
+		D311575220498D050064598E /* Csat_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311575120498D050064598E /* Csat_settings.swift */; };
+		D311575420498D120064598E /* Ces_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311575320498D120064598E /* Ces_settings.swift */; };
 		D31AC33F202C4F88006EA2DB /* LGRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31AC33E202C4F88006EA2DB /* LGRadioButton.swift */; };
 		D32AD91F2035A0F400B3061D /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD91D2035A0F300B3061D /* Labels.swift */; };
 		D32AD9202035A0F400B3061D /* LabelTranslations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD91E2035A0F400B3061D /* LabelTranslations.swift */; };
 		D32AD9222035B5BA00B3061D /* LoyagramRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD9212035B5BA00B3061D /* LoyagramRadioButton.swift */; };
+		D33CF1B7204806080062EF01 /* TranslationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CF1B6204806080062EF01 /* TranslationSettings.swift */; };
 		D33CFA24203A9F7E005E643A /* LoyagramCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CFA23203A9F7E005E643A /* LoyagramCheckBox.swift */; };
 		D33CFA26203AD690005E643A /* LoyagramRatingBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CFA25203AD690005E643A /* LoyagramRatingBar.swift */; };
 		D33E8F3C202DDE8B00BDF83C /* campaign_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; };
@@ -114,10 +117,13 @@
 		D3064ADB20317AD10015E35B /* apple.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = apple.png; sourceTree = "<group>"; };
 		D3064ADD20318AC90015E35B /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
+		D311575120498D050064598E /* Csat_settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Csat_settings.swift; sourceTree = "<group>"; };
+		D311575320498D120064598E /* Ces_settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ces_settings.swift; sourceTree = "<group>"; };
 		D31AC33E202C4F88006EA2DB /* LGRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LGRadioButton.swift; sourceTree = "<group>"; };
 		D32AD91D2035A0F300B3061D /* Labels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		D32AD91E2035A0F400B3061D /* LabelTranslations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelTranslations.swift; sourceTree = "<group>"; };
 		D32AD9212035B5BA00B3061D /* LoyagramRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramRadioButton.swift; sourceTree = "<group>"; };
+		D33CF1B6204806080062EF01 /* TranslationSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslationSettings.swift; sourceTree = "<group>"; };
 		D33CFA23203A9F7E005E643A /* LoyagramCheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCheckBox.swift; sourceTree = "<group>"; };
 		D33CFA25203AD690005E643A /* LoyagramRatingBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramRatingBar.swift; sourceTree = "<group>"; };
 		D344BC6A203C123900B5C235 /* LoyagramRatingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramRatingView.swift; sourceTree = "<group>"; };
@@ -276,8 +282,11 @@
 				D3D9F99520347A220054F7FF /* Thank_you_and_redirect_settings_translations.swift */,
 				D3D9F99B20347A240054F7FF /* Thank_you_and_redirect_settings.swift */,
 				D3D9F99A20347A240054F7FF /* Language.swift */,
+				D311575320498D120064598E /* Ces_settings.swift */,
 				D3D9F99C20347A240054F7FF /* Welcome_message_translations.swift */,
 				D3D9F99620347A230054F7FF /* Widget.swift */,
+				D33CF1B6204806080062EF01 /* TranslationSettings.swift */,
+				D311575120498D050064598E /* Csat_settings.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -620,6 +629,7 @@
 				D3C21B222032E44B002FB1EE /* LoyagramSurveyView.swift in Sources */,
 				D3D9F9A120347A250054F7FF /* Passives.swift in Sources */,
 				D3D9F9AD20347A250054F7FF /* Request_reason_settings.swift in Sources */,
+				D311575220498D050064598E /* Csat_settings.swift in Sources */,
 				D344BC6D203C1F6600B5C235 /* LoyagramTextView.swift in Sources */,
 				D344BC6B203C123900B5C235 /* LoyagramRatingView.swift in Sources */,
 				D3064AD7203157BF0015E35B /* LoyagramCampaignManager.swift in Sources */,
@@ -630,10 +640,12 @@
 				D3D9F9B420347A250054F7FF /* SettingsTranslations.swift in Sources */,
 				D3D9F9A320347A250054F7FF /* Biz.swift in Sources */,
 				D3D9F9AB20347A250054F7FF /* Widget.swift in Sources */,
+				D33CF1B7204806080062EF01 /* TranslationSettings.swift in Sources */,
 				D3D9F9A620347A250054F7FF /* Promoters.swift in Sources */,
 				D3D9F9A020347A250054F7FF /* Campaign.swift in Sources */,
 				D32AD9222035B5BA00B3061D /* LoyagramRadioButton.swift in Sources */,
 				D33CFA26203AD690005E643A /* LoyagramRatingBar.swift in Sources */,
+				D311575420498D120064598E /* Ces_settings.swift in Sources */,
 				D3D9F9B120347A250054F7FF /* Welcome_message_translations.swift in Sources */,
 				D3942249203D3F4300BEB61F /* LoyagramCSATCESView.swift in Sources */,
 				D345F6F32046A058002801E8 /* General.swift in Sources */,

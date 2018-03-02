@@ -111,14 +111,14 @@ class LoyagramTextView: UIView {
             }
             //Text Field Cosntraints
             if(type == "textField") {
-            let txtTop = NSLayoutConstraint(item: textField, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 10.0)
-            
-            let txtLeading = NSLayoutConstraint(item: textField, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
-            
-            let txtTrailing = NSLayoutConstraint(item: textField, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
-            
-            let txtHeight = NSLayoutConstraint(item: textField, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: CGFloat(textFieldHeight))
-            NSLayoutConstraint.activate([txtTop, txtLeading, txtTrailing, txtHeight])
+                let txtTop = NSLayoutConstraint(item: textField, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 10.0)
+                
+                let txtLeading = NSLayoutConstraint(item: textField, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
+                
+                let txtTrailing = NSLayoutConstraint(item: textField, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
+                
+                let txtHeight = NSLayoutConstraint(item: textField, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: CGFloat(textFieldHeight))
+                NSLayoutConstraint.activate([txtTop, txtLeading, txtTrailing, txtHeight])
             }
             else {
                 let txtTop = NSLayoutConstraint(item: textView, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 10.0)
