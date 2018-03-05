@@ -58,6 +58,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     @objc func initRatingView() {
         txtQuestion = UITextView()
+        txtQuestion.isEditable = false
         tableView = UITableView()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(tableView)
@@ -199,10 +200,10 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         let viewHeight = self.frame.height
         let requiredHeight = CGFloat(currentQuestion.labels.count) * 35
         
-        if(requiredHeight <= viewHeight - 50) {
+        if(requiredHeight <= viewHeight - 60) {
             tblHeight.constant = requiredHeight
         } else {
-            tblHeight.constant = viewHeight - 50
+            tblHeight.constant = viewHeight - 60
         }
         //self.layoutIfNeeded()
     }

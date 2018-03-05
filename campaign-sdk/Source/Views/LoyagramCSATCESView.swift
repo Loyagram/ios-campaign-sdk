@@ -106,6 +106,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     
     @objc func initCSATCESView() {
         txtQuestion = UITextView()
+        txtQuestion.isEditable = false
         csatcesTableView = UITableView()
         csatcesTableView.translatesAutoresizingMaskIntoConstraints = false
         self.addSubview(csatcesTableView)
@@ -131,13 +132,13 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
         
         //TextView Question constraints
-        let txtQuestionTop = NSLayoutConstraint(item: txtQuestion, attribute: .bottom, relatedBy: .equal, toItem: csatcesTableView, attribute: .top, multiplier: 1.0, constant: -5.0)
+        let txtQuestionTop = NSLayoutConstraint(item: txtQuestion, attribute: .bottom, relatedBy: .equal, toItem: csatcesTableView, attribute: .top, multiplier: 1.0, constant: 0.0)
         
         let txtQuestionLeading = NSLayoutConstraint(item: txtQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
         let txtQuestionTrailing = NSLayoutConstraint(item: txtQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let txtQuestionHeight = NSLayoutConstraint(item: txtQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        let txtQuestionHeight = NSLayoutConstraint(item: txtQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0)
         
         NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
         
@@ -163,19 +164,20 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     @objc func initFollowUpView() {
         
         txtFollowUpQuestion = UITextView()
+        txtFollowUpQuestion.isEditable = false
         txtFollowUpQuestion.isHidden = true
         self.addSubview(txtFollowUpQuestion)
         txtFollowUpQuestion.translatesAutoresizingMaskIntoConstraints = false
         txtFollowUpQuestion.font = GlobalConstants.FONT_MEDIUM
         txtFollowUpQuestion.textAlignment = .center
         
-        let txtQuestionTop = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .bottom, relatedBy: .equal, toItem: csatcesTableView, attribute: .top, multiplier: 1.0, constant: -5.0)
+        let txtQuestionTop = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .bottom, relatedBy: .equal, toItem: csatcesTableView, attribute: .top, multiplier: 1.0, constant: 0.0)
         
         let txtQuestionLeading = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
         let txtQuestionTrailing = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let txtQuestionHeight = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        let txtQuestionHeight = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0)
         
         NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
         setFollowUpQuestion()
@@ -196,15 +198,18 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         //scrollView.backgroundColor = UIColor.blue
         
         txtFeedbackQuestion = UITextView()
+        txtFeedbackQuestion.isEditable = false
         txtFeedbackQuestion.translatesAutoresizingMaskIntoConstraints = false
         txtFeedbackQuestion.font = GlobalConstants.FONT_MEDIUM
         txtFeedbackQuestion.textAlignment = .center
+        
         
         feedbackTextView = UITextView()
         feedbackTextView.translatesAutoresizingMaskIntoConstraints = false
         feedbackTextView.layer.borderWidth = 1
         feedbackTextView.layer.cornerRadius = 5
         feedbackTextView.layer.borderColor = UIColor.lightGray.cgColor
+        feedbackTextView.autocorrectionType = .no
        // feedbackTextView.delegate = self
         
         let chkContainer = UIView()
@@ -220,6 +225,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextField = UITextField()
         feedbackTextField.translatesAutoresizingMaskIntoConstraints = false
         feedbackTextField.isHidden = true
+        feedbackTextField.autocorrectionType = .no
         //feedbackTextField.delegate = self
         
         csatcesScrollView.addSubview(txtFeedbackQuestion)
@@ -247,7 +253,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
         let txtQuestionTrailing = NSLayoutConstraint(item: txtFeedbackQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let txtQuestionHeight = NSLayoutConstraint(item: txtFeedbackQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
+        let txtQuestionHeight = NSLayoutConstraint(item: txtFeedbackQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35.0)
         
         NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
         
@@ -260,7 +266,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
         let textViewTrailing = NSLayoutConstraint(item: feedbackTextView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35.0)
         
         NSLayoutConstraint.activate([textViewTop,textViewLeading, textViewTrailing, textViewHeight])
         
@@ -304,7 +310,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         super.layoutSubviews()
         let viewHeight = self.frame.height
         let requiredHeight = CGFloat(noOfRows) * 35
-        if(requiredHeight <= viewHeight - 50) {
+        if(requiredHeight <= viewHeight - 60) {
             tblHeight.constant = requiredHeight
         } else {
             tblHeight.constant = viewHeight - 60
@@ -320,7 +326,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     
     @objc func setBorderForTextField() {
         let borderLayer:CALayer = CALayer()
-        let width = CGFloat(2.0)
+        let width = CGFloat(1.0)
         borderLayer.borderColor = UIColor.lightGray.cgColor
         borderLayer.frame = CGRect(x: 0, y: feedbackTextField.frame.size.height - width, width:  feedbackTextField.frame.size.width, height: feedbackTextField.frame.size.height)
         borderLayer.borderWidth = width

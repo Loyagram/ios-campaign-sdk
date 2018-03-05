@@ -31,7 +31,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var viewController : UIViewController!
     var tableViewLanguage : UITableView!
     var tableViewContainer : UIView!
-    var languages:NSArray = ["English", "Spanish", "Portugeese"]
+    var languages = [Language]()
     var primaryColor : UIColor!
     var currentLang : Int!
     var nextPrevButtonView: UIView!
@@ -52,6 +52,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var bottomConstraint : NSLayoutConstraint!
     var topConstraint : NSLayoutConstraint!
     var mainView : UIView!
+    var npsRating = 0
+    let cescsatOption = "neutral"
+    var staticTexts = [String:String]()
     
     public override init(frame: CGRect){
         super.init(frame: frame)
@@ -87,12 +90,12 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         fatalError("init(coder:) has not been implemented")
     }
     
-//    override public func layoutSubviews() {
-//        super.layoutSubviews()
-//        //self.layoutSubviews()
-//        //layoutIfNeeded()
-//
-//    }
+    //    override public func layoutSubviews() {
+    //        super.layoutSubviews()
+    //        //self.layoutSubviews()
+    //        //layoutIfNeeded()
+    //
+    //    }
     
     
     @objc func setViewController(vc:UIViewController!) {
@@ -112,7 +115,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         NSLayoutConstraint(item: mainView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1, constant: 0).isActive = true
         
-       topConstraint = NSLayoutConstraint(item: mainView, attribute: .top, relatedBy: .equal, toItem: self,  attribute: .top, multiplier: 1.0, constant: 0.0)
+        topConstraint = NSLayoutConstraint(item: mainView, attribute: .top, relatedBy: .equal, toItem: self,  attribute: .top, multiplier: 1.0, constant: 0.0)
         
         bottomConstraint = NSLayoutConstraint(item: mainView, attribute: .bottom, relatedBy: .equal, toItem: self,  attribute: .bottom, multiplier: 1.0, constant: 0.0)
         mainView.backgroundColor = UIColor.red
@@ -162,9 +165,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         //Hardcoded texts need to change once api request implemented
         
-        lblBrand.text = "Loyagram"
+        //lblBrand.text = "Loyagram"
         lblQuestionCount.text = " "
-        btnLanguage.setTitle("English", for: .normal)
+        //btnLanguage.setTitle("English", for: .normal)
         
         btnClose.addTarget(self, action: #selector(closeButtonAction(sender:)), for: .touchUpInside)
         btnLanguage.addTarget(self, action: #selector(languageButtonAction(sender:)), for: .touchUpInside)
@@ -270,7 +273,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .bottom, relatedBy: .equal, toItem: brandView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
         NSLayoutConstraint.activate([lblBrandWidth, lblBrandHeight, lblBrandCenterHorizontally, lblBrandTop])
-    
+        
     }
     
     
@@ -325,7 +328,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
     }
     
-
+    
     
     @objc func initContentView() {
         contentView = UIView()
@@ -454,7 +457,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         footerView.backgroundColor = primaryColor
         mainView.addSubview(footerView)
         lblPoweredBy = UILabel()
-        lblPoweredBy.text = "Powered by Loyagram"
+        //lblPoweredBy.text = "Powered by Loyagram"
         lblPoweredBy.textColor = UIColor.white
         footerView.addSubview(lblPoweredBy)
         lblPoweredBy.translatesAutoresizingMaskIntoConstraints = false;
@@ -528,43 +531,43 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         currentQuestion = campaign.questions[questionNumber-1]
         let campaignType = campaign.type
         if(campaignType != nil) {
-        if(campaignType == "CSAT" ) {
-            showCSATCESView(isCSAT: true)
-        } else if(campaignType == "CES") {
-            showCSATCESView(isCSAT: false)
-        } else if (campaignType == "NPS") {
-            showNPSView()
-        }
-        else {
-            switch(currentQuestion.type) {
-            case "SINGLE_SELECT":
-                showSurveyView()
-                break
-            case "MULTI_SELECT":
-                showSurveyView()
-                break
-            case "RATING":
-                showRatingView()
-                break
-            case "NPS":
+            if(campaignType == "CSAT" ) {
+                showCSATCESView(isCSAT: true)
+            } else if(campaignType == "CES") {
+                showCSATCESView(isCSAT: false)
+            } else if (campaignType == "NPS") {
                 showNPSView()
-                break
-            case "PARAGRAPH":
-                showTextView()
-                break
-            case "SHORT_ANSWER":
-                showTextView()
-                break
-            case "EMAIL":
-                showTextView()
-                break
-            case "NUMBER":
-                showTextView()
-                break
-            default :
-                break
             }
-        }
+            else {
+                switch(currentQuestion.type) {
+                case "SINGLE_SELECT":
+                    showSurveyView()
+                    break
+                case "MULTI_SELECT":
+                    showSurveyView()
+                    break
+                case "RATING":
+                    showRatingView()
+                    break
+                case "NPS":
+                    showNPSView()
+                    break
+                case "PARAGRAPH":
+                    showTextView()
+                    break
+                case "SHORT_ANSWER":
+                    showTextView()
+                    break
+                case "EMAIL":
+                    showTextView()
+                    break
+                case "NUMBER":
+                    showTextView()
+                    break
+                default :
+                    break
+                }
+            }
         }
     }
     
@@ -695,6 +698,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             
         else {
             if(questionNumber == noOfQuestions) {
+                submitCampaign()
                 return
             }
             btnNext.backgroundColor = primaryColor
@@ -705,11 +709,15 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             if(questionNumber <= noOfQuestions) {
                 let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
                 lblQuestionCount.text = questionCount
-                for subView in self.campaignView.subviews as [UIView] {
-                    subView.removeFromSuperview()
-                }
+                removeSubViews(view:self.campaignView)
                 showQuestion()
             }
+        }
+    }
+    
+    @objc func removeSubViews(view: UIView) {
+        for subView in view.subviews as [UIView] {
+            subView.removeFromSuperview()
         }
     }
     @objc func showPrevQuestion() {
@@ -748,22 +756,23 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func submitCampaign() {
-        self.viewController.dismiss(animated: true, completion: nil)
+        
+        showThankYou()
+        //self.viewController.dismiss(animated: true, completion: nil)
         
     }
     @objc func closeButtonAction(sender:UIButton!) {
+        closeCampaignController()
+    }
+    
+    @objc func closeCampaignController() {
         self.viewController.dismiss(animated: true, completion: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
-    
     @objc func languageButtonAction(sender:UIButton!) {
         
         tableViewContainer.isHidden = !tableViewContainer.isHidden
-        //tableViewLanguage.isHidden = !tableViewLanguage.isHidden
-        //self.bringSubview(toFront: tableViewContainer)
-        //tableViewLanguage.reloadData()
-        //self.sendSubview(toBack: contentView)
     }
     
     // MARK:-
@@ -776,7 +785,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "LanguageCell")
         cell.selectionStyle = .none
-        cell.lblLanguage.text = languages[indexPath.row] as? String
+        cell.lblLanguage.text = languages[indexPath.row].name
         //check if row is current language
         if(currentLang == indexPath.row) {
             cell.backgroundColor = UIColor.white
@@ -798,6 +807,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         cell.backgroundColor = UIColor.white
         cell.lblLanguage.textColor = primaryColor
         tableViewLanguage.reloadData()
+        let languages = campaign.settings.translation!
+        if(currentLanguage.language_code != languages[indexPath.row].language_code) {
+            currentLanguage = languages[indexPath.row]
+            btnLanguage.setTitle(currentLanguage.name, for: .normal)
+            changeLanguage()
+        }
+        
     }
     
     func setCampaign(campaign:Campaign) {
@@ -809,11 +825,15 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
         lblQuestionCount.text = questionCount
         loadLanguages()
+        btnLanguage.setTitle(currentLanguage.name, for: .normal)
+        tableViewLanguage.reloadData()
+        getStaticTexts()
+        setStaticTexts()
     }
     
     func loadLanguages() {
-        let languages = campaign.settings.translation
-        for language in languages! {
+        languages = campaign.settings.translation
+        for language in languages {
             if(language.primary) {
                 currentLanguage = language
                 primaryLanguage = language
@@ -839,7 +859,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         if(show) {
             changeInHeight = CGFloat((keyboardFrame.height) * -1 )
         } else {
-             changeInHeight = CGFloat((keyboardFrame.height) * 1 )
+            changeInHeight = CGFloat((keyboardFrame.height) * 1 )
         }
         UIView.animate(withDuration: animationDurarion, animations: { () -> Void in
             self.bottomConstraint.constant = changeInHeight
@@ -850,5 +870,265 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             }
         })
         
+    }
+    
+    @objc func changeLanguage () {
+        getStaticTexts()
+        setStaticTexts()
+        
+    }
+    
+    @objc func showThankYou() {
+        
+        if(campaign.thankyou_message_enabled) {
+            initThankYouView()
+            self.perform(#selector(closeCampaignController), with: self, afterDelay: 3.0)
+        } else {
+            closeCampaignController()
+        }
+        
+        
+    }
+    
+    @objc func initThankYouView() {
+        removeSubViews(view: self.campaignView)
+        nextPrevButtonView.isHidden = true
+        let thankYouView = UIView()
+        contentView.addSubview(thankYouView)
+        thankYouView.translatesAutoresizingMaskIntoConstraints = false
+        let txtThankYou = UITextView()
+        txtThankYou.isEditable = false
+        txtThankYou.translatesAutoresizingMaskIntoConstraints = false
+        txtThankYou.textAlignment = .center
+        thankYouView.addSubview(txtThankYou)
+        txtThankYou.font = GlobalConstants.FONT_MEDIUM
+        
+        txtThankYou.text = setThankYouMessage()
+        
+        //ThankYouView constraints
+        let thankYouCenterX = NSLayoutConstraint(item: thankYouView, attribute: .centerX, relatedBy: .equal, toItem: contentView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+        
+        let thankYouCenterY = NSLayoutConstraint(item: thankYouView, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0)
+        
+        let thankYouLeading = NSLayoutConstraint(item: thankYouView, attribute: .leading, relatedBy: .equal, toItem: contentView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let thankYouTrailing = NSLayoutConstraint(item: thankYouView, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        
+        let thankYouHeight = NSLayoutConstraint(item: thankYouView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 50.0)
+        
+        thankYouView.backgroundColor = UIColor.red
+        
+        NSLayoutConstraint.activate([thankYouCenterX, thankYouCenterY, thankYouLeading, thankYouTrailing, thankYouHeight])
+        
+        //ThankYou TextView constraints
+        
+        let txtTop = NSLayoutConstraint(item: txtThankYou, attribute: .top, relatedBy: .equal, toItem: thankYouView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        let txtBottom = NSLayoutConstraint(item: txtThankYou, attribute: .bottom, relatedBy: .equal, toItem: thankYouView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        
+        let txtLeading = NSLayoutConstraint(item: txtThankYou, attribute: .leading, relatedBy: .equal, toItem: thankYouView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let txtTrailing = NSLayoutConstraint(item: txtThankYou, attribute: .trailing, relatedBy: .equal, toItem: thankYouView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([txtTop, txtBottom, txtLeading, txtTrailing])
+    }
+    
+    @objc func setThankYouMessage() -> String {
+        
+        var strThankYou = String()
+        switch (campaign.type) {
+        case "NPS":
+            strThankYou = getNPSThankYou();
+            break;
+        case "CSAT":
+            strThankYou = getCSATCESThankYou();
+            break;
+        case "CES":
+            strThankYou = getCSATCESThankYou();
+            break;
+        case "SURVEY":
+            strThankYou = getSurveyThankYou();
+            break;
+        default:
+            break
+        }
+        return strThankYou
+    }
+    
+    @objc func getNPSThankYou() -> String {
+        var strThankYou = String()
+        let langCode = currentLanguage.language_code
+        let thankYouTranslations = campaign.thank_you_and_redirect_settings_translations
+        for thankYouTranslation in thankYouTranslations! {
+            if(langCode == thankYouTranslation.language_code) {
+                let thankYouAndRedirectSettings = thankYouTranslation.text!
+                switch(thankYouAndRedirectSettings.type) {
+                case "all" :
+                    strThankYou = (thankYouAndRedirectSettings.all.message)!
+                    break
+                case "score" :
+                    if(npsRating <= 6) {
+                        strThankYou = thankYouAndRedirectSettings.custom.detractors.message
+                    } else if(npsRating <= 6) {
+                        strThankYou = thankYouAndRedirectSettings.custom.passives.message
+                    } else {
+                        strThankYou = thankYouAndRedirectSettings.custom.promoters.message
+                    }
+                    break
+                default:
+                    break
+                }
+            }
+        }
+        return strThankYou
+    }
+    
+    @objc func getSurveyThankYou() -> String {
+        var strThankYou = String()
+        let langCode = currentLanguage.language_code
+        let thankYouTranslations = campaign.thank_you_and_redirect_settings_translations
+        for thankYouTranslation in thankYouTranslations! {
+            if(langCode == thankYouTranslation.language_code) {
+                let thankYouAndRedirectSettings = thankYouTranslation.text!
+                strThankYou = (thankYouAndRedirectSettings.all.message)!
+            }
+        }
+        return strThankYou
+    }
+    
+    @objc func getCSATCESThankYou() -> String {
+        var strThankYou = String()
+        let langCode = currentLanguage.language_code
+        let thankYouTranslations = campaign.thank_you_and_redirect_settings_translations
+        for thankYouTranslation in thankYouTranslations! {
+            if(langCode == thankYouTranslation.language_code) {
+                let thankYouAndRedirectSettings = thankYouTranslation.text!
+                switch(thankYouAndRedirectSettings.type) {
+                case "all" :
+                    strThankYou = (thankYouAndRedirectSettings.all.message)!
+                    break
+                case "custom" :
+                    let customThankYou = thankYouAndRedirectSettings.custom!
+                    switch(cescsatOption) {
+                    case "neutral" :
+                        strThankYou = customThankYou.neutral.message
+                        break
+                    case "dissatisfied" :
+                        strThankYou = customThankYou.neutral.message
+                        break
+                    case "satisfied" :
+                        strThankYou = customThankYou.neutral.message
+                        break
+                    case "agree" :
+                        strThankYou = customThankYou.neutral.message
+                        break
+                    case "disagree" :
+                        strThankYou = customThankYou.neutral.message
+                        break
+                    default:
+                        break
+                        
+                    }
+                    
+                    break
+                default:
+                    break
+                }
+            }
+        }
+        return strThankYou
+    }
+    
+    @objc func getStaticTexts() {
+        //staticTexts = [String: String]()
+        let staticTranslations = campaign.static_texts
+        var staticText = String()
+        for staticTranslation in staticTranslations! {
+            if(currentLanguage.language_code == staticTranslation.language_code) {
+                staticText = staticTranslation.text
+                switch(staticTranslation.static_text_id) {
+                case "CAMPAIGN_MODE_BACK_BUTTON_TEXT":
+                    staticTexts["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = staticText
+                    break;
+                case "CAMPAIGN_MODE_NEXT_BUTTON_TEXT":
+                    staticTexts["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] = staticText
+                    break;
+                case "CAMPAIGN_MODE_START_BUTTON_TEXT":
+                    staticTexts["CAMPAIGN_MODE_START_BUTTON_TEXT"] = staticText
+                    break;
+                case "CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT":
+                    staticTexts["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] = staticText
+                    break;
+                case "CHANGE_SCORE_BUTTON_TEXT":
+                    staticTexts["CHANGE_SCORE_BUTTON_TEXT"] = staticText
+                    break;
+                case "POWERED_BY":
+                    staticTexts["POWERED_BY"] = staticText
+            
+                    break;
+                case "SCORE_MESSAGE_TEXT":
+                    staticTexts["SCORE_MESSAGE_TEXT"] = staticText
+                   
+                    break;
+                case "CAMPAIGN_MODE_EXIT_DIALOG_TEXT":
+                    staticTexts["CAMPAIGN_MODE_EXIT_DIALOG_TEXT"] = staticText
+                    break;
+                case "CAMPAIGN_MODE_ANSWER_REQUIRED_DIALOG_TEXT":
+                    staticTexts["CAMPAIGN_MODE_ANSWER_REQUIRED_DIALOG_TEXT"] = staticText
+                    break;
+                case "FOLLOW_UP_REQUEST_CHECKBOX_LABEL":
+                    staticTexts["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] = staticText
+                    break;
+                case "PLUGIN_DIALOGUE_BOX_ACTIVE_BUTTON_TEXT":
+                    staticTexts["PLUGIN_DIALOGUE_BOX_ACTIVE_BUTTON_TEXT"] = staticText
+                    break;
+                case "PLUGIN_DIALOGUE_BOX_PASSIVE_BUTTON_TEXT":
+                    staticTexts["PLUGIN_DIALOGUE_BOX_PASSIVE_BUTTON_TEXT"] = staticText
+                    break;
+                case "EMAIL_ADDRESS_PLACEHOLDER_TEXT":
+                    staticTexts["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] = staticText
+                    break;
+                case "INPUT_PLACEHOLDER_TEXT":
+                    staticTexts["INPUT_PLACEHOLDER_TEXT"] = staticText
+                    break;
+                case "VALIDATION_FAILED_TEXT":
+                    staticTexts["VALIDATION_FAILED_TEXT"] = staticText
+                    break;
+                case "WIDGET_WELCOME_TIP":
+                    staticTexts["WIDGET_WELCOME_TIP"] = staticText
+                    break;
+                case "MANDATORY_QUESTION_TEXT":
+                    staticTexts["MANDATORY_QUESTION_TEXT"] = staticText
+                    break;
+                case "EMAIL_NOT_VALID_TEXT":
+                    staticTexts["EMAIL_NOT_VALID_TEXT"] = staticText
+                    break;
+                default:
+                    break;
+                }
+            }
+            
+        }
+        
+    }
+    @objc func setStaticTexts() {
+        if (noOfQuestions == 1 || questionNumber == noOfQuestions) {
+            btnNext.setTitle(staticTexts["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
+        } else if (campaign.type == "SURVEY") {
+            if (followUpIterator == 2) {
+                btnNext.setTitle(staticTexts["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
+            } else {
+                btnNext.setTitle(staticTexts["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+            }
+        } else {
+           btnNext.setTitle(staticTexts["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+        }
+        
+        btnPrev.setTitle(staticTexts["CAMPAIGN_MODE_BACK_BUTTON_TEXT"], for: .normal)
+        lblPoweredBy.text = staticTexts["POWERED_BY"]
+        
+        if (btnStart != nil) {
+            btnStart.setTitle(staticTexts["CAMPAIGN_MODE_START_BUTTON_TEXT"], for: .normal)
+        }
     }
 }

@@ -8,16 +8,17 @@ class Custom : Codable {
 
 	enum CodingKeys: String, CodingKey {
 
-		case promoters
-		case detractors
-		case passives
+		case promoters = "promoters"
+		case detractors = "detractors"
+		case passives = "passives"
+        
 	}
 
 	required init(from decoder: Decoder) throws {
-		//let values = try decoder.container(keyedBy: CodingKeys.self)
-		promoters = try Promoters(from: decoder)
-		detractors = try Detractors(from: decoder)
-		passives = try Passives(from: decoder)
+		let values = try decoder.container(keyedBy: CodingKeys.self)
+		promoters = try values.decodeIfPresent(Promoters.self, forKey: .promoters)
+		detractors = try values.decodeIfPresent(Detractors.self, forKey: .detractors)
+		passives = try values.decodeIfPresent(Passives.self, forKey: .passives)
 	}
 
 }

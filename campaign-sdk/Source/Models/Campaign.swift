@@ -22,7 +22,7 @@ class  Campaign : Codable {
     let logo_url : String!
     let type : String!
     let welcome_message_enabled : Bool!
-    let thank_you_and_redirect_settings_translations : [Thank_you_and_redirect_settings_translations]!
+    let thank_you_and_redirect_settings_translations : [ThankYouTranslation]!
     let deleted : Bool!
     let biz_id : Int!
     let in_pack_channel : Bool!
@@ -109,7 +109,7 @@ class  Campaign : Codable {
         logo_url = try values.decodeIfPresent(String.self, forKey: .logo_url)
         type = try values.decodeIfPresent(String.self, forKey: .type)
         welcome_message_enabled = try values.decodeIfPresent(Bool.self, forKey: .welcome_message_enabled)
-        thank_you_and_redirect_settings_translations = try values.decodeIfPresent([Thank_you_and_redirect_settings_translations].self, forKey: .thank_you_and_redirect_settings_translations)
+        thank_you_and_redirect_settings_translations = try values.decodeIfPresent([ThankYouTranslation].self, forKey: .thank_you_and_redirect_settings_translations)
         deleted = try values.decodeIfPresent(Bool.self, forKey: .deleted)
         biz_id = try values.decodeIfPresent(Int.self, forKey: .biz_id)
         in_pack_channel = try values.decodeIfPresent(Bool.self, forKey: .in_pack_channel)

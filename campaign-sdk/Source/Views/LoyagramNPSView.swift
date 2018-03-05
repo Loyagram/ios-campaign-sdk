@@ -123,14 +123,14 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         txtQuestion.font = txtQuestion.font?.withSize(16)
         
         //TextView Question constraints
-        let txtQuestionTop = NSLayoutConstraint(item: txtQuestion, attribute: .bottom, relatedBy: .equal, toItem: npsContainer, attribute: .top, multiplier: 1.0, constant: -10.0)
+        let txtQuestionBottom = NSLayoutConstraint(item: txtQuestion, attribute: .bottom, relatedBy: .equal, toItem: npsContainer, attribute: .top, multiplier: 1.0, constant: -5.0)
         
         let txtQuestionLeading = NSLayoutConstraint(item: txtQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
         let txtQuestionTrailing = NSLayoutConstraint(item: txtQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
         let txtQuestionHeight = NSLayoutConstraint(item: txtQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0)
-        NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
+        NSLayoutConstraint.activate([txtQuestionBottom,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
         
     }
     
@@ -167,13 +167,13 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         
         //TextView Question constraints
-        let txtQuestionTop = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .bottom, relatedBy: .equal, toItem: followUpTableView, attribute: .top, multiplier: 1.0, constant: -5.0)
+        let txtQuestionTop = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .bottom, relatedBy: .equal, toItem: followUpTableView, attribute: .top, multiplier: 1.0, constant: 0.0)
         
         let txtQuestionLeading = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
         let txtQuestionTrailing = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let txtQuestionHeight = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        let txtQuestionHeight = NSLayoutConstraint(item: txtFollowUpQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0)
         
         NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
         
@@ -202,7 +202,6 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         let buttonWidth:CGFloat = 25.0
         //NPS Container Constraints
-        let containerTop = NSLayoutConstraint(item: npsContainer, attribute: .top, relatedBy: .equal, toItem: txtQuestion, attribute: .bottom, multiplier: 1.0, constant: 10.0)
         let containerWidth = NSLayoutConstraint(item: npsContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 295)
         
         let containerHeight = NSLayoutConstraint(item: npsContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: buttonWidth)
@@ -211,7 +210,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         let centerVertical = NSLayoutConstraint(item: npsContainer, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1, constant: 30)
         
-        NSLayoutConstraint.activate([containerTop, containerWidth, containerHeight, centerHorizontal, centerVertical])
+        NSLayoutConstraint.activate([containerWidth, containerHeight, centerHorizontal, centerVertical])
         
         
         var xPoint:CGFloat = 0
@@ -300,6 +299,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         txtFeedBackQuestion.translatesAutoresizingMaskIntoConstraints = false
         txtFeedBackQuestion.font = GlobalConstants.FONT_MEDIUM
         txtFeedBackQuestion.textAlignment = .center
+        txtFeedBackQuestion.isEditable = false
         
         feedbackTextView = UITextView()
         feedbackTextView.translatesAutoresizingMaskIntoConstraints = false
@@ -307,6 +307,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextView.layer.cornerRadius = 5
         feedbackTextView.layer.borderColor = UIColor.lightGray.cgColor
         feedbackTextView.delegate = self
+        feedbackTextView.autocorrectionType = .no
         
         let chkContainer = UIView()
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -322,6 +323,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextField.translatesAutoresizingMaskIntoConstraints = false
         feedbackTextField.isHidden = true
         feedbackTextField.delegate = self
+        feedbackTextField.autocorrectionType = .no
         
         scrollView.addSubview(txtFeedBackQuestion)
         scrollView.addSubview(feedbackTextField)
@@ -348,7 +350,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         let txtQuestionTrailing = NSLayoutConstraint(item: txtFeedBackQuestion, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let txtQuestionHeight = NSLayoutConstraint(item: txtFeedBackQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
+        let txtQuestionHeight = NSLayoutConstraint(item: txtFeedBackQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35.0)
         
         NSLayoutConstraint.activate([txtQuestionTop,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
         
@@ -361,7 +363,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         let textViewTrailing = NSLayoutConstraint(item: feedbackTextView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 40.0)
+        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35.0)
         
         NSLayoutConstraint.activate([textViewTop,textViewLeading, textViewTrailing, textViewHeight])
         
@@ -403,14 +405,17 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     
     override func layoutSubviews() {
         super.layoutSubviews()
-        let viewHeight = self.frame.height
-        let requiredHeight = CGFloat(followUpQuestion.labels.count) * 35
-        if(requiredHeight <= viewHeight - 50) {
-            tblHeight.constant = requiredHeight
-        } else {
-            tblHeight.constant = viewHeight - 60
-        }
+        
         if(campaignType == "NPS") {
+            //table View height
+            let viewHeight = self.frame.height
+            let requiredHeight = CGFloat(followUpQuestion.labels.count) * 35
+            if(requiredHeight <= viewHeight - 60) {
+                tblHeight.constant = requiredHeight
+            } else {
+                tblHeight.constant = viewHeight - 60
+            }
+            //scrollview height
             let scrollViewHeight:CGFloat = 150.0
             if(viewHeight <= scrollViewHeight) {
                 heightConsraint.constant = viewHeight
@@ -423,7 +428,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     
     @objc func setBorderForTextField() {
         let borderLayer:CALayer = CALayer()
-        let width = CGFloat(2.0)
+        let width = CGFloat(1.0)
         borderLayer.borderColor = UIColor.lightGray.cgColor
         borderLayer.frame = CGRect(x: 0, y: feedbackTextField.frame.size.height - width, width:  feedbackTextField.frame.size.width, height: feedbackTextField.frame.size.height)
         borderLayer.borderWidth = width
