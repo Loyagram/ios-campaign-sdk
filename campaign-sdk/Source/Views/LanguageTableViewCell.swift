@@ -16,7 +16,6 @@ class LanguageTableViewCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
         let labelHeight: CGFloat = 30
         let labelWidth: CGFloat = 110
-        
         lblLanguage = UILabel()
         lblLanguage.frame = CGRect(x: 10, y: 5, width: labelWidth, height:labelHeight)
         contentView.addSubview(lblLanguage)

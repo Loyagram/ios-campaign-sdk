@@ -10,7 +10,7 @@ import Foundation
 
 public class LoyagramCampaignManager {
     
-    @objc public class func showAsViewController(VC:UIViewController) {
+    @objc public class func showAsViewController(VC:UIViewController, campaignId: String) {
         let CVC:CampaignViewController = CampaignViewController()
         CVC.modalPresentationStyle = .fullScreen
         VC.present(CVC,animated: true, completion: nil)

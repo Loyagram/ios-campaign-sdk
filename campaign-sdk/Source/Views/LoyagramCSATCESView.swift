@@ -13,8 +13,18 @@ protocol LoyagramCSATCESDelegate: class {
     func setOptions()
 }
 
-class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDelegate, UITableViewDataSource {
-    
+class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate {
+    func languageChanged(lang: Language) {
+        self.currentLanguage = lang
+        setQuestion()
+        changeFollowUpLabelLanguage()
+        setFollowUpQuestion()
+        setFeedBackQuestion()
+        changeLabelLanguage()
+        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
+        chk.setNeedsDisplay()
+        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+    }
     
     var txtQuestion: UITextView!
     var txtFollowUpQuestion : UITextView!
@@ -38,8 +48,10 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     var scrollViewHeight: NSLayoutConstraint!
     var csatcesScrollView: UIScrollView!
     var isFollowUp : Bool!
+    var radioGroup = [LoyagramRadioButton]()
+    var staticTexts : StaticTextTranslation!
     
-    public init(frame: CGRect, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, isCSAT: Bool, campaignView:LoyagramCampaignView) {
+    public init(frame: CGRect, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, isCSAT: Bool, campaignView:LoyagramCampaignView, staticTexts: StaticTextTranslation) {
         super.init(frame: frame)
         currentQuestion = question
         self.followUpQuestion = followUpQuestion
@@ -48,9 +60,11 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         primaryColor = color
         self.isCSAT = isCSAT
         self.campaignView = campaignView
-        campaignView.buttonCampaignButtonDelegate = self
+        self.campaignView.campaignButtonDelegate =  self
+        self.campaignView.languageDelegate = self
         noOfRows = question.labels.count
         isFollowUp = false
+        self.staticTexts = staticTexts
         initCSATCESView()
         initFollowUpView()
         setQuestion()
@@ -210,7 +224,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextView.layer.cornerRadius = 5
         feedbackTextView.layer.borderColor = UIColor.lightGray.cgColor
         feedbackTextView.autocorrectionType = .no
-       // feedbackTextView.delegate = self
+        // feedbackTextView.delegate = self
         
         let chkContainer = UIView()
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -218,15 +232,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let rect = CGRect(x: 0, y: 0, width: 250, height: 35)
         chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
-        //chk.translatesAutoresizingMaskIntoConstraints = false
-        chk.setText(stringValue: "Submit E-mail")
+        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
         chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
         chkContainer.addSubview(chk)
         feedbackTextField = UITextField()
         feedbackTextField.translatesAutoresizingMaskIntoConstraints = false
         feedbackTextField.isHidden = true
         feedbackTextField.autocorrectionType = .no
-        //feedbackTextField.delegate = self
+        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
         
         csatcesScrollView.addSubview(txtFeedbackQuestion)
         csatcesScrollView.addSubview(feedbackTextField)
@@ -315,14 +328,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         } else {
             tblHeight.constant = viewHeight - 60
         }
-            //let scrollViewHeight:CGFloat = 150.0
-            if(viewHeight <= 150) {
-                scrollViewHeight.constant = viewHeight
-            } else {
-                scrollViewHeight.constant = 150.0
-            }
-            setBorderForTextField()
+        //let scrollViewHeight:CGFloat = 150.0
+        if(viewHeight <= 150) {
+            scrollViewHeight.constant = viewHeight
+        } else {
+            scrollViewHeight.constant = 150.0
         }
+        setBorderForTextField()
+    }
     
     @objc func setBorderForTextField() {
         let borderLayer:CALayer = CALayer()
@@ -452,7 +465,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         //radioButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
-        
+        radioLabel.tag = label.id
         //Radio button cosntraints
         
         let radioTop = NSLayoutConstraint(item: radioButton, attribute: .top, relatedBy: .equal, toItem: radioButtonContainer, attribute: .top, multiplier: 1.0, constant: 6.0)
@@ -491,6 +504,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let rect = CGRect(x: 0, y: 0, width: 220, height: 35)
         let chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
+        chk.tag = label.id
         checkBoxContainer.addSubview(chk)
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
         let labelTranslations = label.label_translations
@@ -506,5 +520,28 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     @objc func checkBoxAction (sender: LoyagramRadioButton) {
         
         
+    }
+    
+    @objc func changeLabelLanguage() {
+        
+        let questionLabels = currentQuestion.labels!
+        for ql in questionLabels {
+            let labelTranslations = ql.label_translations!
+            for labelTranslation in labelTranslations {
+                if (labelTranslation.language_code == currentLanguage.language_code) {
+                    if(currentQuestion.type == "SINGLE_SELECT") {
+                        if(self.viewWithTag(ql.id) != nil) {
+                            let radioLabel:UILabel = self.viewWithTag(ql.id) as! UILabel
+                            radioLabel.text = labelTranslation.text
+                        }
+                    }
+                    break
+                }
+            }
+        }
+        
+    }
+    @objc func changeFollowUpLabelLanguage() {
+        csatcesTableView.reloadData()
     }
 }

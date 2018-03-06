@@ -29,6 +29,10 @@
 		D344BC6D203C1F6600B5C235 /* LoyagramTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D344BC6C203C1F6600B5C235 /* LoyagramTextView.swift */; };
 		D345F6F32046A058002801E8 /* General.swift in Sources */ = {isa = PBXBuildFile; fileRef = D345F6F22046A058002801E8 /* General.swift */; };
 		D36D5332202DA26200258DCA /* LoyagramCampaignView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */; };
+		D3713731204EB0EC00047606 /* StaticTextTranslation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3713730204EB0EC00047606 /* StaticTextTranslation.swift */; };
+		D3713734204ECBF900047606 /* ApiBase.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3713733204ECBF900047606 /* ApiBase.swift */; };
+		D3713736204ECCF300047606 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3713735204ECCF300047606 /* Reachability.swift */; };
+		D3713738204ECEAB00047606 /* RequestQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3713737204ECEAB00047606 /* RequestQuestion.swift */; };
 		D38D18602045560F00505EC8 /* RatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38D185F2045560F00505EC8 /* RatingTableViewCell.swift */; };
 		D38D1862204571AD00505EC8 /* View.xib in Resources */ = {isa = PBXBuildFile; fileRef = D38D1861204571AD00505EC8 /* View.xib */; };
 		D3942247203D3F2100BEB61F /* LoyagramNPSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3942246203D3F2100BEB61F /* LoyagramNPSView.swift */; };
@@ -135,6 +139,10 @@
 		D344BC6C203C1F6600B5C235 /* LoyagramTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramTextView.swift; sourceTree = "<group>"; };
 		D345F6F22046A058002801E8 /* General.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = General.swift; sourceTree = "<group>"; };
 		D36D5331202DA26200258DCA /* LoyagramCampaignView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCampaignView.swift; sourceTree = "<group>"; };
+		D3713730204EB0EC00047606 /* StaticTextTranslation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticTextTranslation.swift; sourceTree = "<group>"; };
+		D3713733204ECBF900047606 /* ApiBase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApiBase.swift; sourceTree = "<group>"; };
+		D3713735204ECCF300047606 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
+		D3713737204ECEAB00047606 /* RequestQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestQuestion.swift; sourceTree = "<group>"; };
 		D38D185F2045560F00505EC8 /* RatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingTableViewCell.swift; sourceTree = "<group>"; };
 		D38D1861204571AD00505EC8 /* View.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = View.xib; sourceTree = "<group>"; };
 		D3942246203D3F2100BEB61F /* LoyagramNPSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramNPSView.swift; sourceTree = "<group>"; };
@@ -251,6 +259,7 @@
 		D36D532C202DA01700258DCA /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				D3713732204ECBE400047606 /* RestApi */,
 				D345F6F12046A02A002801E8 /* Utils */,
 				D3064ADA203178820015E35B /* Images */,
 				D36D5333202DA44A00258DCA /* UI */,
@@ -293,6 +302,7 @@
 				D340FCD1204D508100D87B5B /* ThankYouAndRedirectSetting.swift */,
 				D340FCD3204D51FB00D87B5B /* ThankYouTranslation.swift */,
 				D340FCD5204D532A00D87B5B /* CustomThankYouAndRedirectSettings.swift */,
+				D3713730204EB0EC00047606 /* StaticTextTranslation.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -329,6 +339,16 @@
 				D38D1861204571AD00505EC8 /* View.xib */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		D3713732204ECBE400047606 /* RestApi */ = {
+			isa = PBXGroup;
+			children = (
+				D3713733204ECBF900047606 /* ApiBase.swift */,
+				D3713735204ECCF300047606 /* Reachability.swift */,
+				D3713737204ECEAB00047606 /* RequestQuestion.swift */,
+			);
+			path = RestApi;
 			sourceTree = "<group>";
 		};
 		D3B07FF8202B0068009B046B = {
@@ -622,6 +642,7 @@
 				D3064AD9203158E20015E35B /* CampaignViewController.swift in Sources */,
 				D3064AE22031C0310015E35B /* LanguageTableViewCell.swift in Sources */,
 				D3D9F9A920347A250054F7FF /* Placeholders.swift in Sources */,
+				D3713738204ECEAB00047606 /* RequestQuestion.swift in Sources */,
 				D32AD9202035A0F400B3061D /* LabelTranslations.swift in Sources */,
 				D3D9F9AF20347A250054F7FF /* Language.swift in Sources */,
 				D33CFA24203A9F7E005E643A /* LoyagramCheckBox.swift in Sources */,
@@ -632,6 +653,7 @@
 				D36D5332202DA26200258DCA /* LoyagramCampaignView.swift in Sources */,
 				D3D9F9B320347A250054F7FF /* Settings.swift in Sources */,
 				D3C21B222032E44B002FB1EE /* LoyagramSurveyView.swift in Sources */,
+				D3713734204ECBF900047606 /* ApiBase.swift in Sources */,
 				D3D9F9A120347A250054F7FF /* Passives.swift in Sources */,
 				D3D9F9AD20347A250054F7FF /* Request_reason_settings.swift in Sources */,
 				D311575220498D050064598E /* Csat_settings.swift in Sources */,
@@ -641,10 +663,12 @@
 				D32AD91F2035A0F400B3061D /* Labels.swift in Sources */,
 				D38D18602045560F00505EC8 /* RatingTableViewCell.swift in Sources */,
 				D3D9F9A420347A250054F7FF /* QuestionTranslations.swift in Sources */,
+				D3713736204ECCF300047606 /* Reachability.swift in Sources */,
 				D3D9F9A720347A250054F7FF /* All.swift in Sources */,
 				D3D9F9B420347A250054F7FF /* SettingsTranslations.swift in Sources */,
 				D340FCD6204D532A00D87B5B /* CustomThankYouAndRedirectSettings.swift in Sources */,
 				D3D9F9A320347A250054F7FF /* Biz.swift in Sources */,
+				D3713731204EB0EC00047606 /* StaticTextTranslation.swift in Sources */,
 				D3D9F9AB20347A250054F7FF /* Widget.swift in Sources */,
 				D340FCD2204D508100D87B5B /* ThankYouAndRedirectSetting.swift in Sources */,
 				D33CF1B7204806080062EF01 /* TranslationSettings.swift in Sources */,

@@ -7,7 +7,13 @@
 //
 
 
-class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegate, UITableViewDataSource {
+class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate {
+    func languageChanged(lang: Language) {
+        currentLanguage = lang
+        setQuestion()
+        changeLabelLanguage()
+    }
+    
     
     func ratingChangedValue(ratingBar: LoyagramRatingBar) {
         
@@ -25,13 +31,16 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     var scrollViewContent: UIView!
     var currentRating : Int!
     var tblHeight : NSLayoutConstraint!
+    var campaignView: LoyagramCampaignView!
     
-    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor) {
+    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView:LoyagramCampaignView) {
         super.init(frame: frame)
-        currentQuestion = question
-        currentLanguage = currentLang
-        primaryLanguage = primaryLang
-        primaryColor = color
+        self.currentQuestion = question
+        self.currentLanguage = currentLang
+        self.primaryLanguage = primaryLang
+        self.primaryColor = color
+        self.campaignView = campaignView
+        self.campaignView.languageDelegate = self
         self.autoresizesSubviews = true
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         //self.layoutIfNeeded()
@@ -131,7 +140,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         ratingBar.translatesAutoresizingMaskIntoConstraints = false
         ratingBar.isEditable = true
         ratingBar.delegate = self
-        
+        ratingLabel.tag = label.id
         //ContentView constrinats
         
         let cellContent = UIView()
@@ -206,6 +215,22 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             tblHeight.constant = viewHeight - 60
         }
         //self.layoutIfNeeded()
+    }
+    
+    @objc func changeLabelLanguage() {
+        let questionLabels = currentQuestion.labels!
+        for ql in questionLabels {
+            let labelTranslations = ql.label_translations!
+            for labelTranslation in labelTranslations {
+                if (labelTranslation.language_code == currentLanguage.language_code) {
+                        if(self.viewWithTag(ql.id) != nil) {
+                            let radioLabel:UITextView = self.viewWithTag(ql.id) as! UITextView
+                            radioLabel.text = labelTranslation.text
+                    }
+                    break
+                }
+            }
+        }
     }
     
 }

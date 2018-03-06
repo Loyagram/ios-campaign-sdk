@@ -8,7 +8,13 @@
 
 import UIKit
 
-class LoyagramTextView: UIView, UIScrollViewDelegate {
+class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
+    func languageChanged(lang: Language) {
+        currentLanguage = lang
+        setQuestion()
+        setPlaceHolderText()
+    }
+    
     
     var txtQuestion: UITextView!
     var currentQuestion : Question!
@@ -21,13 +27,15 @@ class LoyagramTextView: UIView, UIScrollViewDelegate {
     var txtQuestionCenterY: NSLayoutConstraint!
     var textScrollView: UIScrollView!
     var scrollViewHeight: NSLayoutConstraint!
+    var staticTexts: StaticTextTranslation!
     
-    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor) {
+    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, staticTexts:StaticTextTranslation) {
         super.init(frame: frame)
         currentQuestion = question
         currentLanguage = currentLang
         primaryLanguage = primaryLang
         primaryColor = color
+        self.staticTexts = staticTexts
         initTextView()
         setQuestion()
         showTextView()
@@ -129,6 +137,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate {
                 textFieldHeight = 20
                 textField.keyboardType = .emailAddress
                 textField.autocorrectionType = .no
+                 textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
                 type = "textField"
             case "NUMBER":
                 textField = UITextField()
@@ -137,6 +146,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate {
                 textFieldHeight = 20
                 textField.keyboardType = .phonePad
                 textField.autocorrectionType = .no
+                 textField.placeholder = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]
                 type = "textField"
             default:
                 textView = UITextView()
@@ -205,6 +215,24 @@ class LoyagramTextView: UIView, UIScrollViewDelegate {
             textField.layer.addSublayer(borderLayer)
             textField.layer.masksToBounds = true
         }
+    }
+    
+    @objc func setPlaceHolderText(){
+        switch (fieldType) {
+        case "SHORT_ANSWER":
+            break
+        case "PARAGRAPH":
+            break
+        case "NUMBER":
+            textField.placeholder = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]
+            break;
+        case "EMAIL":
+            textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+            break;
+        default:
+            break;
+        }
+    
     }
     
 }

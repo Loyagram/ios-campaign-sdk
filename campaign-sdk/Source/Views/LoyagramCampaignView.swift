@@ -15,6 +15,12 @@ protocol LoyagramCampaignButtonDelegate: class {
     
 }
 
+protocol LoyagramLanguageDelegate: class {
+    
+    func languageChanged(lang: Language)
+    
+}
+
 public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCSATCESDelegate, LoyagramNPSDelegate {
     
     var headerView: UIView!
@@ -47,14 +53,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var noOfQuestions = 0
     var btnStart: UIButton!
     var startButtonContainerView: UIView!
-    var buttonCampaignButtonDelegate: LoyagramCampaignButtonDelegate!
+    var campaignButtonDelegate: LoyagramCampaignButtonDelegate!
+    var languageDelegate: LoyagramLanguageDelegate!
     var followUpIterator: Int = 0
     var bottomConstraint : NSLayoutConstraint!
     var topConstraint : NSLayoutConstraint!
     var mainView : UIView!
     var npsRating = 0
     let cescsatOption = "neutral"
-    var staticTexts = [String:String]()
+    var staticTexts = StaticTextTranslation()
+    var txtWelcomeMessage : UITextView!
+    var txtWelcomeTip : UITextView!
+    var activityIndicator: UIActivityIndicatorView!
     
     public override init(frame: CGRect){
         super.init(frame: frame)
@@ -496,30 +506,62 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnStart.layer.borderColor = primaryColor.cgColor
         btnStart.backgroundColor = primaryColor
         btnStart.setTitleColor(UIColor.white, for: .normal)
-        
+        initWelcomeView()
         //Start Button Container
         NSLayoutConstraint(item: startButtonContainerView, attribute: .leading,  relatedBy: .equal, toItem: contentView, attribute: .leading,  multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: startButtonContainerView, attribute: .trailing,  relatedBy: .equal, toItem: contentView, attribute: .trailing,  multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: startButtonContainerView, attribute: .centerY,  relatedBy: .equal, toItem: contentView, attribute: .centerY,  multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: startButtonContainerView, attribute: .centerX,  relatedBy: .equal, toItem: contentView, attribute: .centerX,  multiplier: 1.0, constant: 0.0).isActive = true
         
-        NSLayoutConstraint(item: startButtonContainerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 100.0).isActive = true
+        NSLayoutConstraint(item: startButtonContainerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 120.0).isActive = true
         
         //Start button Constraints
         let btnHeight = NSLayoutConstraint(item: btnStart, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 30.0)
         
         let btnWidth = NSLayoutConstraint(item: btnStart, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 80.0)
         
-        let btnCenterVertically = NSLayoutConstraint(item: btnStart, attribute: .centerY,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .centerY,  multiplier: 1.0, constant: 0.0)
+        let btnTop = NSLayoutConstraint(item: btnStart, attribute: .top,  relatedBy: .equal, toItem: txtWelcomeMessage, attribute: .bottom,  multiplier: 1.0, constant: 0.0)
         
         let btnCenterHorizontally = NSLayoutConstraint(item: btnStart, attribute: .centerX,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .centerX,  multiplier: 1.0, constant: 0.0)
         
-        NSLayoutConstraint.activate([btnWidth, btnHeight, btnCenterVertically, btnCenterHorizontally])
+        NSLayoutConstraint.activate([btnWidth, btnHeight, btnTop, btnCenterHorizontally])
         
         btnStart.addTarget(self, action: #selector(startButtonAction(sender:)), for: .touchUpInside)
         
+        
+        
     }
     
+    @objc func initWelcomeView() {
+        txtWelcomeMessage = UITextView()
+        txtWelcomeMessage.isEditable = false
+        txtWelcomeMessage.translatesAutoresizingMaskIntoConstraints = false
+        startButtonContainerView.addSubview(txtWelcomeMessage)
+        txtWelcomeMessage.textAlignment = .center
+        
+        txtWelcomeTip = UITextView()
+        txtWelcomeTip.isEditable = false
+        txtWelcomeTip.translatesAutoresizingMaskIntoConstraints = false
+        txtWelcomeTip.textAlignment = .center
+        startButtonContainerView.addSubview(txtWelcomeTip)
+        
+        txtWelcomeTip.font = GlobalConstants.FONT_MEDIUM
+        txtWelcomeMessage.font = GlobalConstants.FONT_MEDIUM
+
+        //Welcome message constrinats
+        NSLayoutConstraint(item: txtWelcomeMessage, attribute: .leading,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .leading,  multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: txtWelcomeMessage, attribute: .trailing,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .trailing,  multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: txtWelcomeMessage, attribute: .top,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .top,  multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: txtWelcomeMessage, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 50.0).isActive = true
+        
+        //Welcome Tip constrinats
+        NSLayoutConstraint(item: txtWelcomeTip, attribute: .leading,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .leading,  multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: txtWelcomeTip, attribute: .trailing,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .trailing,  multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: txtWelcomeTip, attribute: .bottom,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .bottom,  multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: txtWelcomeTip, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 40.0).isActive = true
+        
+        
+    }
     @objc func startButtonAction(sender: UIButton!) {
         startButtonContainerView.isHidden = true
         nextPrevButtonView.isHidden = false
@@ -573,7 +615,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     //MARK : Show Question Views
     @objc func showSurveyView() {
-        let campaignContentView = LoyagramSurveyView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
+        let campaignContentView = LoyagramSurveyView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self)
         campaignView.addSubview(campaignContentView)
         
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -588,7 +630,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     @objc func showRatingView() {
-        let campaignContentView = LoyagramRatingView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
+        let campaignContentView = LoyagramRatingView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self)
         campaignView.addSubview(campaignContentView)
         
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -605,7 +647,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func showNPSView() {
         let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:campaign.type, question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint)
+        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:campaign.type, question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint, staticTextes:staticTexts)
         campaignView.addSubview(campaignContentView)
         campaignContentView.isUserInteractionEnabled = true
         campaignContentView.delegate = self
@@ -621,7 +663,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     @objc func showTextView() {
-        let campaignContentView = LoyagramTextView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor)
+        let campaignContentView = LoyagramTextView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, staticTexts: staticTexts)
         campaignView.addSubview(campaignContentView)
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
@@ -636,7 +678,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func showCSATCESView(isCSAT: Bool) {
         let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramCSATCESView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self)
+        let campaignContentView = LoyagramCSATCESView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self, staticTexts: staticTexts)
         campaignContentView.delegate = self
         campaignView.addSubview(campaignContentView)
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -678,13 +720,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let campaignType = campaign.type
         if(campaignType != "SURVEY") {
             switch(followUpIterator) {
-            case 0: buttonCampaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
+            case 0: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             followUpIterator += 1
                 break
-            case 1: buttonCampaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
+            case 1: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             followUpIterator += 1
                 break
-            case 2: buttonCampaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
+            case 2: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             submitCampaign()
             followUpIterator = 0
             
@@ -726,10 +768,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             switch(followUpIterator) {
             case 0:
                 break
-            case 1: buttonCampaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
+            case 1: campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
             followUpIterator -= 1
                 break
-            case 2: buttonCampaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
+            case 2: campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
             followUpIterator -= 1
                 break
             default:
@@ -875,7 +917,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func changeLanguage () {
         getStaticTexts()
         setStaticTexts()
-        
+        if(languageDelegate != nil) {
+            languageDelegate.languageChanged(lang: currentLanguage)
+        }
     }
     
     @objc func showThankYou() {
@@ -1043,65 +1087,66 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //staticTexts = [String: String]()
         let staticTranslations = campaign.static_texts
         var staticText = String()
+        staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = ""
         for staticTranslation in staticTranslations! {
             if(currentLanguage.language_code == staticTranslation.language_code) {
                 staticText = staticTranslation.text
                 switch(staticTranslation.static_text_id) {
                 case "CAMPAIGN_MODE_BACK_BUTTON_TEXT":
-                    staticTexts["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = staticText
+                    staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = staticText
                     break;
                 case "CAMPAIGN_MODE_NEXT_BUTTON_TEXT":
-                    staticTexts["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] = staticText
+                    staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] = staticText
                     break;
                 case "CAMPAIGN_MODE_START_BUTTON_TEXT":
-                    staticTexts["CAMPAIGN_MODE_START_BUTTON_TEXT"] = staticText
+                    staticTexts.translation["CAMPAIGN_MODE_START_BUTTON_TEXT"] = staticText
                     break;
                 case "CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT":
-                    staticTexts["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] = staticText
+                    staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] = staticText
                     break;
                 case "CHANGE_SCORE_BUTTON_TEXT":
-                    staticTexts["CHANGE_SCORE_BUTTON_TEXT"] = staticText
+                    staticTexts.translation["CHANGE_SCORE_BUTTON_TEXT"] = staticText
                     break;
                 case "POWERED_BY":
-                    staticTexts["POWERED_BY"] = staticText
+                    staticTexts.translation["POWERED_BY"] = staticText
             
                     break;
                 case "SCORE_MESSAGE_TEXT":
-                    staticTexts["SCORE_MESSAGE_TEXT"] = staticText
+                    staticTexts.translation["SCORE_MESSAGE_TEXT"] = staticText
                    
                     break;
                 case "CAMPAIGN_MODE_EXIT_DIALOG_TEXT":
-                    staticTexts["CAMPAIGN_MODE_EXIT_DIALOG_TEXT"] = staticText
+                    staticTexts.translation["CAMPAIGN_MODE_EXIT_DIALOG_TEXT"] = staticText
                     break;
                 case "CAMPAIGN_MODE_ANSWER_REQUIRED_DIALOG_TEXT":
-                    staticTexts["CAMPAIGN_MODE_ANSWER_REQUIRED_DIALOG_TEXT"] = staticText
+                    staticTexts.translation["CAMPAIGN_MODE_ANSWER_REQUIRED_DIALOG_TEXT"] = staticText
                     break;
                 case "FOLLOW_UP_REQUEST_CHECKBOX_LABEL":
-                    staticTexts["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] = staticText
+                    staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] = staticText
                     break;
                 case "PLUGIN_DIALOGUE_BOX_ACTIVE_BUTTON_TEXT":
-                    staticTexts["PLUGIN_DIALOGUE_BOX_ACTIVE_BUTTON_TEXT"] = staticText
+                    staticTexts.translation["PLUGIN_DIALOGUE_BOX_ACTIVE_BUTTON_TEXT"] = staticText
                     break;
                 case "PLUGIN_DIALOGUE_BOX_PASSIVE_BUTTON_TEXT":
-                    staticTexts["PLUGIN_DIALOGUE_BOX_PASSIVE_BUTTON_TEXT"] = staticText
+                    staticTexts.translation["PLUGIN_DIALOGUE_BOX_PASSIVE_BUTTON_TEXT"] = staticText
                     break;
                 case "EMAIL_ADDRESS_PLACEHOLDER_TEXT":
-                    staticTexts["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] = staticText
+                    staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] = staticText
                     break;
                 case "INPUT_PLACEHOLDER_TEXT":
-                    staticTexts["INPUT_PLACEHOLDER_TEXT"] = staticText
+                    staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] = staticText
                     break;
                 case "VALIDATION_FAILED_TEXT":
-                    staticTexts["VALIDATION_FAILED_TEXT"] = staticText
+                    staticTexts.translation["VALIDATION_FAILED_TEXT"] = staticText
                     break;
                 case "WIDGET_WELCOME_TIP":
-                    staticTexts["WIDGET_WELCOME_TIP"] = staticText
+                    staticTexts.translation["WIDGET_WELCOME_TIP"] = staticText
                     break;
                 case "MANDATORY_QUESTION_TEXT":
-                    staticTexts["MANDATORY_QUESTION_TEXT"] = staticText
+                    staticTexts.translation["MANDATORY_QUESTION_TEXT"] = staticText
                     break;
                 case "EMAIL_NOT_VALID_TEXT":
-                    staticTexts["EMAIL_NOT_VALID_TEXT"] = staticText
+                    staticTexts.translation["EMAIL_NOT_VALID_TEXT"] = staticText
                     break;
                 default:
                     break;
@@ -1113,22 +1158,39 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func setStaticTexts() {
         if (noOfQuestions == 1 || questionNumber == noOfQuestions) {
-            btnNext.setTitle(staticTexts["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
         } else if (campaign.type == "SURVEY") {
             if (followUpIterator == 2) {
-                btnNext.setTitle(staticTexts["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
             } else {
-                btnNext.setTitle(staticTexts["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
             }
         } else {
-           btnNext.setTitle(staticTexts["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+           btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
         }
         
-        btnPrev.setTitle(staticTexts["CAMPAIGN_MODE_BACK_BUTTON_TEXT"], for: .normal)
-        lblPoweredBy.text = staticTexts["POWERED_BY"]
+        btnPrev.setTitle(staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"], for: .normal)
+        lblPoweredBy.text = staticTexts.translation["POWERED_BY"]
         
         if (btnStart != nil) {
-            btnStart.setTitle(staticTexts["CAMPAIGN_MODE_START_BUTTON_TEXT"], for: .normal)
+            btnStart.setTitle(staticTexts.translation["CAMPAIGN_MODE_START_BUTTON_TEXT"], for: .normal)
         }
+    }
+    
+    @objc func showActivityIndicator() {
+        
+        activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+        activityIndicator.color = primaryColor
+        activityIndicator.translatesAutoresizingMaskIntoConstraints = false
+        contentView.addSubview(activityIndicator)
+        //constrinats
+        
+        NSLayoutConstraint(item: activityIndicator, attribute: .centerX, relatedBy: .equal, toItem: contentView, attribute: .centerX, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: activityIndicator, attribute: .centerY, relatedBy: .equal, toItem: contentView, attribute: .centerY, multiplier: 1.0, constant: 0.0).isActive = true
+        activityIndicator.startAnimating()
+    }
+    
+    @objc func hideActivityIndicator() {
+        activityIndicator.stopAnimating()
     }
 }

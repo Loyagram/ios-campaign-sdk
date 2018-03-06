@@ -12,8 +12,20 @@ protocol LoyagramNPSDelegate: class {
     func setNPS()
 }
 
-class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCampaignButtonDelegate, UITextFieldDelegate, UITextViewDelegate {
-    
+class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCampaignButtonDelegate, UITextFieldDelegate, UITextViewDelegate, LoyagramLanguageDelegate {
+    func languageChanged(lang: Language) {
+        currentLanguage = lang
+        setQuestion()
+        setLikelyText()
+        if(campaignType == "NPS") {
+            setFeedBackQuestion()
+            setFollowUpQuestion()
+            changeLabelLanguage()
+            chk.text = staticTextes.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
+            chk.setNeedsDisplay()
+            feedbackTextField.placeholder = staticTextes.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+        }
+    }
     
     var txtQuestion : UITextView!
     var txtFollowUpQuestion : UITextView!
@@ -38,8 +50,11 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     var scrollViewBottomConstraint : NSLayoutConstraint!
     var bottomConstraint: NSLayoutConstraint!
     var heightConsraint: NSLayoutConstraint!
+    var staticTextes: StaticTextTranslation!
+    var txtLikely: UITextView!
+    var txtNotLikely: UITextView!
     
-    public init(frame: CGRect, campaignType: String, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView, bottomConstraint:NSLayoutConstraint) {
+    public init(frame: CGRect, campaignType: String, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView, bottomConstraint:NSLayoutConstraint, staticTextes: StaticTextTranslation) {
         super.init(frame: frame)
         currentQuestion = question
         self.campaignType = campaignType
@@ -49,11 +64,12 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         primaryColor = color
         self.campaignView = campaignView
         self.bottomConstraint = bottomConstraint
-        campaignView.buttonCampaignButtonDelegate = self
+        self.campaignView.campaignButtonDelegate = self
         self.autoresizesSubviews = true
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.isUserInteractionEnabled = true
-        
+        self.campaignView.languageDelegate = self
+        self.staticTextes = staticTextes
         initNPSView()
         addNPSButtons()
         setQuestion()
@@ -83,7 +99,6 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     }
     
     @objc func setFollowUpQuestion() {
-        
         let langCode = currentLanguage.language_code
         let questionTranslations = followUpQuestion.question_translations
         for questionTranslation in questionTranslations! {
@@ -99,7 +114,6 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let settingsTranslations = currentQuestion.settings_translations
         for sT in settingsTranslations! {
             if(sT.language_code == langCode) {
-                //txtFollowUpQuestion.text = questionTranslation.text
                 let requestReasonSettings = sT.text.settings.nps_settings.request_reason_settings
                 txtFeedBackQuestion.text = requestReasonSettings?.all.message
                 break
@@ -131,7 +145,6 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         let txtQuestionHeight = NSLayoutConstraint(item: txtQuestion, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50.0)
         NSLayoutConstraint.activate([txtQuestionBottom,txtQuestionLeading, txtQuestionTrailing, txtQuestionHeight])
-        
     }
     
     @objc func initFollowUpView() {
@@ -204,7 +217,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         //NPS Container Constraints
         let containerWidth = NSLayoutConstraint(item: npsContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 295)
         
-        let containerHeight = NSLayoutConstraint(item: npsContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: buttonWidth)
+        let containerHeight = NSLayoutConstraint(item: npsContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 50)
         
         let centerHorizontal = NSLayoutConstraint(item: npsContainer, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1, constant: 0)
         
@@ -212,6 +225,38 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         NSLayoutConstraint.activate([containerWidth, containerHeight, centerHorizontal, centerVertical])
         
+        txtLikely = UITextView()
+        txtLikely.translatesAutoresizingMaskIntoConstraints = false
+        txtLikely.font = GlobalConstants.FONT_MEDIUM
+        txtLikely.textAlignment = .right
+        //txtLikely.text = staticTextes.translation[""]
+        
+        txtNotLikely = UITextView()
+        txtNotLikely.translatesAutoresizingMaskIntoConstraints = false
+        txtNotLikely.font = GlobalConstants.FONT_MEDIUM
+        txtNotLikely.textAlignment = .left
+        //txtNotLikely.text = staticTextes.translation[""]
+        
+        npsContainer.addSubview(txtLikely)
+        npsContainer.addSubview(txtNotLikely)
+        setLikelyText()
+        //Likely constraints
+        
+        NSLayoutConstraint(item: txtLikely, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130).isActive = true
+        NSLayoutConstraint(item: txtLikely, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30).isActive = true
+        
+        NSLayoutConstraint(item: txtLikely, attribute: .right, relatedBy: .equal, toItem: npsContainer, attribute: .right, multiplier: 1.0, constant: 0).isActive = true
+        
+        NSLayoutConstraint(item: txtLikely, attribute: .bottom, relatedBy: .equal, toItem: npsContainer, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
+        
+        //NOt Likely constraints
+        
+        NSLayoutConstraint(item: txtNotLikely, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130).isActive = true
+        NSLayoutConstraint(item: txtNotLikely, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30).isActive = true
+        
+        NSLayoutConstraint(item: txtNotLikely, attribute: .left, relatedBy: .equal, toItem: npsContainer, attribute: .left, multiplier: 1.0, constant: 0).isActive = true
+        
+        NSLayoutConstraint(item: txtNotLikely, attribute: .bottom, relatedBy: .equal, toItem: npsContainer, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         
         var xPoint:CGFloat = 0
         for i in 0..<11 {
@@ -315,8 +360,8 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let rect = CGRect(x: 0, y: 0, width: 250, height: 35)
         chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
-        //chk.translatesAutoresizingMaskIntoConstraints = false
-        chk.setText(stringValue: "Submit E-mail")
+        chk.tag = 1001
+        chk.text = staticTextes.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
         chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
         chkContainer.addSubview(chk)
         feedbackTextField = UITextField()
@@ -324,6 +369,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextField.isHidden = true
         feedbackTextField.delegate = self
         feedbackTextField.autocorrectionType = .no
+        feedbackTextField.placeholder = staticTextes.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
         
         scrollView.addSubview(txtFeedBackQuestion)
         scrollView.addSubview(feedbackTextField)
@@ -485,6 +531,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
         checkBoxContainer.addSubview(chk)
+        chk.tag = label.id
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
         let labelTranslations = label.label_translations
         let langCode = currentLanguage.language_code
@@ -501,5 +548,20 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextField.resignFirstResponder()
         return true
     }
-    
+    @objc func setLikelyText() {
+        let settingsTransaltions = currentQuestion.settings_translations!
+        for st in settingsTransaltions {
+            if(st.language_code == currentLanguage.language_code) {
+                let npsSettings = st.text.settings.nps_settings!
+                    let widget = npsSettings.widget!
+                    txtLikely.text = widget.very_likely
+                    txtNotLikely.text = widget.not_likely
+                break
+                }
+            }
+        }
+    @objc func changeLabelLanguage() {
+        
+        followUpTableView.reloadData()
+    }
 }

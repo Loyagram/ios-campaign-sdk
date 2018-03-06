@@ -8,30 +8,38 @@
 
 import UIKit
 
-var surveyContainer: UIView!
-var txtQuestion: UITextView!
-var currentQuestion : Question!
-var currentLanguage : Language!
-var primaryLanguage : Language!
-var primaryColor : UIColor!
-var surveyTableView : UITableView!
-var tblHeight : NSLayoutConstraint!
-var radioGroup = [LoyagramRadioButton] ()
-
-class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegate, UITableViewDataSource {
+class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate {
+    var surveyContainer: UIView!
+    var txtQuestion: UITextView!
+    var currentQuestion : Question!
+    var currentLanguage : Language!
+    var primaryLanguage : Language!
+    var primaryColor : UIColor!
+    var surveyTableView : UITableView!
+    var tblHeight : NSLayoutConstraint!
+    var radioGroup = [LoyagramRadioButton] ()
+    var campaignView: LoyagramCampaignView!
+    func languageChanged(lang: Language) {
+        currentLanguage = lang
+        setQuestion()
+        changeLabelLanguage()
+        
+    }
+    
     
     func ratingChangedValue(ratingBar: LoyagramRatingBar) {
         print(ratingBar.rating)
     }
     
     
-    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor){
+    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView){
         super.init(frame: frame)
-        currentQuestion = question
-        currentLanguage = currentLang
-        primaryLanguage = primaryLang
-        primaryColor = color
-        
+        self.currentQuestion = question
+        self.currentLanguage = currentLang
+        self.primaryLanguage = primaryLang
+        self.primaryColor = color
+        self.campaignView = campaignView
+        self.campaignView.languageDelegate = self
         self.autoresizesSubviews = true
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         initSurveyView()
@@ -117,14 +125,14 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-       
+        
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
         
         
         cell.translatesAutoresizingMaskIntoConstraints = false
         
         cell.selectionStyle = .none
-       
+        
         //ContentView constrinats
         
         let cellContent = UIView()
@@ -144,15 +152,15 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         
         NSLayoutConstraint.activate([cellContentWidth, cellContentHeight, centerX, centerY])
         
-    
+        
         
         if(currentQuestion.type == "SINGLE_SELECT") {
             getSingleSelectCell(radioButtonContainer: cellContent, row: indexPath.row)
         } else {
             getMultiSelectCell(checkBoxContainer: cellContent, row: indexPath.row)
         }
-       
-
+        
+        
         return cell
     }
     
@@ -181,7 +189,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         //radioButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
-  
+        radioLabel.tag = label.id
         //Radio button cosntraints
         
         let radioTop = NSLayoutConstraint(item: radioButton, attribute: .top, relatedBy: .equal, toItem: radioButtonContainer, attribute: .top, multiplier: 1.0, constant: 6.0)
@@ -231,7 +239,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
                 break
             }
         }
-
+        
     }
     
     
@@ -242,7 +250,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         sender.isSelected = !sender.isSelected
     }
     
-  
+    
     @objc func checkBoxAction (sender: LoyagramRadioButton) {
         
         
@@ -258,6 +266,29 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             tblHeight.constant = requiredHeight
         } else {
             tblHeight.constant = viewHeight - 60
+        }
+    }
+    
+    @objc func changeLabelLanguage() {
+        let questionLabels = currentQuestion.labels!
+        for ql in questionLabels {
+            let labelTranslations = ql.label_translations!
+            for labelTranslation in labelTranslations {
+                if (labelTranslation.language_code == currentLanguage.language_code) {
+                    if(currentQuestion.type == "SINGLE_SELECT") {
+                        if(self.viewWithTag(ql.id) != nil) {
+                            let radioLabel:UILabel = self.viewWithTag(ql.id) as! UILabel
+                            radioLabel.text = labelTranslation.text
+                        }
+                    } else {
+                        if(self.viewWithTag(ql.id) != nil) {
+                            let checkBox:LoyagramCheckBox = viewWithTag(ql.id) as! LoyagramCheckBox
+                            checkBox.text = labelTranslation.text
+                        }
+                    }
+                    break
+                }
+            }  
         }
     }
     
