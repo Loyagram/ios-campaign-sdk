@@ -15,7 +15,7 @@ class LoyagramCheckBox: UIControl {
     var boxBorderColor: UIColor!
     var labelFont: UIFont!
     var labelTextColor: UIColor!
-    var label: UILabel!
+    var label: UITextView!
     var textIsSet: Bool!
     var primaryColor: UIColor!
     
@@ -65,14 +65,14 @@ class LoyagramCheckBox: UIControl {
         
         if(showTextLabel) {
             if(!textIsSet) {
-                label = UILabel(frame: CGRect(x: self.frame.minX + 35, y: 0, width: self.frame.size.width - 30, height: self.frame.size.height))
+                label = UITextView(frame: CGRect(x: self.frame.minX + 30, y: 0, width: self.frame.size.width - 30, height: self.frame.size.height))
                 label.backgroundColor = UIColor.clear
                 self.addSubview(label)
-                //label.textAlignment = .left
+                label.isEditable = false
+                label.font = GlobalConstants.FONT_MEDIUM
                 textIsSet  = true
             }
             
-            label.font = labelFont;
             label.textColor = labelTextColor;
             label.text = text
             let boxPath = UIBezierPath(roundedRect: CGRect(x: 2, y: 7, width: 20, height: 20), cornerRadius: 2)

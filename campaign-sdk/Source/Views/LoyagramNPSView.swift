@@ -357,7 +357,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let chkContainer = UIView()
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        let rect = CGRect(x: 0, y: 0, width: 250, height: 35)
+        let rect = CGRect(x: 0, y: 0, width: 320, height: 35)
         chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
         chk.tag = 1001
@@ -409,7 +409,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         let textViewTrailing = NSLayoutConstraint(item: feedbackTextView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35.0)
+        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 65.0)
         
         NSLayoutConstraint.activate([textViewTop,textViewLeading, textViewTrailing, textViewHeight])
         
@@ -419,8 +419,9 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let chkTop = NSLayoutConstraint(item: chkContainer, attribute: .top, relatedBy: .equal, toItem: feedbackTextView, attribute: .bottom, multiplier: 1.0, constant: 5.0)
         
         let chkLeading = NSLayoutConstraint(item: chkContainer, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
+        //let chkTrailing = NSLayoutConstraint(item: chkContainer, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 10.0)
         
-        let chkWidth = NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 280.0)
+        let chkWidth = NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 320.0)
         let chkHeight = NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20.0)
         
         NSLayoutConstraint.activate([chkTop,chkLeading, chkWidth, chkHeight])
@@ -462,7 +463,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
                 tblHeight.constant = viewHeight - 60
             }
             //scrollview height
-            let scrollViewHeight:CGFloat = 150.0
+            let scrollViewHeight:CGFloat = 180.0
             if(viewHeight <= scrollViewHeight) {
                 heightConsraint.constant = viewHeight
             } else {

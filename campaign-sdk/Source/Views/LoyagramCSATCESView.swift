@@ -68,7 +68,6 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         initCSATCESView()
         initFollowUpView()
         setQuestion()
-        
         initFeedbackView()
     }
     
@@ -128,8 +127,6 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         csatcesTableView.delegate = self
         csatcesTableView.dataSource = self
         csatcesTableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
-        
-        
         csatcesTableView.isScrollEnabled = true
         csatcesTableView.bounces = false
         csatcesTableView.separatorStyle = .none
@@ -229,7 +226,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let chkContainer = UIView()
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
         
-        let rect = CGRect(x: 0, y: 0, width: 250, height: 35)
+        let rect = CGRect(x: 0, y: 0, width: 320, height: 35)
         chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
         chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
@@ -279,7 +276,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
         let textViewTrailing = NSLayoutConstraint(item: feedbackTextView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
-        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 35.0)
+        let textViewHeight = NSLayoutConstraint(item: feedbackTextView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 65.0)
         
         NSLayoutConstraint.activate([textViewTop,textViewLeading, textViewTrailing, textViewHeight])
         
@@ -290,7 +287,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
         let chkLeading = NSLayoutConstraint(item: chkContainer, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
-        let chkWidth = NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 280.0)
+        let chkWidth = NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 320.0)
         let chkHeight = NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20.0)
         
         NSLayoutConstraint.activate([chkTop,chkLeading, chkWidth, chkHeight])
@@ -319,6 +316,8 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextField.isHidden = !feedbackTextField.isHidden
     }
     
+    
+    
     override func layoutSubviews() {
         super.layoutSubviews()
         let viewHeight = self.frame.height
@@ -329,10 +328,10 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             tblHeight.constant = viewHeight - 60
         }
         //let scrollViewHeight:CGFloat = 150.0
-        if(viewHeight <= 150) {
+        if(viewHeight <= 180) {
             scrollViewHeight.constant = viewHeight
         } else {
-            scrollViewHeight.constant = 150.0
+            scrollViewHeight.constant = 180.0
         }
         setBorderForTextField()
     }
@@ -347,6 +346,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextField.layer.masksToBounds = true
         
     }
+    
     
     
     @objc func radioButtonAction (sender: LoyagramRadioButton) {

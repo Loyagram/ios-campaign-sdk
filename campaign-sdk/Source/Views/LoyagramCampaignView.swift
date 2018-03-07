@@ -81,7 +81,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let bundle = Bundle(for: type(of: self))
         btnClose.setImage(UIImage(named: "close.png", in: bundle, compatibleWith: nil), for:.normal)
-        imageViewBrand.image = UIImage(named: "apple.png", in: bundle, compatibleWith: nil)
         btnLanguage.setImage(UIImage(named: "drop-down-arrow.png", in: bundle, compatibleWith: nil), for: .normal)
         btnLanguage.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 10)
         btnLanguage.imageEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
@@ -94,6 +93,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         tableViewLanguage.tableFooterView = UIView()
         tableViewLanguage.layer.zPosition = 1
         currentLang = 0
+        showActivityIndicator()
+        hideCampaignView()
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -175,7 +176,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         //Hardcoded texts need to change once api request implemented
         
-        //lblBrand.text = "Loyagram"
         lblQuestionCount.text = " "
         //btnLanguage.setTitle("English", for: .normal)
         
@@ -263,7 +263,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let imgBrandCenterHorizontally = NSLayoutConstraint(item: imageViewBrand, attribute: .centerX, relatedBy: .equal, toItem: brandView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let imgBrandTop =  NSLayoutConstraint(item: imageViewBrand, attribute: .top, relatedBy: .equal,  toItem: brandView,  attribute: .top, multiplier: 1.0, constant: -30.0)
+        let imgBrandTop =  NSLayoutConstraint(item: imageViewBrand, attribute: .top, relatedBy: .equal,  toItem: brandView,  attribute: .top, multiplier: 1.0, constant: -105.0)
         
         
         let imgBrandWidth = NSLayoutConstraint(item: imageViewBrand, attribute: .width, relatedBy: .equal,  toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
@@ -282,8 +282,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .bottom, relatedBy: .equal, toItem: brandView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
-        NSLayoutConstraint.activate([lblBrandWidth, lblBrandHeight, lblBrandCenterHorizontally, lblBrandTop])
-        
+        NSLayoutConstraint.activate([lblBrandWidth, lblBrandHeight, lblBrandCenterHorizontally, lblBrandTop]) 
     }
     
     
@@ -314,12 +313,12 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //Table view cosntraints
         let containerHeight = NSLayoutConstraint(item: tableViewContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0)
         
-        let containerWidth = NSLayoutConstraint(item: tableViewContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0)
+        let containerWidth = NSLayoutConstraint(item: tableViewContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 120.0)
         
         
         let containerTop =  NSLayoutConstraint(item: tableViewContainer, attribute: .top, relatedBy: .equal, toItem: btnLanguage, attribute: .top, multiplier: 1.0, constant: 0.0)
         
-        let containerLeading = NSLayoutConstraint(item: tableViewContainer, attribute: .leading, relatedBy: .equal, toItem: headerView, attribute: .leading, multiplier: 1.0, constant: 15.0)
+        let containerLeading = NSLayoutConstraint(item: tableViewContainer, attribute: .leading, relatedBy: .equal, toItem: headerView, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
         NSLayoutConstraint.activate([containerHeight,containerWidth, containerTop, containerLeading])
         
@@ -547,7 +546,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         txtWelcomeTip.font = GlobalConstants.FONT_MEDIUM
         txtWelcomeMessage.font = GlobalConstants.FONT_MEDIUM
-
+        
         //Welcome message constrinats
         NSLayoutConstraint(item: txtWelcomeMessage, attribute: .leading,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .leading,  multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: txtWelcomeMessage, attribute: .trailing,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .trailing,  multiplier: 1.0, constant: 0.0).isActive = true
@@ -573,9 +572,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         currentQuestion = campaign.questions[questionNumber-1]
         let campaignType = campaign.type
         if(campaignType != nil) {
-            if(campaignType == "CSAT" ) {
+            if(campaignType == "SAT" ) {
                 showCSATCESView(isCSAT: true)
-            } else if(campaignType == "CES") {
+            } else if(campaignType == "ES") {
                 showCSATCESView(isCSAT: false)
             } else if (campaignType == "NPS") {
                 showNPSView()
@@ -693,6 +692,28 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     
+    
+    @objc func hideCampaignView() {
+        btnLanguage.isHidden = true
+        brandView.isHidden = true
+        lblQuestionCount.isHidden = true
+        lblPoweredBy.isHidden = true
+        nextPrevButtonView.isHidden = true
+        startButtonContainerView.isHidden = true
+        
+    }
+    @objc func showCampaignView() {
+        
+        brandView.isHidden = false
+        lblPoweredBy.isHidden = false
+        startButtonContainerView.isHidden = false
+        if(campaign.type == "SURVEY") {
+            lblQuestionCount.isHidden = false
+        }
+        if(languages.count > 1) {
+            btnLanguage.isHidden = false
+        }
+    }
     //MARK :- Question Navigation
     
     func setNPS() {
@@ -718,13 +739,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func showNextQuestion() {
         let campaignType = campaign.type
-        if(campaignType != "SURVEY") {
+        btnNext.backgroundColor = primaryColor
+        btnNext.setTitleColor(UIColor.white, for: .normal)
+        btnPrev.setTitleColor(primaryColor, for: .normal)
+        btnPrev.backgroundColor = UIColor.white
+        if(campaignType != "SURVEY" && campaignButtonDelegate != nil) {
             switch(followUpIterator) {
             case 0: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             followUpIterator += 1
                 break
             case 1: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             followUpIterator += 1
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
                 break
             case 2: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             submitCampaign()
@@ -739,21 +765,19 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         }
             
         else {
-            if(questionNumber == noOfQuestions) {
+            questionNumber += 1
+            if(btnNext.titleLabel?.text == staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"]) {
                 submitCampaign()
                 return
             }
-            btnNext.backgroundColor = primaryColor
-            btnNext.setTitleColor(UIColor.white, for: .normal)
-            btnPrev.setTitleColor(primaryColor, for: .normal)
-            btnPrev.backgroundColor = UIColor.white
-            questionNumber += 1
-            if(questionNumber <= noOfQuestions) {
-                let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
-                lblQuestionCount.text = questionCount
-                removeSubViews(view:self.campaignView)
-                showQuestion()
+            if(questionNumber == noOfQuestions) {
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
             }
+            
+            let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
+            lblQuestionCount.text = questionCount
+            removeSubViews(view:self.campaignView)
+            showQuestion()
         }
     }
     
@@ -764,6 +788,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func showPrevQuestion() {
         let campaignType = campaign.type
+        btnPrev.backgroundColor = primaryColor
+        btnPrev.setTitleColor(UIColor.white, for: .normal)
+        btnNext.setTitleColor(primaryColor, for: .normal)
+        btnNext.backgroundColor = UIColor.white
         if(campaignType != "SURVEY") {
             switch(followUpIterator) {
             case 0:
@@ -773,6 +801,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             case 2: campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
             followUpIterator -= 1
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
                 break
             default:
                 break
@@ -783,25 +812,27 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             if(questionNumber < 2) {
                 return
             }
-            btnPrev.backgroundColor = primaryColor
-            btnPrev.setTitleColor(UIColor.white, for: .normal)
-            btnNext.setTitleColor(primaryColor, for: .normal)
-            btnNext.backgroundColor = UIColor.white
+            if(questionNumber == noOfQuestions) {
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+            }
             questionNumber -= 1
             let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
             lblQuestionCount.text = questionCount
-            for subView in self.campaignView.subviews as [UIView] {
-                subView.removeFromSuperview()
-                showQuestion()
-            }
+            removeSubViews(view:self.campaignView)
+            showQuestion()
         }
     }
     
     @objc func submitCampaign() {
         
         showThankYou()
+        resetCampaign()
         //self.viewController.dismiss(animated: true, completion: nil)
         
+    }
+    
+    @objc func resetCampaign() {
+        followUpIterator = 0
     }
     @objc func closeButtonAction(sender:UIButton!) {
         closeCampaignController()
@@ -871,6 +902,56 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         tableViewLanguage.reloadData()
         getStaticTexts()
         setStaticTexts()
+        hideActivityIndicator()
+        showCampaignView()
+        if(Reachability.isConnectedToNetwork()) {
+        getDataFromUrl(url: URL(string:campaign.logo_url)!, completion: ({ (data, response, error) in
+            if(data != nil)  {
+                DispatchQueue.main.async() {
+                    let image = UIImage(data: data!)
+                    self.imageViewBrand.image = image
+                    self.lblBrand.text = campaign.brand_title
+                }
+            }
+            
+        }))
+        } else {
+             self.lblBrand.text = campaign.brand_title
+        }
+    }
+    
+    func campaignErrorHandler() {
+        hideActivityIndicator()
+        showAlert()
+    }
+    func showAlert() {
+        if(viewController != nil) {
+            let message = "Something unexpected happened. Please try again after sometime!!! "
+            let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
+            viewController.present(alert, animated: true)
+            
+            let okButton = UIAlertAction(title: "OK", style: .default, handler: {(_ action: UIAlertAction) -> Void in
+                alert.dismiss(animated: true)
+                
+            })
+            alert.addAction(okButton)
+            // duration in seconds
+            let duration: Double = 5
+            
+            DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + duration) {
+                alert.dismiss(animated: true)
+            }
+        }
+    }
+    
+    func getDataFromUrl(url: URL, completion: @escaping (Data?, URLResponse?, Error?) -> ()) {
+        let sessionConfig = URLSessionConfiguration.default
+        sessionConfig.timeoutIntervalForRequest = 15.0
+        sessionConfig.timeoutIntervalForResource = 15.0
+        let session = URLSession(configuration: sessionConfig)
+        session.dataTask(with: url) { data, response, error in
+            completion(data, response, error)
+            }.resume()
     }
     
     func loadLanguages() {
@@ -984,10 +1065,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         case "NPS":
             strThankYou = getNPSThankYou();
             break;
-        case "CSAT":
+        case "SAT":
             strThankYou = getCSATCESThankYou();
             break;
-        case "CES":
+        case "ES":
             strThankYou = getCSATCESThankYou();
             break;
         case "SURVEY":
@@ -1109,11 +1190,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                     break;
                 case "POWERED_BY":
                     staticTexts.translation["POWERED_BY"] = staticText
-            
+                    
                     break;
                 case "SCORE_MESSAGE_TEXT":
                     staticTexts.translation["SCORE_MESSAGE_TEXT"] = staticText
-                   
+                    
                     break;
                 case "CAMPAIGN_MODE_EXIT_DIALOG_TEXT":
                     staticTexts.translation["CAMPAIGN_MODE_EXIT_DIALOG_TEXT"] = staticText
@@ -1166,7 +1247,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
             }
         } else {
-           btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
         }
         
         btnPrev.setTitle(staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"], for: .normal)

@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     var radioGroupView: UIView!
     @IBOutlet var mainView: UIView!
     var rdbGroup: [LGRadioButton]!
+    var campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -21,7 +22,7 @@ class ViewController: UIViewController {
         //radioGroupView.backgroundColor = UIColor.red
         radioGroupView.translatesAutoresizingMaskIntoConstraints = false;
         mainView.addSubview(radioGroupView)
-
+        
         setRdbLayoutConstaints()
         
         initRadioButtonView()
@@ -33,9 +34,9 @@ class ViewController: UIViewController {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-
-    @objc func setRdbLayoutConstaints() {
     
+    @objc func setRdbLayoutConstaints() {
+        
         //Leading
         let leadingConstraint  = NSLayoutConstraint(item: radioGroupView, attribute: NSLayoutAttribute.leading, relatedBy: NSLayoutRelation.greaterThanOrEqual, toItem: self.view, attribute: NSLayoutAttribute.leading, multiplier: 1, constant: 5)
         
@@ -44,29 +45,29 @@ class ViewController: UIViewController {
         
         //top
         let topConstraint = NSLayoutConstraint(item: radioGroupView,
-                                     attribute: .top,
-                                     relatedBy: .equal,
-                                     toItem: self.view,
-                                     attribute: .top,
-                                     multiplier: 1.0,
-                                     constant: 40.0)
+                                               attribute: .top,
+                                               relatedBy: .equal,
+                                               toItem: self.view,
+                                               attribute: .top,
+                                               multiplier: 1.0,
+                                               constant: 40.0)
         //height
         let heightConstraint = NSLayoutConstraint(item: radioGroupView,
-                                        attribute: .height,
-                                        relatedBy: .equal,
-                                        toItem: nil,
-                                        attribute: .notAnAttribute,
-                                        multiplier: 1.0,
-                                        constant: 210.0)
-        
-        //height
-        let widthConstraint = NSLayoutConstraint(item: radioGroupView,
-                                                  attribute: .width,
+                                                  attribute: .height,
                                                   relatedBy: .equal,
                                                   toItem: nil,
                                                   attribute: .notAnAttribute,
                                                   multiplier: 1.0,
-                                                  constant: 300.0)
+                                                  constant: 210.0)
+        
+        //height
+        let widthConstraint = NSLayoutConstraint(item: radioGroupView,
+                                                 attribute: .width,
+                                                 relatedBy: .equal,
+                                                 toItem: nil,
+                                                 attribute: .notAnAttribute,
+                                                 multiplier: 1.0,
+                                                 constant: 300.0)
         
         //centerHorizontal
         let centerHorizontally = NSLayoutConstraint(item: radioGroupView,
@@ -76,15 +77,30 @@ class ViewController: UIViewController {
                                                     attribute: .centerX,
                                                     multiplier: 1.0,
                                                     constant: 0.0)
-
+        
         
         NSLayoutConstraint.activate([leadingConstraint,trailingConstraint, topConstraint, widthConstraint, heightConstraint, centerHorizontally])
-    
+        
     }
     @objc func manualAction (sender: LGRadioButton) {
         
         rdbGroup.forEach { $0.isSelected = false}
         sender.isSelected = !sender.isSelected
+        switch(sender.tag) {
+        case 101:
+            campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
+            break
+        case 102:
+            campaignId = "1020-80c64203-5484-4a52-b41d-5ef485cc80f1"
+            break
+        case 103:
+            campaignId = "1020-2d06b020-aeb6-472b-8321-556f3d4ec510"
+            break
+        case 104:
+            campaignId = "1020-193be5eb-870d-4d27-971a-268cff4add88"
+            break
+        default: break
+        }
     }
     
     @objc func initRadioButtonView() {
@@ -93,22 +109,23 @@ class ViewController: UIViewController {
         rdbNPS.tag = 101
         let lblNPS = UILabel(frame: CGRect(x:25, y:10, width:40, height:30))
         lblNPS.text = "NPS"
+        rdbNPS.isSelected = true
         
         let rdbSurvey = LGRadioButton(frame: CGRect(x: 70, y: 10, width: 20, height: 30))
         rdbSurvey.addTarget(self, action: #selector(manualAction(sender:)), for: .touchUpInside)
-        rdbNPS.tag = 102
+        rdbSurvey.tag = 102
         let lblSurvey = UILabel(frame: CGRect(x:95, y:10, width:60, height:30))
         lblSurvey.text = "Survey"
         
         let rdbCSAT = LGRadioButton(frame: CGRect(x: 160, y: 10, width: 20, height: 30))
         rdbCSAT.addTarget(self, action: #selector(manualAction(sender:)), for: .touchUpInside)
-        rdbNPS.tag = 103
+        rdbCSAT.tag = 103
         let lblCSAT = UILabel(frame: CGRect(x:185, y:10, width:50, height:30))
         lblCSAT.text = "CSAT"
         
         let rdbCES = LGRadioButton(frame: CGRect(x: 240, y: 10, width: 20, height: 30))
         rdbCES.addTarget(self, action: #selector(manualAction(sender:)), for: .touchUpInside)
-        rdbNPS.tag = 104
+        rdbCES.tag = 104
         let lblCES = UILabel(frame: CGRect(x:265, y:10, width:40, height:30))
         lblCES.text = "CES"
         rdbGroup = [rdbNPS,rdbSurvey, rdbCSAT, rdbCES]
@@ -129,7 +146,7 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self)
+        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
     }
     
     @objc func dialogButtonAction(sender:UIButton!) {
@@ -138,7 +155,7 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self)
+        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
     }
     @objc func slideButtonAction(sender:UIButton!) {
         
@@ -146,7 +163,7 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self)
+        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
     }
     
     @objc func previewButtonAction(sender:UIButton!) {
@@ -155,7 +172,7 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self)
+        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
     }
     
     @objc func initButtonView() {
@@ -166,10 +183,10 @@ class ViewController: UIViewController {
         btnVC.layer.borderWidth = 2
         btnVC.layer.borderColor = color.cgColor
         btnVC.setTitleColor(color, for: .normal)
-    
+        
         btnVC.addTarget(self, action: #selector(controllerButtonAction(sender:)), for: .touchUpInside)
-        
-        
+//        btnVC.titleLabel?.font = UI
+        print("fonts \(UIFont.familyNames)")
         let btnDialog = UIButton(type: .system)
         btnDialog.setTitle("SHOW AS DIALOG", for: .normal)
         btnDialog.layer.cornerRadius = 2
@@ -210,51 +227,14 @@ class ViewController: UIViewController {
         
         //top
         let btnVCTop = NSLayoutConstraint(item: btnVC,
-                                               attribute: .top,
-                                               relatedBy: .equal,
-                                               toItem: radioGroupView,
-                                               attribute: .top,
-                                               multiplier: 1.0,
-                                               constant: 60.0)
-        //height
-        let btnVCHeight = NSLayoutConstraint(item: btnVC,
-                                                  attribute: .height,
-                                                  relatedBy: .equal,
-                                                  toItem: nil,
-                                                  attribute: .notAnAttribute,
-                                                  multiplier: 1.0,
-                                                  constant: 30.0)
-        
-        //height
-        let btnVCwidth = NSLayoutConstraint(item: btnVC,
-                                                  attribute: .width,
-                                                  relatedBy: .equal,
-                                                  toItem: nil,
-                                                  attribute: .notAnAttribute,
-                                                  multiplier: 1.0,
-                                                  constant: 270.0)
-        
-        //centerHorizontal
-        let btnVCCenterHorizontally = NSLayoutConstraint(item: btnVC,
-                                                    attribute: .centerX,
-                                                    relatedBy: .equal,
-                                                    toItem: radioGroupView,
-                                                    attribute: .centerX,
-                                                    multiplier: 1.0,
-                                                    constant: 0.0)
-        
-        NSLayoutConstraint.activate([btnVCTop, btnVCHeight, btnVCwidth, btnVCCenterHorizontally])
-        
-        //top
-        let btnDialogTop = NSLayoutConstraint(item: btnDialog,
                                           attribute: .top,
                                           relatedBy: .equal,
                                           toItem: radioGroupView,
                                           attribute: .top,
                                           multiplier: 1.0,
-                                          constant: 100.0)
+                                          constant: 60.0)
         //height
-        let btnDialogHeight = NSLayoutConstraint(item: btnDialog,
+        let btnVCHeight = NSLayoutConstraint(item: btnVC,
                                              attribute: .height,
                                              relatedBy: .equal,
                                              toItem: nil,
@@ -262,8 +242,8 @@ class ViewController: UIViewController {
                                              multiplier: 1.0,
                                              constant: 30.0)
         
-        //Weight
-        let btnDialogWidth = NSLayoutConstraint(item: btnDialog,
+        //height
+        let btnVCwidth = NSLayoutConstraint(item: btnVC,
                                             attribute: .width,
                                             relatedBy: .equal,
                                             toItem: nil,
@@ -272,7 +252,7 @@ class ViewController: UIViewController {
                                             constant: 270.0)
         
         //centerHorizontal
-        let btnDialogCenterHorizontally = NSLayoutConstraint(item: btnDialog,
+        let btnVCCenterHorizontally = NSLayoutConstraint(item: btnVC,
                                                          attribute: .centerX,
                                                          relatedBy: .equal,
                                                          toItem: radioGroupView,
@@ -280,18 +260,18 @@ class ViewController: UIViewController {
                                                          multiplier: 1.0,
                                                          constant: 0.0)
         
-        NSLayoutConstraint.activate([btnDialogTop, btnDialogHeight, btnDialogWidth, btnDialogCenterHorizontally])
+        NSLayoutConstraint.activate([btnVCTop, btnVCHeight, btnVCwidth, btnVCCenterHorizontally])
         
         //top
-        let btnSlideBottomTop = NSLayoutConstraint(item: btnSlideBottom,
+        let btnDialogTop = NSLayoutConstraint(item: btnDialog,
                                               attribute: .top,
                                               relatedBy: .equal,
                                               toItem: radioGroupView,
                                               attribute: .top,
                                               multiplier: 1.0,
-                                              constant: 140.0)
+                                              constant: 100.0)
         //height
-        let btnSlideBottomHeight = NSLayoutConstraint(item: btnSlideBottom,
+        let btnDialogHeight = NSLayoutConstraint(item: btnDialog,
                                                  attribute: .height,
                                                  relatedBy: .equal,
                                                  toItem: nil,
@@ -299,8 +279,8 @@ class ViewController: UIViewController {
                                                  multiplier: 1.0,
                                                  constant: 30.0)
         
-        //weight
-        let btnSlideBottomWidth = NSLayoutConstraint(item: btnSlideBottom,
+        //Weight
+        let btnDialogWidth = NSLayoutConstraint(item: btnDialog,
                                                 attribute: .width,
                                                 relatedBy: .equal,
                                                 toItem: nil,
@@ -309,7 +289,7 @@ class ViewController: UIViewController {
                                                 constant: 270.0)
         
         //centerHorizontal
-        let btnSlideBottomCenterHorizontally = NSLayoutConstraint(item: btnSlideBottom,
+        let btnDialogCenterHorizontally = NSLayoutConstraint(item: btnDialog,
                                                              attribute: .centerX,
                                                              relatedBy: .equal,
                                                              toItem: radioGroupView,
@@ -317,18 +297,18 @@ class ViewController: UIViewController {
                                                              multiplier: 1.0,
                                                              constant: 0.0)
         
-        NSLayoutConstraint.activate([btnSlideBottomTop, btnSlideBottomHeight, btnSlideBottomWidth, btnSlideBottomCenterHorizontally])
+        NSLayoutConstraint.activate([btnDialogTop, btnDialogHeight, btnDialogWidth, btnDialogCenterHorizontally])
         
         //top
-        let btnPreviewTop = NSLayoutConstraint(item: btnPreview,
+        let btnSlideBottomTop = NSLayoutConstraint(item: btnSlideBottom,
                                                    attribute: .top,
                                                    relatedBy: .equal,
                                                    toItem: radioGroupView,
                                                    attribute: .top,
                                                    multiplier: 1.0,
-                                                   constant: 180.0)
+                                                   constant: 140.0)
         //height
-        let btnPreviewHeight = NSLayoutConstraint(item: btnPreview,
+        let btnSlideBottomHeight = NSLayoutConstraint(item: btnSlideBottom,
                                                       attribute: .height,
                                                       relatedBy: .equal,
                                                       toItem: nil,
@@ -337,7 +317,7 @@ class ViewController: UIViewController {
                                                       constant: 30.0)
         
         //weight
-        let btnPreviewWidth = NSLayoutConstraint(item: btnPreview,
+        let btnSlideBottomWidth = NSLayoutConstraint(item: btnSlideBottom,
                                                      attribute: .width,
                                                      relatedBy: .equal,
                                                      toItem: nil,
@@ -346,7 +326,7 @@ class ViewController: UIViewController {
                                                      constant: 270.0)
         
         //centerHorizontal
-        let btnPreviewCenterHorizontally = NSLayoutConstraint(item: btnPreview,
+        let btnSlideBottomCenterHorizontally = NSLayoutConstraint(item: btnSlideBottom,
                                                                   attribute: .centerX,
                                                                   relatedBy: .equal,
                                                                   toItem: radioGroupView,
@@ -354,9 +334,46 @@ class ViewController: UIViewController {
                                                                   multiplier: 1.0,
                                                                   constant: 0.0)
         
+        NSLayoutConstraint.activate([btnSlideBottomTop, btnSlideBottomHeight, btnSlideBottomWidth, btnSlideBottomCenterHorizontally])
+        
+        //top
+        let btnPreviewTop = NSLayoutConstraint(item: btnPreview,
+                                               attribute: .top,
+                                               relatedBy: .equal,
+                                               toItem: radioGroupView,
+                                               attribute: .top,
+                                               multiplier: 1.0,
+                                               constant: 180.0)
+        //height
+        let btnPreviewHeight = NSLayoutConstraint(item: btnPreview,
+                                                  attribute: .height,
+                                                  relatedBy: .equal,
+                                                  toItem: nil,
+                                                  attribute: .notAnAttribute,
+                                                  multiplier: 1.0,
+                                                  constant: 30.0)
+        
+        //weight
+        let btnPreviewWidth = NSLayoutConstraint(item: btnPreview,
+                                                 attribute: .width,
+                                                 relatedBy: .equal,
+                                                 toItem: nil,
+                                                 attribute: .notAnAttribute,
+                                                 multiplier: 1.0,
+                                                 constant: 270.0)
+        
+        //centerHorizontal
+        let btnPreviewCenterHorizontally = NSLayoutConstraint(item: btnPreview,
+                                                              attribute: .centerX,
+                                                              relatedBy: .equal,
+                                                              toItem: radioGroupView,
+                                                              attribute: .centerX,
+                                                              multiplier: 1.0,
+                                                              constant: 0.0)
+        
         NSLayoutConstraint.activate([btnPreviewTop, btnPreviewHeight, btnPreviewWidth, btnPreviewCenterHorizontally])
         
     }
-
+    
 }
 

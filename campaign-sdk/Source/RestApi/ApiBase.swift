@@ -14,6 +14,6 @@ class ApiBase {
     static let AUTHENTICATED_PATH:String  = "/api/v0.0.1beta"
     
     class func getApiPath() -> String {
-        return HOST + AUTHENTICATED_PATH
+        return HOST
     }
 }

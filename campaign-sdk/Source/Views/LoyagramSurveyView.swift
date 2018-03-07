@@ -44,8 +44,6 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         initSurveyView()
         setQuestion()
-        //showSingleSelect()
-        //showMultiSelect()
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -252,7 +250,6 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     
     @objc func checkBoxAction (sender: LoyagramRadioButton) {
-        
         
     }
     
