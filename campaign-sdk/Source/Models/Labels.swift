@@ -4,7 +4,7 @@ import Foundation
 class Labels : Codable {
 	let field_type : String!
 	let name : String!
-	let order_no : Int!
+	let order_no : UInt!
 	let settings : Settings!
 	let deleted : Bool!
 	let max_value : Int!
@@ -15,8 +15,8 @@ class Labels : Codable {
 	let label_translations : [LabelTranslations]!
 	let step_value : Int!
 	let img_url : String!
-	let id : Int!
-	let question_id : Int!
+	let id : UInt!
+	let question_id : UInt!
 
 	enum CodingKeys: String, CodingKey {
 
@@ -41,7 +41,7 @@ class Labels : Codable {
 		let values = try decoder.container(keyedBy: CodingKeys.self)
 		field_type = try values.decodeIfPresent(String.self, forKey: .field_type)
 		name = try values.decodeIfPresent(String.self, forKey: .name)
-		order_no = try values.decodeIfPresent(Int.self, forKey: .order_no)
+		order_no = try values.decodeIfPresent(UInt.self, forKey: .order_no)
 		settings = try Settings(from: decoder)
 		deleted = try values.decodeIfPresent(Bool.self, forKey: .deleted)
 		max_value = try values.decodeIfPresent(Int.self, forKey: .max_value)
@@ -52,8 +52,8 @@ class Labels : Codable {
 		label_translations = try values.decodeIfPresent([LabelTranslations].self, forKey: .label_translations)
 		step_value = try values.decodeIfPresent(Int.self, forKey: .step_value)
 		img_url = try values.decodeIfPresent(String.self, forKey: .img_url)
-		id = try values.decodeIfPresent(Int.self, forKey: .id)
-		question_id = try values.decodeIfPresent(Int.self, forKey: .question_id)
+		id = try values.decodeIfPresent(UInt.self, forKey: .id)
+		question_id = try values.decodeIfPresent(UInt.self, forKey: .question_id)
 	}
 
 }

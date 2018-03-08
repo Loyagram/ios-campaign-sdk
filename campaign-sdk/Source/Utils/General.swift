@@ -11,7 +11,7 @@ import Foundation
 struct GlobalConstants {
     
     static var FONT_MEDIUM = UIFont.systemFont(ofSize: 16)
-    
+    static var FONT_SMALL = UIFont.systemFont(ofSize: 12)
     static var fonts = UIFont()
     
     //static var FONT_MEDIUM1 = UIFont(name: "Proxima Nova", size: 16)
@@ -19,6 +19,7 @@ struct GlobalConstants {
         
     fonts = unpackFonts()
         FONT_MEDIUM = UIFont(name:"Proxima Nova", size: 16)!
+        FONT_SMALL = UIFont(name:"Proxima Nova", size: 14)!
     }
 
     static func unpackFonts() -> UIFont {
@@ -26,13 +27,8 @@ struct GlobalConstants {
             //let bundle = Bundle(identifier: "com.loyagram.campaign-sdk")
             let bundle1 = Bundle(for: LoyagramCampaignView.self)
             let fontPath = bundle1.path(forResource: "ProximaNova-Regular", ofType: "otf")
-            //let fontsFolderURL = URL(fileURLWithPath: (bundle1.bundlePath)).appendingPathComponent("Source/Fonts")
-            let defaultFontSize: CGFloat = 25.0
+            let defaultFontSize: CGFloat = 16.0
             var fonts = UIFont()
-//            let fontsDir = try FileManager.default.contentsOfDirectory(at: fontsFolderURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
-            
-//            for fontFile in fontsDir {
-//                do {
             let fontBinary  = try NSData(contentsOfFile: fontPath!, options: NSData.ReadingOptions())
                     //let fontBinary = try Data(contentsOf: fontFile)
                     

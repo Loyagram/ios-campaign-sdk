@@ -89,7 +89,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         txtQuestion.text = " "
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
-        txtQuestion.font = txtQuestion.font?.withSize(16)
+        txtQuestion.font = GlobalConstants.FONT_MEDIUM
         
         
         //TextView Question constraints
@@ -140,7 +140,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         ratingBar.translatesAutoresizingMaskIntoConstraints = false
         ratingBar.isEditable = true
         ratingBar.delegate = self
-        ratingLabel.tag = label.id
+        ratingLabel.tag = Int(label.id)
         //ContentView constrinats
         
         let cellContent = UIView()
@@ -223,8 +223,8 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             let labelTranslations = ql.label_translations!
             for labelTranslation in labelTranslations {
                 if (labelTranslation.language_code == currentLanguage.language_code) {
-                        if(self.viewWithTag(ql.id) != nil) {
-                            let radioLabel:UITextView = self.viewWithTag(ql.id) as! UITextView
+                        if(self.viewWithTag(Int(ql.id)) != nil) {
+                            let radioLabel:UITextView = self.viewWithTag(Int(ql.id)) as! UITextView
                             radioLabel.text = labelTranslation.text
                     }
                     break

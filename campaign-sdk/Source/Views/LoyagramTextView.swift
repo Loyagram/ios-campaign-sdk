@@ -76,7 +76,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
         txtQuestion.text = " "
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
-        txtQuestion.font = txtQuestion.font?.withSize(16)
+        txtQuestion.font = GlobalConstants.FONT_MEDIUM
         txtQuestion.isEditable = false
         
         //TextView Question constraints

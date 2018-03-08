@@ -18,6 +18,7 @@ class LanguageTableViewCell: UITableViewCell {
         let labelWidth: CGFloat = 110
         lblLanguage = UILabel()
         lblLanguage.frame = CGRect(x: 10, y: 5, width: labelWidth, height:labelHeight)
+        lblLanguage.font = GlobalConstants.FONT_MEDIUM
         contentView.addSubview(lblLanguage)
         
     }

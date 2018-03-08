@@ -75,7 +75,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         txtQuestion.text = " "
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
-        txtQuestion.font = txtQuestion.font?.withSize(16)
+        txtQuestion.font = GlobalConstants.FONT_MEDIUM
         
         
         //TextView Question constraints
@@ -184,10 +184,11 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         radioButtonContainer.addSubview(radioButton)
         let radioLabel = UILabel()
         radioButtonContainer.addSubview(radioLabel)
+        radioLabel.font = GlobalConstants.FONT_MEDIUM
         //radioButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
-        radioLabel.tag = label.id
+        radioLabel.tag = Int(label.id)
         //Radio button cosntraints
         
         let radioTop = NSLayoutConstraint(item: radioButton, attribute: .top, relatedBy: .equal, toItem: radioButtonContainer, attribute: .top, multiplier: 1.0, constant: 6.0)
@@ -273,13 +274,13 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             for labelTranslation in labelTranslations {
                 if (labelTranslation.language_code == currentLanguage.language_code) {
                     if(currentQuestion.type == "SINGLE_SELECT") {
-                        if(self.viewWithTag(ql.id) != nil) {
-                            let radioLabel:UILabel = self.viewWithTag(ql.id) as! UILabel
+                        if(self.viewWithTag(Int(ql.id)) != nil) {
+                            let radioLabel:UILabel = self.viewWithTag(Int(ql.id)) as! UILabel
                             radioLabel.text = labelTranslation.text
                         }
                     } else {
-                        if(self.viewWithTag(ql.id) != nil) {
-                            let checkBox:LoyagramCheckBox = viewWithTag(ql.id) as! LoyagramCheckBox
+                        if(self.viewWithTag(Int(ql.id)) != nil) {
+                            let checkBox:LoyagramCheckBox = viewWithTag(Int(ql.id)) as! LoyagramCheckBox
                             checkBox.text = labelTranslation.text
                         }
                     }

@@ -91,6 +91,7 @@ class ViewController: UIViewController {
             campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
             break
         case 102:
+             //campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
             campaignId = "1020-80c64203-5484-4a52-b41d-5ef485cc80f1"
             break
         case 103:

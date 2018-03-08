@@ -65,13 +65,15 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var txtWelcomeMessage : UITextView!
     var txtWelcomeTip : UITextView!
     var activityIndicator: UIActivityIndicatorView!
+    var response: Response!
     
     public override init(frame: CGRect){
         super.init(frame: frame)
         primaryColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-        self.layoutIfNeeded()
+        //self.layoutIfNeeded()
         self.isUserInteractionEnabled = true
         
+        GlobalConstants.initContstants()
         initMainView()
         initHeaderView()
         initFooterView()
@@ -83,7 +85,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnClose.setImage(UIImage(named: "close.png", in: bundle, compatibleWith: nil), for:.normal)
         btnLanguage.setImage(UIImage(named: "drop-down-arrow.png", in: bundle, compatibleWith: nil), for: .normal)
         btnLanguage.titleEdgeInsets = UIEdgeInsets(top: 0, left: 5, bottom: 0, right: 10)
-        btnLanguage.imageEdgeInsets = UIEdgeInsets(top: 0, left: 30, bottom: 0, right: 0)
+        btnLanguage.imageEdgeInsets = UIEdgeInsets(top: 0, left: 10, bottom: 0, right: 0)
         btnLanguage.semanticContentAttribute = .forceRightToLeft
         btnLanguage.contentHorizontalAlignment = .left
         
@@ -95,6 +97,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         currentLang = 0
         showActivityIndicator()
         hideCampaignView()
+        initResponse()
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -146,7 +149,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         lblQuestionCount = UILabel()
         btnLanguage = UIButton(type: .custom)
         //imageViewArrow = UIImageView()
-        imageViewBrand.contentMode = .scaleAspectFit;
+        //imageViewBrand.contentMode = .scaleAspectFit;
+        imageViewBrand.contentMode = .scaleAspectFill
         
         lblBrand.textColor = UIColor.white
         lblBrand.textAlignment = .center
@@ -176,8 +180,12 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         //Hardcoded texts need to change once api request implemented
         
-        lblQuestionCount.text = " "
+        //lblQuestionCount.text = " "
         //btnLanguage.setTitle("English", for: .normal)
+        
+        lblBrand.font = GlobalConstants.FONT_MEDIUM
+        btnLanguage.titleLabel?.font = GlobalConstants.FONT_MEDIUM
+        lblQuestionCount.font = GlobalConstants.FONT_MEDIUM
         
         btnClose.addTarget(self, action: #selector(closeButtonAction(sender:)), for: .touchUpInside)
         btnLanguage.addTarget(self, action: #selector(languageButtonAction(sender:)), for: .touchUpInside)
@@ -260,15 +268,15 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         
         //Brand Image Constraints
-        
         let imgBrandCenterHorizontally = NSLayoutConstraint(item: imageViewBrand, attribute: .centerX, relatedBy: .equal, toItem: brandView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let imgBrandTop =  NSLayoutConstraint(item: imageViewBrand, attribute: .top, relatedBy: .equal,  toItem: brandView,  attribute: .top, multiplier: 1.0, constant: -105.0)
+        let imgBrandTop =  NSLayoutConstraint(item: imageViewBrand, attribute: .top, relatedBy: .equal,  toItem: brandView,  attribute: .top, multiplier: 1.0, constant: 15.0)
         
         
-        let imgBrandWidth = NSLayoutConstraint(item: imageViewBrand, attribute: .width, relatedBy: .equal,  toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
+        let imgBrandWidth = NSLayoutConstraint(item: imageViewBrand, attribute: .width, relatedBy: .equal,  toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70.0)
+        let imgBrandHeight = NSLayoutConstraint(item: imageViewBrand, attribute: .height, relatedBy: .equal,  toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70.0)
         
-        NSLayoutConstraint.activate([imgBrandCenterHorizontally, imgBrandTop, imgBrandWidth])
+        NSLayoutConstraint.activate([imgBrandCenterHorizontally, imgBrandTop, imgBrandWidth, imgBrandHeight])
         
         
         //Brand Label Constraints
@@ -280,7 +288,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let lblBrandCenterHorizontally = NSLayoutConstraint(item: lblBrand, attribute: .centerX, relatedBy: .equal, toItem: brandView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .bottom, relatedBy: .equal, toItem: brandView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .bottom, relatedBy: .equal, toItem: brandView, attribute: .bottom, multiplier: 1.0, constant: 5.0)
         
         NSLayoutConstraint.activate([lblBrandWidth, lblBrandHeight, lblBrandCenterHorizontally, lblBrandTop]) 
     }
@@ -470,6 +478,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         lblPoweredBy.textColor = UIColor.white
         footerView.addSubview(lblPoweredBy)
         lblPoweredBy.translatesAutoresizingMaskIntoConstraints = false;
+        lblPoweredBy.font = GlobalConstants.FONT_MEDIUM
         //Layout Constraints
         
         let lblPoweredByCenterHorizontally = NSLayoutConstraint(item: lblPoweredBy, attribute: .centerX, relatedBy: .equal, toItem: footerView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
@@ -905,18 +914,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         hideActivityIndicator()
         showCampaignView()
         if(Reachability.isConnectedToNetwork()) {
-        getDataFromUrl(url: URL(string:campaign.logo_url)!, completion: ({ (data, response, error) in
-            if(data != nil)  {
-                DispatchQueue.main.async() {
-                    let image = UIImage(data: data!)
-                    self.imageViewBrand.image = image
-                    self.lblBrand.text = campaign.brand_title
+            getDataFromUrl(url: URL(string:campaign.biz.img_url)!, completion: ({ (data, response, error) in
+                if(data != nil)  {
+                    DispatchQueue.main.async() {
+                        let image = UIImage(data: data!)
+                        self.imageViewBrand.image = image
+                        self.lblBrand.text = campaign.biz.name
+                    }
                 }
-            }
-            
-        }))
+                
+            }))
         } else {
-             self.lblBrand.text = campaign.brand_title
+            self.lblBrand.text = campaign.biz.name
         }
     }
     
@@ -1273,5 +1282,24 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func hideActivityIndicator() {
         activityIndicator.stopAnimating()
+    }
+    
+    //Handle Resposne
+    
+    @objc func initResponse() {
+        let response: Response = Response()
+        response.sub_channel = "IOS"
+        response.biz_id = UInt(campaign.biz_id)
+        response.campaign_id = campaign.id
+        response.started_at = CUnsignedLong(CFAbsoluteTime())
+        if(response.response_answers == nil) {
+            response.response_answers = [ResponseAnswer]()
+            //response.response_answers.append()
+        }
+        
+        //            let encoder = JSONEncoder()
+        //            encoder.outputFormatting = .prettyPrinted
+        //            let data = try! encoder.encode(response)
+        //            print(String(data: data, encoding: .utf8)!)
     }
 }

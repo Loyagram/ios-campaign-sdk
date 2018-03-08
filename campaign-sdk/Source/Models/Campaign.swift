@@ -12,9 +12,9 @@ class  Campaign : Codable {
     let questions : [Question]!
     let thankyou_message : String!
 	let brand_title : String!
-    let id : Int!
+    let id : UInt!
     let in_url_channel : Bool!
-    let user_id : Int!
+    let user_id : UInt!
     let welcome_message : String!
     let note : String!
     let color_accent : String!
@@ -24,7 +24,7 @@ class  Campaign : Codable {
     let welcome_message_enabled : Bool!
     let thank_you_and_redirect_settings_translations : [ThankYouTranslation]!
     let deleted : Bool!
-    let biz_id : Int!
+    let biz_id : UInt!
     let in_pack_channel : Bool!
     let biz : Biz!
     let active_to : String!
@@ -69,7 +69,7 @@ class  Campaign : Codable {
         case deleted = "deleted"
         case biz_id = "biz_id"
         case in_pack_channel = "in_pack_channel"
-        case biz
+        case biz = "biz"
         case active_to = "active_to"
         case active = "active"
         case str_id = "str_id"
@@ -99,9 +99,9 @@ class  Campaign : Codable {
         questions = try values.decodeIfPresent([Question].self, forKey: .questions)
         thankyou_message = try values.decodeIfPresent(String.self, forKey: .thankyou_message)
 		brand_title = try values.decodeIfPresent(String.self, forKey: .brand_title)
-        id = try values.decodeIfPresent(Int.self, forKey: .id)
+        id = try values.decodeIfPresent(UInt.self, forKey: .id)
         in_url_channel = try values.decodeIfPresent(Bool.self, forKey: .in_url_channel)
-        user_id = try values.decodeIfPresent(Int.self, forKey: .user_id)
+        user_id = try values.decodeIfPresent(UInt.self, forKey: .user_id)
         welcome_message = try values.decodeIfPresent(String.self, forKey: .welcome_message)
         note = try values.decodeIfPresent(String.self, forKey: .note)
         color_accent = try values.decodeIfPresent(String.self, forKey: .color_accent)
@@ -111,9 +111,9 @@ class  Campaign : Codable {
         welcome_message_enabled = try values.decodeIfPresent(Bool.self, forKey: .welcome_message_enabled)
         thank_you_and_redirect_settings_translations = try values.decodeIfPresent([ThankYouTranslation].self, forKey: .thank_you_and_redirect_settings_translations)
         deleted = try values.decodeIfPresent(Bool.self, forKey: .deleted)
-        biz_id = try values.decodeIfPresent(Int.self, forKey: .biz_id)
+        biz_id = try values.decodeIfPresent(UInt.self, forKey: .biz_id)
         in_pack_channel = try values.decodeIfPresent(Bool.self, forKey: .in_pack_channel)
-        biz = try Biz(from: decoder)
+        biz = try values.decodeIfPresent(Biz.self, forKey: .biz)
         active_to = try values.decodeIfPresent(String.self, forKey: .active_to)
         active = try values.decodeIfPresent(Bool.self, forKey: .active)
         str_id = try values.decodeIfPresent(String.self, forKey: .str_id)

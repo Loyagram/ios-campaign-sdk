@@ -11,7 +11,6 @@ import Foundation
 public class LoyagramCampaignManager {
     
     @objc public class func showAsViewController(VC:UIViewController, campaignId: String) {
-        GlobalConstants.initContstants()
         let CVC:CampaignViewController = CampaignViewController()
         CVC.modalPresentationStyle = .fullScreen
         CVC.campaignId = campaignId

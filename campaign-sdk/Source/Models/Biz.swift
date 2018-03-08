@@ -10,7 +10,7 @@ class Biz : Codable {
 	let in_web_channel : Bool!
 	let in_app_channel : Bool!
 	let number : String!
-	let id : Int!
+	let id : UInt!
 	let in_pack_channel : Bool!
 	let user_updated : Bool!
 	let in_sms_channel : Bool!
@@ -49,7 +49,7 @@ class Biz : Codable {
 		in_web_channel = try values.decodeIfPresent(Bool.self, forKey: .in_web_channel)
 		in_app_channel = try values.decodeIfPresent(Bool.self, forKey: .in_app_channel)
 		number = try values.decodeIfPresent(String.self, forKey: .number)
-		id = try values.decodeIfPresent(Int.self, forKey: .id)
+		id = try values.decodeIfPresent(UInt.self, forKey: .id)
 		in_pack_channel = try values.decodeIfPresent(Bool.self, forKey: .in_pack_channel)
 		user_updated = try values.decodeIfPresent(Bool.self, forKey: .user_updated)
 		in_sms_channel = try values.decodeIfPresent(Bool.self, forKey: .in_sms_channel)

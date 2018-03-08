@@ -20,7 +20,7 @@ class RatingTableViewCell: UITableViewCell {
         
         lblRating = UILabel()
         lblRating.frame = CGRect(x: 10, y: 5, width: labelWidth, height:labelHeight)
-        
+        lblRating.font = GlobalConstants.FONT_MEDIUM
         
         contentView.addSubview(lblRating)
         

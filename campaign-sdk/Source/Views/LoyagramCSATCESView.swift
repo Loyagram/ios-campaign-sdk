@@ -139,7 +139,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         txtQuestion.text = " "
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
-        txtQuestion.font = txtQuestion.font?.withSize(16)
+        txtQuestion.font = GlobalConstants.FONT_MEDIUM
         
         
         //TextView Question constraints
@@ -465,7 +465,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         //radioButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
-        radioLabel.tag = label.id
+        radioLabel.tag = Int(label.id)
         //Radio button cosntraints
         
         let radioTop = NSLayoutConstraint(item: radioButton, attribute: .top, relatedBy: .equal, toItem: radioButtonContainer, attribute: .top, multiplier: 1.0, constant: 6.0)
@@ -504,7 +504,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let rect = CGRect(x: 0, y: 0, width: 220, height: 35)
         let chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
-        chk.tag = label.id
+        chk.tag = Int(label.id)
         checkBoxContainer.addSubview(chk)
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
         let labelTranslations = label.label_translations
@@ -530,16 +530,15 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             for labelTranslation in labelTranslations {
                 if (labelTranslation.language_code == currentLanguage.language_code) {
                     if(currentQuestion.type == "SINGLE_SELECT") {
-                        if(self.viewWithTag(ql.id) != nil) {
-                            let radioLabel:UILabel = self.viewWithTag(ql.id) as! UILabel
+                        if(self.viewWithTag(Int(ql.id)) != nil) {
+                            let radioLabel:UILabel = self.viewWithTag(Int(ql.id)) as! UILabel
                             radioLabel.text = labelTranslation.text
                         }
                     }
                     break
                 }
             }
-        }
-        
+        }  
     }
     @objc func changeFollowUpLabelLanguage() {
         csatcesTableView.reloadData()
