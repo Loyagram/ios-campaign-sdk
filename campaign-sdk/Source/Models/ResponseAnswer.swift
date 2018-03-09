@@ -12,12 +12,12 @@ class ResponseAnswer : Codable {
     
     var id : String!
     var biz_id : UInt!
-    var biz_loc_id : UInt!
-    var biz_user_id : UInt!
-    var campaign_id : UInt!
+    var biz_loc_id : String!
+    var biz_user_id : CUnsignedLong!
+    var campaign_id : CUnsignedLong!
     var response_id : String!
-    var question_id : UInt!
-    var question_label_id : UInt!
+    var question_id : CUnsignedLong!
+    var question_label_id : CUnsignedLong!
     var at : CUnsignedLong!
     var answer : UInt!
     var response_answer_text : ResponseAnswerText!

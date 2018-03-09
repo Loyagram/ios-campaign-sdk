@@ -17,7 +17,8 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     func ratingChangedValue(ratingBar: LoyagramRatingBar) {
         
-        print("current rating\(ratingBar.rating)")
+        setRatingResposne(id: CUnsignedLong(ratingBar.tag), rating:Int(ratingBar.rating))
+        //print("current rating\(ratingBar.rating)")
     }
     
     var mainView: UIView!
@@ -32,8 +33,9 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     var currentRating : Int!
     var tblHeight : NSLayoutConstraint!
     var campaignView: LoyagramCampaignView!
+    var response: Response!
     
-    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView:LoyagramCampaignView) {
+    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView:LoyagramCampaignView, response:Response) {
         super.init(frame: frame)
         self.currentQuestion = question
         self.currentLanguage = currentLang
@@ -42,6 +44,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         self.campaignView = campaignView
         self.campaignView.languageDelegate = self
         self.autoresizesSubviews = true
+        self.response = response
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         //self.layoutIfNeeded()
         initRatingView()
@@ -54,7 +57,6 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     }
     
     @objc func setQuestion() {
-        
         let langCode = currentLanguage.language_code
         let questionTranslations = currentQuestion.question_translations
         for questionTranslation in questionTranslations! {
@@ -141,8 +143,12 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         ratingBar.isEditable = true
         ratingBar.delegate = self
         ratingLabel.tag = Int(label.id)
+        ratingBar.tag = Int(label.id)
+        let responseAnswer = getResponseAnswer(id: label.id)
+        if(responseAnswer != nil) {
+            ratingBar.rating = Float((responseAnswer?.answer)!)
+        }
         //ContentView constrinats
-        
         let cellContent = UIView()
         
         cell.contentView.addSubview(cellContent)
@@ -231,6 +237,44 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
                 }
             }
         }
+    }
+    
+    func setRatingResposne(id: CUnsignedLong, rating:Int){
+        let answers = getResponseAnswer(id: id)
+        if(answers != nil) {
+            answers?.answer = UInt(rating)
+            answers?.question_label_id = id
+            //return ra
+        } else {
+            let ra = getNewResponseAnswer()
+            ra.question_label_id = id
+            ra.answer = UInt(rating)
+            response.response_answers.append(ra)
+        }
+    }
+    
+    func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if(ra.question_label_id == id) {
+                    return ra
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getNewResponseAnswer() -> ResponseAnswer {
+        let responseAnswer = ResponseAnswer()
+        responseAnswer.biz_id = response.biz_id
+        responseAnswer.biz_loc_id  = response.location_id
+        responseAnswer.biz_user_id = response.user_id
+        responseAnswer.campaign_id = response.campaign_id
+        responseAnswer.response_id = response.id
+        responseAnswer.question_id = currentQuestion.id
+        responseAnswer.at = CUnsignedLong(CFAbsoluteTime())
+        responseAnswer.id = UUID().uuidString
+        return responseAnswer
     }
     
 }

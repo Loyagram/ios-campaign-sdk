@@ -186,8 +186,7 @@ class ViewController: UIViewController {
         btnVC.setTitleColor(color, for: .normal)
         
         btnVC.addTarget(self, action: #selector(controllerButtonAction(sender:)), for: .touchUpInside)
-//        btnVC.titleLabel?.font = UI
-        print("fonts \(UIFont.familyNames)")
+
         let btnDialog = UIButton(type: .system)
         btnDialog.setTitle("SHOW AS DIALOG", for: .normal)
         btnDialog.layer.cornerRadius = 2

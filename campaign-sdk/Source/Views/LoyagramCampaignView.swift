@@ -97,7 +97,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         currentLang = 0
         showActivityIndicator()
         hideCampaignView()
-        initResponse()
+        
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -623,7 +623,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     //MARK : Show Question Views
     @objc func showSurveyView() {
-        let campaignContentView = LoyagramSurveyView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self)
+        let campaignContentView = LoyagramSurveyView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self, resposne:response)
         campaignView.addSubview(campaignContentView)
         
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -638,7 +638,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     @objc func showRatingView() {
-        let campaignContentView = LoyagramRatingView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self)
+        let campaignContentView = LoyagramRatingView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self, response:response)
         campaignView.addSubview(campaignContentView)
         
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -671,7 +671,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     @objc func showTextView() {
-        let campaignContentView = LoyagramTextView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, staticTexts: staticTexts)
+        let campaignContentView = LoyagramTextView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, staticTexts: staticTexts, response:response)
         campaignView.addSubview(campaignContentView)
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
@@ -927,7 +927,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         } else {
             self.lblBrand.text = campaign.biz.name
         }
+        initResponse()
     }
+    
     
     func campaignErrorHandler() {
         hideActivityIndicator()
@@ -1287,14 +1289,14 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     //Handle Resposne
     
     @objc func initResponse() {
-        let response: Response = Response()
+        response = Response()
         response.sub_channel = "IOS"
         response.biz_id = UInt(campaign.biz_id)
         response.campaign_id = campaign.id
         response.started_at = CUnsignedLong(CFAbsoluteTime())
         if(response.response_answers == nil) {
             response.response_answers = [ResponseAnswer]()
-            //response.response_answers.append()
+            //            response.response_answers.append()
         }
         
         //            let encoder = JSONEncoder()

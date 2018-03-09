@@ -47,7 +47,6 @@ class CampaignViewController: UIViewController {
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
         
         getCampaignFromServer(campaignId: campaignId)
-         print("fonts in sdk\(UIFont.familyNames)")
         
     }
     

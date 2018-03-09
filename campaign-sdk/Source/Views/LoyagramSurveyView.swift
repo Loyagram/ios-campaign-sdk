@@ -19,6 +19,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     var tblHeight : NSLayoutConstraint!
     var radioGroup = [LoyagramRadioButton] ()
     var campaignView: LoyagramCampaignView!
+    var response: Response!
     func languageChanged(lang: Language) {
         currentLanguage = lang
         setQuestion()
@@ -32,7 +33,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     }
     
     
-    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView){
+    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView, resposne: Response){
         super.init(frame: frame)
         self.currentQuestion = question
         self.currentLanguage = currentLang
@@ -40,6 +41,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         self.primaryColor = color
         self.campaignView = campaignView
         self.campaignView.languageDelegate = self
+        self.response = resposne
         self.autoresizesSubviews = true
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         initSurveyView()
@@ -126,7 +128,6 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
         
-        
         cell.translatesAutoresizingMaskIntoConstraints = false
         
         cell.selectionStyle = .none
@@ -189,6 +190,12 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.tag = Int(label.id)
+        radioButton.tag = Int(label.id)
+        let ra = getResponseAnswer(id: label.id)
+        if(ra != nil && ra?.question_label_id == label.id) {
+            radioButton.isSelected = true
+        }
+        
         //Radio button cosntraints
         
         let radioTop = NSLayoutConstraint(item: radioButton, attribute: .top, relatedBy: .equal, toItem: radioButtonContainer, attribute: .top, multiplier: 1.0, constant: 6.0)
@@ -229,7 +236,12 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         let chk = LoyagramCheckBox(frame: rect)
         chk.showTextLabel = true
         checkBoxContainer.addSubview(chk)
+        chk.tag = Int(label.id)
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
+        let responseAnswer = getResponseAnswer(id: label.id)
+        if(responseAnswer != nil) {
+           chk.isChecked = true
+        }
         let labelTranslations = label.label_translations
         let langCode = currentLanguage.language_code
         for labelTranslation in labelTranslations! {
@@ -247,11 +259,16 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             $0.isSelected = false
         }
         sender.isSelected = !sender.isSelected
+        setSingleSelectResposne(id: CUnsignedLong(sender.tag))
     }
     
     
-    @objc func checkBoxAction (sender: LoyagramRadioButton) {
-        
+    @objc func checkBoxAction (sender: LoyagramCheckBox) {
+        if(sender.isChecked) {
+            setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 1)
+        } else {
+            setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 0)
+        }
     }
     
     override public func layoutSubviews() {
@@ -290,4 +307,77 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         }
     }
     
+    
+    
+    func setMultiSelectResponse(id: CUnsignedLong, val:Int) {
+        let answer = getResponseAnswer(id: id)
+        if(answer != nil) {
+            if(val == 1) {
+                answer?.answer = id
+            } else {
+                let index = response.response_answers.index(where:{$0 === answer!})
+                response.response_answers.remove(at: index!)
+            }
+        } else {
+            let ra = getNewResponseAnswer()
+            ra.question_label_id = id
+            ra.answer = id
+            response.response_answers.append(ra)
+        }
+    }
+    
+    
+    func getResponseAnswerByQuestionId(id: CUnsignedLong) -> [ResponseAnswer] {
+        
+        var answers = [ResponseAnswer]()
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if(ra.question_id == id) {
+                    answers.append(ra)
+                }
+            }
+        }
+        return answers
+    }
+    
+    func setSingleSelectResposne(id: CUnsignedLong){
+        let answers = getResponseAnswerByQuestionId(id: currentQuestion.id)
+        if(answers.count > 0) {
+            let ra = answers[0]
+            ra.answer = id
+            ra.question_label_id = id
+            //return ra
+        } else {
+            let ra = getNewResponseAnswer()
+            ra.question_label_id = id
+            ra.answer = id
+            response.response_answers.append(ra)
+            //return ra
+        }
+    }
+    
+    func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if(ra.question_label_id == id) {
+                    return ra
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getNewResponseAnswer() -> ResponseAnswer {
+        let responseAnswer = ResponseAnswer()
+        responseAnswer.biz_id = response.biz_id
+        responseAnswer.biz_loc_id  = response.location_id
+        responseAnswer.biz_user_id = response.user_id
+        responseAnswer.campaign_id = response.campaign_id
+        responseAnswer.response_id = response.id
+        responseAnswer.question_id = currentQuestion.id
+        responseAnswer.at = CUnsignedLong(CFAbsoluteTime())
+        responseAnswer.id = UUID().uuidString
+        return responseAnswer
+    }
+   
 }

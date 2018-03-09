@@ -8,7 +8,7 @@
 
 import UIKit
 
-class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
+class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, UITextViewDelegate, UITextFieldDelegate {
     func languageChanged(lang: Language) {
         currentLanguage = lang
         setQuestion()
@@ -28,14 +28,17 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
     var textScrollView: UIScrollView!
     var scrollViewHeight: NSLayoutConstraint!
     var staticTexts: StaticTextTranslation!
+    var response:Response!
+    var questionLabelId: CUnsignedLong!
     
-    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, staticTexts:StaticTextTranslation) {
+    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, staticTexts:StaticTextTranslation, response:Response) {
         super.init(frame: frame)
         currentQuestion = question
         currentLanguage = currentLang
         primaryLanguage = primaryLang
         primaryColor = color
         self.staticTexts = staticTexts
+        self.response = response
         initTextView()
         setQuestion()
         showTextView()
@@ -108,6 +111,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
         
         if (currentQuestion.labels.count > 0) {
             let label = currentQuestion.labels[0]
+            questionLabelId = label.id
             fieldType = label.field_type
             var textFieldHeight:CGFloat = 40
             var type = "textView"
@@ -121,6 +125,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
                 textView.layer.borderColor = UIColor.lightGray.cgColor
                 textView.autocorrectionType = .no
                 textView.layer.cornerRadius = 5
+                textView.delegate = self
             case "PARAGRAPH":
                 textView = UITextView()
                 textScrollView.addSubview(textView)
@@ -130,6 +135,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
                 textView.layer.borderColor = UIColor.lightGray.cgColor
                 textView.autocorrectionType = .no
                 textView.layer.cornerRadius = 5
+                textView.delegate = self
             case "EMAIL":
                 textField = UITextField()
                 textScrollView.addSubview(textField)
@@ -137,7 +143,8 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
                 textFieldHeight = 20
                 textField.keyboardType = .emailAddress
                 textField.autocorrectionType = .no
-                 textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+                textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+                textField.delegate = self
                 type = "textField"
             case "NUMBER":
                 textField = UITextField()
@@ -146,7 +153,8 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
                 textFieldHeight = 20
                 textField.keyboardType = .phonePad
                 textField.autocorrectionType = .no
-                 textField.placeholder = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]
+                textField.placeholder = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]
+                textField.delegate = self
                 type = "textField"
             default:
                 textView = UITextView()
@@ -157,6 +165,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
                 textView.layer.borderColor = UIColor.lightGray.cgColor
                 textView.autocorrectionType = .no
                 textView.layer.cornerRadius = 5
+                textView.delegate = self
                 textFieldHeight = 80
             }
             //Text Field Cosntraints
@@ -234,5 +243,63 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate {
         }
     
     }
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let textViewText = textView.text + text
+        let response = setTextResposne(id: questionLabelId, rating: 1)
+        if (response.response_answer_text != nil) {
+            response.response_answer_text.text = textViewText
+        }
+        return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let textFieldText = textField.text! + string
+        let response = setTextResposne(id: questionLabelId, rating: 1)
+        if (response.response_answer_text != nil) {
+            response.response_answer_text.text = textFieldText
+        }
+        return true
+    }
+    func setTextResposne(id: CUnsignedLong, rating:Int) -> ResponseAnswer {
+        let answer = getResponseAnswer(id: id)
+        if(answer != nil) {
+            answer?.answer = UInt(rating)
+            return answer!
+        } else {
+            let ra = getNewResponseAnswer()
+            ra.question_label_id = id
+            ra.answer = UInt(rating)
+            let responseAnswerText = ResponseAnswerText()
+            responseAnswerText.response_answer_id = ra.id
+            ra.response_answer_text = responseAnswerText
+            response.response_answers.append(ra)
+            return ra
+        }
+    }
+    
+    func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if(ra.question_label_id == id) {
+                    return ra
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getNewResponseAnswer() -> ResponseAnswer {
+        let responseAnswer = ResponseAnswer()
+        responseAnswer.biz_id = response.biz_id
+        responseAnswer.biz_loc_id  = response.location_id
+        responseAnswer.biz_user_id = response.user_id
+        responseAnswer.campaign_id = response.campaign_id
+        responseAnswer.response_id = response.id
+        responseAnswer.question_id = currentQuestion.id
+        responseAnswer.at = CUnsignedLong(CFAbsoluteTime())
+        responseAnswer.id = UUID().uuidString
+        return responseAnswer
+    }
+
     
 }
