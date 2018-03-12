@@ -313,7 +313,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         let answer = getResponseAnswer(id: id)
         if(answer != nil) {
             if(val == 1) {
-                answer?.answer = id
+                answer?.answer = Int(id)
             } else {
                 let index = response.response_answers.index(where:{$0 === answer!})
                 response.response_answers.remove(at: index!)
@@ -321,7 +321,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         } else {
             let ra = getNewResponseAnswer()
             ra.question_label_id = id
-            ra.answer = id
+            ra.answer = Int(id)
             response.response_answers.append(ra)
         }
     }
@@ -344,19 +344,19 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         let answers = getResponseAnswerByQuestionId(id: currentQuestion.id)
         if(answers.count > 0) {
             let ra = answers[0]
-            ra.answer = id
+            ra.answer = Int(id)
             ra.question_label_id = id
             //return ra
         } else {
             let ra = getNewResponseAnswer()
             ra.question_label_id = id
-            ra.answer = id
+            ra.answer = Int(id)
             response.response_answers.append(ra)
             //return ra
         }
     }
     
-    func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
+    func getResponseAnswer(id:CUnsignedLong) -> ResponseAnswer! {
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
                 if(ra.question_label_id == id) {
@@ -375,7 +375,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         responseAnswer.campaign_id = response.campaign_id
         responseAnswer.response_id = response.id
         responseAnswer.question_id = currentQuestion.id
-        responseAnswer.at = CUnsignedLong(CFAbsoluteTime())
+        responseAnswer.at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
         responseAnswer.id = UUID().uuidString
         return responseAnswer
     }

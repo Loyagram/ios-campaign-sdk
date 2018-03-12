@@ -14,6 +14,7 @@ class LoyagramRadioButton: UIButton {
     internal var innerCircleLayer = CAShapeLayer()
     //internal var color = UIColor(rgb: 0x1abc9c)
     internal var color = UIColor()
+    var csatcesOption = String()
     
     public var outerCircleColor: UIColor = UIColor.green {
         didSet {

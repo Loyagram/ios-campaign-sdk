@@ -6,31 +6,27 @@
 //  Copyright © 2018 loyagram. All rights reserved.
 //
 
-class RequestQuestion {
+class SubmitResponse {
     
-    class func requestQuestion (campaignId : String, completion: @escaping ((_ campaign:Campaign) -> Void), failure: @escaping (() -> Void)) {
-        
-        let urlString = ApiBase.getApiPath() + getQuestionPath(campaignId: campaignId)
+    class func submitResponse (response : Data, success: @escaping (() -> Void), failure: @escaping (() -> Void)) {
+        let urlString = ApiBase.getApiPath() + getQuestionPath()
         let url = URL(string:urlString)
         let sessionConfig = URLSessionConfiguration.default
         sessionConfig.timeoutIntervalForRequest = 15.0
         sessionConfig.timeoutIntervalForResource = 15.0
         let session = URLSession(configuration: sessionConfig)
         if(Reachability.isConnectedToNetwork()) {
-            let request = URLRequest(url:url!)
+            var request = URLRequest(url:url!)
+            request.httpMethod = "POST"
+            request.httpBody = response
             let task = session.dataTask(with:request) { (data, response, error) in
                 do {
                     if(data != nil) {
-                    let jsonDecoder = JSONDecoder()
-                    let campaign = try jsonDecoder.decode(Campaign.self, from: data!)
-                    //print(campaign.brand_title ?? "not parsed!!!")
-                    completion(campaign)
+                        print(String(data: data!, encoding: .utf8)!)
+                        success()
                     } else {
                         failure()
                     }
-                } catch let error {
-                    print(error.localizedDescription)
-                    failure()
                 }
             }
             task.resume()
@@ -40,9 +36,9 @@ class RequestQuestion {
         
     }
     
-    class func getQuestionPath(campaignId : String) -> String{
-        
-        return "/in-store/" + campaignId + "?lang=all"
+    class func getQuestionPath() -> String{
+        return "/responses"
     }
     
 }
+

@@ -655,7 +655,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func showNPSView() {
         let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:campaign.type, question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint, staticTextes:staticTexts)
+        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:campaign.type, question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint, staticTextes:staticTexts, response:response)
         campaignView.addSubview(campaignContentView)
         campaignContentView.isUserInteractionEnabled = true
         campaignContentView.delegate = self
@@ -686,7 +686,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func showCSATCESView(isCSAT: Bool) {
         let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramCSATCESView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self, staticTexts: staticTexts)
+        let campaignContentView = LoyagramCSATCESView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self, staticTexts: staticTexts, response:response)
         campaignContentView.delegate = self
         campaignView.addSubview(campaignContentView)
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -833,10 +833,29 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func submitCampaign() {
-        
         showThankYou()
         resetCampaign()
-        //self.viewController.dismiss(animated: true, completion: nil)
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
+        response.language_code = currentLanguage.language_code
+        let data = try! encoder.encode(response)
+        let jsonString = String(data:data, encoding = .prettyPrinted)
+        //let jsonString = String(data: data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\\", with: "")
+        //let jsonStringWithData:[String:Any] = ["data":jsonString]
+        
+        
+//        let dict = NSMutableDictionary()
+//        dict.setValue(data, forKey: "data")
+//        let jsonData = try? JSONSerialization.data(withJSONObject: dict)
+//        let valid = JSONSerialization.isValidJSONObject(jsonData)
+//        print(String(data:jsonData!, encoding : .utf8)!)
+//
+//        SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
+//            print("sucessfully submited")
+//        }, failure: {() -> Void in
+//            print("failed to submit response")
+//        })
         
     }
     
@@ -1165,7 +1184,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                         break
                         
                     }
-                    
                     break
                 default:
                     break
@@ -1290,18 +1308,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func initResponse() {
         response = Response()
+        response.channel = "MOBILE-SDK"
         response.sub_channel = "IOS"
         response.biz_id = UInt(campaign.biz_id)
         response.campaign_id = campaign.id
-        response.started_at = CUnsignedLong(CFAbsoluteTime())
+        response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
         if(response.response_answers == nil) {
             response.response_answers = [ResponseAnswer]()
-            //            response.response_answers.append()
         }
-        
-        //            let encoder = JSONEncoder()
-        //            encoder.outputFormatting = .prettyPrinted
-        //            let data = try! encoder.encode(response)
-        //            print(String(data: data, encoding: .utf8)!)
     }
 }

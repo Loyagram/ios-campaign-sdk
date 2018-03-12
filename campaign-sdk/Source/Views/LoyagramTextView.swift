@@ -245,7 +245,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let textViewText = textView.text + text
-        let response = setTextResposne(id: questionLabelId, rating: 1)
+        let response = setTextResposne(id: currentQuestion.id, rating: 1)
         if (response.response_answer_text != nil) {
             response.response_answer_text.text = textViewText
         }
@@ -254,7 +254,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let textFieldText = textField.text! + string
-        let response = setTextResposne(id: questionLabelId, rating: 1)
+        let response = setTextResposne(id: currentQuestion.id, rating: 1)
         if (response.response_answer_text != nil) {
             response.response_answer_text.text = textFieldText
         }
@@ -263,12 +263,12 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     func setTextResposne(id: CUnsignedLong, rating:Int) -> ResponseAnswer {
         let answer = getResponseAnswer(id: id)
         if(answer != nil) {
-            answer?.answer = UInt(rating)
+            answer?.answer = Int(rating)
             return answer!
         } else {
             let ra = getNewResponseAnswer()
             ra.question_label_id = id
-            ra.answer = UInt(rating)
+            ra.answer = Int(rating)
             let responseAnswerText = ResponseAnswerText()
             responseAnswerText.response_answer_id = ra.id
             ra.response_answer_text = responseAnswerText
@@ -280,7 +280,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
-                if(ra.question_label_id == id) {
+                if(ra.question_id == id) {
                     return ra
                 }
             }
@@ -296,7 +296,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         responseAnswer.campaign_id = response.campaign_id
         responseAnswer.response_id = response.id
         responseAnswer.question_id = currentQuestion.id
-        responseAnswer.at = CUnsignedLong(CFAbsoluteTime())
+        responseAnswer.at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
         responseAnswer.id = UUID().uuidString
         return responseAnswer
     }

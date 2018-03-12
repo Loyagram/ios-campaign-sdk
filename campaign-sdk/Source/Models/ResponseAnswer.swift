@@ -19,7 +19,7 @@ class ResponseAnswer : Codable {
     var question_id : CUnsignedLong!
     var question_label_id : CUnsignedLong!
     var at : CUnsignedLong!
-    var answer : UInt!
+    var answer : Int!
     var response_answer_text : ResponseAnswerText!
   
     

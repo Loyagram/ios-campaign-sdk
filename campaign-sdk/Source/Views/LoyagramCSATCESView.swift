@@ -13,7 +13,7 @@ protocol LoyagramCSATCESDelegate: class {
     func setOptions()
 }
 
-class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate {
+class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate, UITextViewDelegate, UITextFieldDelegate {
     func languageChanged(lang: Language) {
         self.currentLanguage = lang
         setQuestion()
@@ -50,8 +50,10 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     var isFollowUp : Bool!
     var radioGroup = [LoyagramRadioButton]()
     var staticTexts : StaticTextTranslation!
+    var response: Response!
+    var csatcesOption: String!
     
-    public init(frame: CGRect, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, isCSAT: Bool, campaignView:LoyagramCampaignView, staticTexts: StaticTextTranslation) {
+    public init(frame: CGRect, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, isCSAT: Bool, campaignView:LoyagramCampaignView, staticTexts: StaticTextTranslation, response:Response) {
         super.init(frame: frame)
         currentQuestion = question
         self.followUpQuestion = followUpQuestion
@@ -65,6 +67,8 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         noOfRows = question.labels.count
         isFollowUp = false
         self.staticTexts = staticTexts
+        self.response = response
+        csatcesOption = String()
         initCSATCESView()
         initFollowUpView()
         setQuestion()
@@ -221,6 +225,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextView.layer.cornerRadius = 5
         feedbackTextView.layer.borderColor = UIColor.lightGray.cgColor
         feedbackTextView.autocorrectionType = .no
+        feedbackTextView.delegate = self
         // feedbackTextView.delegate = self
         
         let chkContainer = UIView()
@@ -237,6 +242,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextField.isHidden = true
         feedbackTextField.autocorrectionType = .no
         feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+        feedbackTextField.delegate = self
         
         csatcesScrollView.addSubview(txtFeedbackQuestion)
         csatcesScrollView.addSubview(feedbackTextField)
@@ -314,6 +320,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     @objc func followUpCheckBoxAction (sender: LoyagramCheckBox) {
         
         feedbackTextField.isHidden = !feedbackTextField.isHidden
+        
     }
     
     
@@ -346,8 +353,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextField.layer.masksToBounds = true
         
     }
-    
-    
+
     
     @objc func radioButtonAction (sender: LoyagramRadioButton) {
         radioGroup.forEach {
@@ -357,6 +363,42 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         if(delegate != nil) {
             delegate.setOptions()
         }
+        setCSATCESResponse(id: CUnsignedLong(sender.tag), val: 1)
+        switch(sender.csatcesOption) {
+        case "very_dissatisfied":
+            csatcesOption = "dissatisfied"
+            break
+        case "somewhat_dissatisfied":
+            csatcesOption = "dissatisfied"
+            break
+        case "neither_satisfied_nor_dissatisfied":
+            csatcesOption = "neutral"
+            break
+        case "somewhat_satisfied":
+            csatcesOption = "satisfied"
+            break
+        case "very_satisfied":
+            csatcesOption = "satisfied"
+            break
+        case "agree":
+            csatcesOption = "agree"
+            break
+        case "somewhat_agree":
+            csatcesOption = "agree"
+            break
+        case "neither_agree_nor_disagree":
+            csatcesOption = "neutral"
+            break
+        case "somewhat_disagree":
+            csatcesOption = "disagree"
+            break
+        case "disagree":
+            csatcesOption = "disagree"
+            break
+        default:
+            break
+        }
+        
     }
     
     func prevButtonPressed(iterator: Int) {
@@ -369,6 +411,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             txtFollowUpQuestion.isHidden = true
             noOfRows = currentQuestion.labels.count
             csatcesTableView.reloadData()
+            self.layoutSubviews()
             break
         case 2:
             csatcesScrollView.isHidden = true
@@ -377,6 +420,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             txtFollowUpQuestion.isHidden = false
             csatcesTableView.isHidden = false
             csatcesTableView.reloadData()
+            self.layoutSubviews()
             break
         default:
             break
@@ -391,6 +435,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             txtFollowUpQuestion.isHidden = false
             txtQuestion.isHidden = true
             csatcesTableView.reloadData()
+            self.layoutSubviews()
             break
         case 1:
             txtFollowUpQuestion.isHidden = true
@@ -466,6 +511,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.tag = Int(label.id)
+        radioButton.tag = Int(label.id)
+        radioButton.csatcesOption = label.name
+        
+        let ra = getResponseAnswer(id: label.id)
+        if(ra != nil && ra?.question_label_id == label.id) {
+            radioButton.isSelected = true
+        }
+        
         //Radio button cosntraints
         
         let radioTop = NSLayoutConstraint(item: radioButton, attribute: .top, relatedBy: .equal, toItem: radioButtonContainer, attribute: .top, multiplier: 1.0, constant: 6.0)
@@ -516,9 +569,18 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             }
         }
         
-    }
-    @objc func checkBoxAction (sender: LoyagramRadioButton) {
+        let responseAnswer = getMulResponseAnswer(id: label.id)
+        if(responseAnswer != nil) {
+            chk.isChecked = true
+        }
         
+    }
+    @objc func checkBoxAction (sender: LoyagramCheckBox) {
+        if(sender.isChecked) {
+            setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 1)
+        } else {
+            setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 0)
+        }
         
     }
     
@@ -543,4 +605,101 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     @objc func changeFollowUpLabelLanguage() {
         csatcesTableView.reloadData()
     }
+    
+    func getResponseAnswerByQuestionId(id: CUnsignedLong) -> ResponseAnswer! {
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if(ra.question_id == id) {
+                    return ra
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if(ra.question_label_id == id) {
+                    return ra
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getMulResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if (ra.question_label_id != nil && ra.question_label_id == id) {
+                    return ra
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getNewResponseAnswer(questionId: UInt!) -> ResponseAnswer {
+        let responseAnswer = ResponseAnswer()
+        responseAnswer.biz_id = response.biz_id
+        responseAnswer.biz_loc_id  = response.location_id
+        responseAnswer.biz_user_id = response.user_id
+        responseAnswer.campaign_id = response.campaign_id
+        responseAnswer.response_id = response.id
+        responseAnswer.question_id = questionId
+        responseAnswer.at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
+        responseAnswer.id = UUID().uuidString
+        return responseAnswer
+    }
+    
+    func setCSATCESResponse(id: CUnsignedLong, val:Int) {
+        let responseAnswer = getResponseAnswerByQuestionId(id: currentQuestion.id)
+        if(responseAnswer != nil) {
+            responseAnswer?.answer = Int(id)
+            responseAnswer?.question_label_id = id
+        } else {
+            let ra = getNewResponseAnswer(questionId:currentQuestion.id)
+            ra.question_label_id = id
+            ra.answer = Int(id)
+            let responseAnswerText = ResponseAnswerText()
+            responseAnswerText.response_answer_id = ra.id
+            ra.response_answer_text = responseAnswerText
+            response.response_answers.append(ra)
+        }
+    }
+    
+    func setMultiSelectResponse(id: CUnsignedLong, val:Int) {
+        let answer = getMulResponseAnswer(id: id)
+        if(answer != nil) {
+            if(val == 1) {
+                answer?.answer = Int(id)
+            } else {
+                let index = response.response_answers.index(where:{$0 === answer!})
+                response.response_answers.remove(at: index!)
+            }
+        } else {
+            let ra = getNewResponseAnswer(questionId:followUpQuestion.id)
+            ra.question_label_id = id
+            ra.answer = Int(id)
+            response.response_answers.append(ra)
+        }
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let textViewText = textView.text + text
+        let response = getResponseAnswerByQuestionId(id: currentQuestion.id)
+        if (response?.response_answer_text != nil) {
+            response?.response_answer_text.text = textViewText
+        }
+        return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let textFieldText = textField.text! + string
+        //Set FollowUP Email
+        response.customer_email = textFieldText
+        return true
+    }
+    
+    
 }

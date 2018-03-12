@@ -48,6 +48,7 @@
 		D3B0802D202B03B6009B046B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3B0802B202B03B6009B046B /* LaunchScreen.storyboard */; };
 		D3B08038202B03B6009B046B /* CampaignSdkDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08037202B03B6009B046B /* CampaignSdkDemoTests.swift */; };
 		D3B08043202B03B6009B046B /* CampaignSdkDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08042202B03B6009B046B /* CampaignSdkDemoUITests.swift */; };
+		D3BEFBA02056755D006822A0 /* SubmitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BEFB9F2056755D006822A0 /* SubmitResponse.swift */; };
 		D3C21B1B2032E14F002FB1EE /* campaign_sdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D3C21B222032E44B002FB1EE /* LoyagramSurveyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */; };
 		D3D9F9A020347A250054F7FF /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98B20347A200054F7FF /* Campaign.swift */; };
@@ -169,6 +170,7 @@
 		D3B0803E202B03B6009B046B /* CampaignSdkDemoUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CampaignSdkDemoUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3B08042202B03B6009B046B /* CampaignSdkDemoUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignSdkDemoUITests.swift; sourceTree = "<group>"; };
 		D3B08044202B03B6009B046B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		D3BEFB9F2056755D006822A0 /* SubmitResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitResponse.swift; sourceTree = "<group>"; };
 		D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramSurveyView.swift; sourceTree = "<group>"; };
 		D3D9F98B20347A200054F7FF /* Campaign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Campaign.swift; sourceTree = "<group>"; };
 		D3D9F98C20347A210054F7FF /* Passives.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Passives.swift; sourceTree = "<group>"; };
@@ -345,6 +347,7 @@
 				D3713733204ECBF900047606 /* ApiBase.swift */,
 				D3713735204ECCF300047606 /* Reachability.swift */,
 				D3713737204ECEAB00047606 /* RequestQuestion.swift */,
+				D3BEFB9F2056755D006822A0 /* SubmitResponse.swift */,
 			);
 			path = RestApi;
 			sourceTree = "<group>";
@@ -676,6 +679,7 @@
 				D340FCD6204D532A00D87B5B /* CustomThankYouAndRedirectSettings.swift in Sources */,
 				D3D9F9A320347A250054F7FF /* Biz.swift in Sources */,
 				D3713731204EB0EC00047606 /* StaticTextTranslation.swift in Sources */,
+				D3BEFBA02056755D006822A0 /* SubmitResponse.swift in Sources */,
 				D3D9F9AB20347A250054F7FF /* Widget.swift in Sources */,
 				D340FCD2204D508100D87B5B /* ThankYouAndRedirectSetting.swift in Sources */,
 				D33CF1B7204806080062EF01 /* TranslationSettings.swift in Sources */,

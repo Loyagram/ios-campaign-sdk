@@ -14,7 +14,8 @@ class ViewController: UIViewController {
     var radioGroupView: UIView!
     @IBOutlet var mainView: UIView!
     var rdbGroup: [LGRadioButton]!
-    var campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
+    var campaignId = "1020-f6c94dd5-d8c2-4f2d-9c8c-88d7237a8812"
+    //var campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -88,7 +89,8 @@ class ViewController: UIViewController {
         sender.isSelected = !sender.isSelected
         switch(sender.tag) {
         case 101:
-            campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
+            campaignId = "1020-f6c94dd5-d8c2-4f2d-9c8c-88d7237a8812"
+            //campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
             break
         case 102:
              //campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"

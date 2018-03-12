@@ -53,8 +53,11 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     var staticTextes: StaticTextTranslation!
     var txtLikely: UILabel!
     var txtNotLikely: UILabel!
+    var response:Response!
+    var currentRating: Int!
+    var npsButtons : [UIButton]!
     
-    public init(frame: CGRect, campaignType: String, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView, bottomConstraint:NSLayoutConstraint, staticTextes: StaticTextTranslation) {
+    public init(frame: CGRect, campaignType: String, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView, bottomConstraint:NSLayoutConstraint, staticTextes: StaticTextTranslation, response:Response) {
         super.init(frame: frame)
         currentQuestion = question
         self.campaignType = campaignType
@@ -70,6 +73,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         self.isUserInteractionEnabled = true
         self.campaignView.languageDelegate = self
         self.staticTextes = staticTextes
+        self.response = response
         initNPSView()
         addNPSButtons()
         setQuestion()
@@ -260,6 +264,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         NSLayoutConstraint(item: txtNotLikely, attribute: .bottom, relatedBy: .equal, toItem: npsContainer, attribute: .bottom, multiplier: 1.0, constant: 0).isActive = true
         
         var xPoint:CGFloat = 0
+        npsButtons = [UIButton]()
         for i in 0..<11 {
             
             let frame = CGRect(x: CGFloat(xPoint), y: 0, width: buttonWidth, height: buttonWidth)
@@ -271,15 +276,38 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             npsButton.layer.borderWidth = 1.0
             npsButton.layer.borderColor = primaryColor.cgColor
             npsContainer.addSubview(npsButton)
+            npsButton.tag = i
             npsButton.setTitleColor(primaryColor, for: .normal)
             npsButton.addTarget(self, action: #selector(npsButtonAction(sender:)), for: .touchUpInside)
-            
+            npsButtons.append(npsButton)
+            //
+            let responseAnswer = getResponseAnswer(id: currentQuestion.id)
+            if(responseAnswer != nil) {
+                if( i == responseAnswer?.answer) {
+                  npsButton.backgroundColor = primaryColor
+                  npsButton.setTitleColor(UIColor.white, for: .normal)
+                }
+            }
         }
     }
     
     @objc func npsButtonAction (sender: UIButton) {
         if(delegate != nil) {
             delegate.setNPS()
+        }
+        if(currentRating != nil) {
+            let button = self.viewWithTag(currentRating) as! UIButton
+            button.backgroundColor = UIColor.white
+            button.setTitleColor(primaryColor, for: .normal)
+        }
+        currentRating = sender.tag
+        setNpsResponse(id: currentQuestion.id, val: sender.tag)
+        let responseAnswer = getResponseAnswer(id: currentQuestion.id)
+        if(responseAnswer != nil) {
+            if(sender.tag == responseAnswer?.answer) {
+                sender.backgroundColor = primaryColor
+                sender.setTitleColor(UIColor.white, for: .normal)
+            }
         }
     }
     
@@ -449,9 +477,10 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         setFeedBackQuestion()
     }
     
-    @objc func followUpCheckBoxAction (sender: LoyagramRadioButton) {
+    @objc func followUpCheckBoxAction (sender: LoyagramCheckBox) {
         
         feedbackTextField.isHidden = !feedbackTextField.isHidden
+        
     }
     
     override func layoutSubviews() {
@@ -488,9 +517,12 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
     }
     
-    @objc func checkBoxAction (sender: LoyagramRadioButton) {
-        
-        
+    @objc func checkBoxAction (sender: LoyagramCheckBox) {
+        if(sender.isChecked) {
+            setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 1)
+        } else {
+            setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 0)
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -547,6 +579,11 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             }
         }
         
+        let responseAnswer = getMulResponseAnswer(id: label.id)
+        if(responseAnswer != nil) {
+            chk.isChecked = true
+        }
+        
     }
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -569,4 +606,87 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         followUpTableView.reloadData()
     }
+    
+    func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if(ra.question_id == id) {
+                    return ra
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getMulResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
+        if(response.response_answers.count > 0) {
+            for ra in response.response_answers {
+                if (ra.question_label_id != nil && ra.question_label_id == id) {
+                    return ra
+                }
+            }
+        }
+        return nil
+    }
+    
+    func getNewResponseAnswer(questionId: UInt!) -> ResponseAnswer {
+        let responseAnswer = ResponseAnswer()
+        responseAnswer.biz_id = response.biz_id
+        responseAnswer.biz_loc_id  = response.location_id
+        responseAnswer.biz_user_id = response.user_id
+        responseAnswer.campaign_id = response.campaign_id
+        responseAnswer.response_id = response.id
+        responseAnswer.question_id = questionId
+        responseAnswer.at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
+        responseAnswer.id = UUID().uuidString
+        return responseAnswer
+    }
+    
+    func setNpsResponse(id: CUnsignedLong, val:Int) {
+        let answer = getResponseAnswer(id: id)
+        if(answer != nil) {
+            answer?.answer = val
+        } else {
+            let ra = getNewResponseAnswer(questionId:currentQuestion.id)
+            ra.question_id = id
+            ra.answer = Int(val)
+            let responseAnswerText = ResponseAnswerText()
+            responseAnswerText.response_answer_id = ra.id
+            ra.response_answer_text = responseAnswerText
+            response.response_answers.append(ra)
+        }
+    }
+    
+    func setMultiSelectResponse(id: CUnsignedLong, val:Int) {
+        let answer = getMulResponseAnswer(id: id)
+        if(answer != nil) {
+            if(val == 1) {
+                answer?.answer = Int(id)
+            } else {
+                let index = response.response_answers.index(where:{$0 === answer!})
+                response.response_answers.remove(at: index!)
+            }
+        } else {
+            let ra = getNewResponseAnswer(questionId:followUpQuestion.id)
+            ra.question_label_id = id
+            ra.answer = Int(id)
+            response.response_answers.append(ra)
+        }
+    }
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let textViewText = textView.text + text
+        let response = getResponseAnswer(id: currentQuestion.id)
+        if (response?.response_answer_text != nil) {
+            response?.response_answer_text.text = textViewText
+        }
+        return true
+    }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        let textFieldText = textField.text! + string
+        //Set FollowUP Email
+        response.customer_email = textFieldText
+        return true
+    }
+    
 }

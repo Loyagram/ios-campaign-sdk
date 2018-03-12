@@ -242,13 +242,13 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     func setRatingResposne(id: CUnsignedLong, rating:Int){
         let answers = getResponseAnswer(id: id)
         if(answers != nil) {
-            answers?.answer = UInt(rating)
+            answers?.answer = Int(rating)
             answers?.question_label_id = id
             //return ra
         } else {
             let ra = getNewResponseAnswer()
             ra.question_label_id = id
-            ra.answer = UInt(rating)
+            ra.answer = Int(rating)
             response.response_answers.append(ra)
         }
     }
@@ -272,7 +272,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         responseAnswer.campaign_id = response.campaign_id
         responseAnswer.response_id = response.id
         responseAnswer.question_id = currentQuestion.id
-        responseAnswer.at = CUnsignedLong(CFAbsoluteTime())
+        responseAnswer.at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
         responseAnswer.id = UUID().uuidString
         return responseAnswer
     }
