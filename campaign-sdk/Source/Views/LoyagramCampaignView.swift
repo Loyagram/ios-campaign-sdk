@@ -60,12 +60,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var topConstraint : NSLayoutConstraint!
     var mainView : UIView!
     var npsRating = 0
-    let cescsatOption = "neutral"
+    var cescsatOption = "neutral"
     var staticTexts = StaticTextTranslation()
     var txtWelcomeMessage : UITextView!
     var txtWelcomeTip : UITextView!
     var activityIndicator: UIActivityIndicatorView!
     var response: Response!
+    var chk: CheckBox!
     
     public override init(frame: CGRect){
         super.init(frame: frame)
@@ -132,7 +133,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         topConstraint = NSLayoutConstraint(item: mainView, attribute: .top, relatedBy: .equal, toItem: self,  attribute: .top, multiplier: 1.0, constant: 0.0)
         
         bottomConstraint = NSLayoutConstraint(item: mainView, attribute: .bottom, relatedBy: .equal, toItem: self,  attribute: .bottom, multiplier: 1.0, constant: 0.0)
-        mainView.backgroundColor = UIColor.red
         NSLayoutConstraint.activate([bottomConstraint, topConstraint])
         
     }
@@ -356,7 +356,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnNext = UIButton(type: .system)
         btnPrev = UIButton(type: .system)
         
-        //nextPrevButtonView.backgroundColor = UIColor.red
         mainView.addSubview(contentView)
         contentView.backgroundColor = UIColor.white
         nextPrevButtonView.addSubview(btnPrev)
@@ -374,7 +373,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnPrev.addTarget(self, action: #selector(prevButtonAction(sender:)), for: .touchUpInside)
         btnNext.addTarget(self, action: #selector(nextButtonAction(sender:)), for: .touchUpInside)
         
-        //nextPrevButtonView.backgroundColor = UIColor.red
         
         //Style buttons
         btnPrev.layer.borderWidth = 2
@@ -535,7 +533,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([btnWidth, btnHeight, btnTop, btnCenterHorizontally])
         
         btnStart.addTarget(self, action: #selector(startButtonAction(sender:)), for: .touchUpInside)
-        
         
         
     }
@@ -725,11 +722,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     //MARK :- Question Navigation
     
-    func setNPS() {
+    func setNPS(rating: Int!) {
+        npsRating = rating
         showNextQuestion()
     }
     
-    func setOptions() {
+    func setOptions(option:String!) {
+        cescsatOption = option
         showNextQuestion()
         
     }
@@ -833,30 +832,30 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func submitCampaign() {
-        showThankYou()
-        resetCampaign()
+        
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
         response.language_code = currentLanguage.language_code
         let data = try! encoder.encode(response)
-        let jsonString = String(data:data, encoding = .prettyPrinted)
+        let jsonString = String(data:data, encoding: .utf8)
         //let jsonString = String(data: data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\\", with: "")
         //let jsonStringWithData:[String:Any] = ["data":jsonString]
         
         
-//        let dict = NSMutableDictionary()
-//        dict.setValue(data, forKey: "data")
-//        let jsonData = try? JSONSerialization.data(withJSONObject: dict)
-//        let valid = JSONSerialization.isValidJSONObject(jsonData)
-//        print(String(data:jsonData!, encoding : .utf8)!)
-//
-//        SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
-//            print("sucessfully submited")
-//        }, failure: {() -> Void in
-//            print("failed to submit response")
-//        })
-        
+        let dict = NSMutableDictionary()
+        dict.setValue(jsonString, forKey: "data")
+        let jsonData = try? JSONSerialization.data(withJSONObject: dict)
+        //let valid = JSONSerialization.isValidJSONObject(jsonData)
+        print(String(data:jsonData!, encoding : .utf8)!)
+
+        SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
+            print("sucessfully submited")
+        }, failure: {() -> Void in
+            print("failed to submit response")
+        })
+        showThankYou()
+        resetCampaign()
     }
     
     @objc func resetCampaign() {
@@ -1058,7 +1057,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         thankYouView.addSubview(txtThankYou)
         txtThankYou.font = GlobalConstants.FONT_MEDIUM
         
+        let chkContainer = UIView()
+        
         txtThankYou.text = setThankYouMessage()
+        chk = CheckBox(frame: CGRect(x: 0, y: 0, width: 60, height: 60))
+        chkContainer.addSubview(chk)
+        chkContainer.translatesAutoresizingMaskIntoConstraints = false
+        thankYouView.addSubview(chkContainer)
         
         //ThankYouView constraints
         let thankYouCenterX = NSLayoutConstraint(item: thankYouView, attribute: .centerX, relatedBy: .equal, toItem: contentView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
@@ -1069,24 +1074,36 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let thankYouTrailing = NSLayoutConstraint(item: thankYouView, attribute: .trailing, relatedBy: .equal, toItem: contentView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
         
-        let thankYouHeight = NSLayoutConstraint(item: thankYouView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 50.0)
-        
-        thankYouView.backgroundColor = UIColor.red
+        let thankYouHeight = NSLayoutConstraint(item: thankYouView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 120.0)
         
         NSLayoutConstraint.activate([thankYouCenterX, thankYouCenterY, thankYouLeading, thankYouTrailing, thankYouHeight])
         
         //ThankYou TextView constraints
         
-        let txtTop = NSLayoutConstraint(item: txtThankYou, attribute: .top, relatedBy: .equal, toItem: thankYouView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        let txtTop = NSLayoutConstraint(item: txtThankYou, attribute: .top, relatedBy: .equal, toItem: thankYouView, attribute: .top, multiplier: 1.0, constant: 70.0)
         
-        let txtBottom = NSLayoutConstraint(item: txtThankYou, attribute: .bottom, relatedBy: .equal, toItem: thankYouView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
         let txtLeading = NSLayoutConstraint(item: txtThankYou, attribute: .leading, relatedBy: .equal, toItem: thankYouView, attribute: .leading, multiplier: 1.0, constant: 0.0)
         
         let txtTrailing = NSLayoutConstraint(item: txtThankYou, attribute: .trailing, relatedBy: .equal, toItem: thankYouView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
         
-        NSLayoutConstraint.activate([txtTop, txtBottom, txtLeading, txtTrailing])
+        let txtHeight = NSLayoutConstraint(item: txtThankYou, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 50.0)
+        
+        NSLayoutConstraint.activate([txtTop, txtLeading, txtTrailing, txtHeight])
+        //checkmark constraints
+        
+        NSLayoutConstraint(item: chkContainer, attribute: .centerX, relatedBy: .equal, toItem: thankYouView, attribute: .centerX, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: chkContainer, attribute: .top, relatedBy: .equal, toItem: thankYouView, attribute: .top, multiplier: 1.0, constant: 5.0).isActive = true
+        
+        NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 60.0).isActive = true
+        NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 60.0).isActive = true
+        
+        DispatchQueue.main.async() {
+            self.chk.setColorPrimary(color: self.primaryColor)
+            self.chk.showCheckMarkAnimation()
+        }
     }
+    
     
     @objc func setThankYouMessage() -> String {
         
@@ -1124,7 +1141,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 case "score" :
                     if(npsRating <= 6) {
                         strThankYou = thankYouAndRedirectSettings.custom.detractors.message
-                    } else if(npsRating <= 6) {
+                    } else if(npsRating <= 8) {
                         strThankYou = thankYouAndRedirectSettings.custom.passives.message
                     } else {
                         strThankYou = thankYouAndRedirectSettings.custom.promoters.message
@@ -1169,16 +1186,16 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                         strThankYou = customThankYou.neutral.message
                         break
                     case "dissatisfied" :
-                        strThankYou = customThankYou.neutral.message
+                        strThankYou = customThankYou.dissatisfied.message
                         break
                     case "satisfied" :
-                        strThankYou = customThankYou.neutral.message
+                        strThankYou = customThankYou.satisfied.message
                         break
                     case "agree" :
-                        strThankYou = customThankYou.neutral.message
+                        strThankYou = customThankYou.agree.message
                         break
                     case "disagree" :
-                        strThankYou = customThankYou.neutral.message
+                        strThankYou = customThankYou.disagree.message
                         break
                     default:
                         break

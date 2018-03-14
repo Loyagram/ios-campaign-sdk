@@ -71,6 +71,9 @@
 		D3D9F9B220347A250054F7FF /* Question.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99D20347A240054F7FF /* Question.swift */; };
 		D3D9F9B320347A250054F7FF /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99E20347A250054F7FF /* Settings.swift */; };
 		D3D9F9B420347A250054F7FF /* SettingsTranslations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F99F20347A250054F7FF /* SettingsTranslations.swift */; };
+		D3E3B1502057DDE7005A4175 /* AnimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E3B14F2057DDE7005A4175 /* AnimationManager.swift */; };
+		D3E3B1522057E205005A4175 /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E3B1512057E205005A4175 /* CheckBox.swift */; };
+		D3E3B1542057E279005A4175 /* PathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E3B1532057E279005A4175 /* PathManager.swift */; };
 		D3F17CCC205014B400F431F5 /* drop-down-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D3F17CCB205014B400F431F5 /* drop-down-arrow.png */; };
 		D3F17CCE20501EA800F431F5 /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D3F17CC82050140900F431F5 /* ProximaNova-Regular.otf */; };
 /* End PBXBuildFile section */
@@ -192,6 +195,9 @@
 		D3D9F99D20347A240054F7FF /* Question.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Question.swift; sourceTree = "<group>"; };
 		D3D9F99E20347A250054F7FF /* Settings.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		D3D9F99F20347A250054F7FF /* SettingsTranslations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SettingsTranslations.swift; sourceTree = "<group>"; };
+		D3E3B14F2057DDE7005A4175 /* AnimationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationManager.swift; sourceTree = "<group>"; };
+		D3E3B1512057E205005A4175 /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
+		D3E3B1532057E279005A4175 /* PathManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathManager.swift; sourceTree = "<group>"; };
 		D3F17CC82050140900F431F5 /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Regular.otf"; sourceTree = "<group>"; };
 		D3F17CCB205014B400F431F5 /* drop-down-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drop-down-arrow.png"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -264,6 +270,7 @@
 		D36D532C202DA01700258DCA /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				D3E3B14E2057DDD0005A4175 /* Animation */,
 				D3F17CCD20501E8400F431F5 /* Fonts */,
 				D3713732204ECBE400047606 /* RestApi */,
 				D345F6F12046A02A002801E8 /* Utils */,
@@ -427,6 +434,16 @@
 				D3B08044202B03B6009B046B /* Info.plist */,
 			);
 			path = CampaignSdkDemoUITests;
+			sourceTree = "<group>";
+		};
+		D3E3B14E2057DDD0005A4175 /* Animation */ = {
+			isa = PBXGroup;
+			children = (
+				D3E3B14F2057DDE7005A4175 /* AnimationManager.swift */,
+				D3E3B1512057E205005A4175 /* CheckBox.swift */,
+				D3E3B1532057E279005A4175 /* PathManager.swift */,
+			);
+			path = Animation;
 			sourceTree = "<group>";
 		};
 		D3F17CCD20501E8400F431F5 /* Fonts */ = {
@@ -647,6 +664,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D3E3B1502057DDE7005A4175 /* AnimationManager.swift in Sources */,
 				D3064AD9203158E20015E35B /* CampaignViewController.swift in Sources */,
 				D391C5D920515C2E0026DA31 /* ResponseAnswerText.swift in Sources */,
 				D3064AE22031C0310015E35B /* LanguageTableViewCell.swift in Sources */,
@@ -670,6 +688,7 @@
 				D344BC6D203C1F6600B5C235 /* LoyagramTextView.swift in Sources */,
 				D344BC6B203C123900B5C235 /* LoyagramRatingView.swift in Sources */,
 				D3064AD7203157BF0015E35B /* LoyagramCampaignManager.swift in Sources */,
+				D3E3B1522057E205005A4175 /* CheckBox.swift in Sources */,
 				D32AD91F2035A0F400B3061D /* Labels.swift in Sources */,
 				D38D18602045560F00505EC8 /* RatingTableViewCell.swift in Sources */,
 				D3D9F9A420347A250054F7FF /* QuestionTranslations.swift in Sources */,
@@ -684,6 +703,7 @@
 				D340FCD2204D508100D87B5B /* ThankYouAndRedirectSetting.swift in Sources */,
 				D33CF1B7204806080062EF01 /* TranslationSettings.swift in Sources */,
 				D391C5D720515C100026DA31 /* ResponseAnswer.swift in Sources */,
+				D3E3B1542057E279005A4175 /* PathManager.swift in Sources */,
 				D3D9F9A620347A250054F7FF /* Promoters.swift in Sources */,
 				D3D9F9A020347A250054F7FF /* Campaign.swift in Sources */,
 				D32AD9222035B5BA00B3061D /* LoyagramRadioButton.swift in Sources */,

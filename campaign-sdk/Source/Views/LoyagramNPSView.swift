@@ -9,7 +9,7 @@
 import UIKit
 
 protocol LoyagramNPSDelegate: class {
-    func setNPS()
+    func setNPS(rating: Int!)
 }
 
 class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCampaignButtonDelegate, UITextFieldDelegate, UITextViewDelegate, LoyagramLanguageDelegate {
@@ -292,15 +292,16 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     }
     
     @objc func npsButtonAction (sender: UIButton) {
-        if(delegate != nil) {
-            delegate.setNPS()
-        }
+        
         if(currentRating != nil) {
             let button = self.viewWithTag(currentRating) as! UIButton
             button.backgroundColor = UIColor.white
             button.setTitleColor(primaryColor, for: .normal)
         }
         currentRating = sender.tag
+        if(delegate != nil && currentRating != nil) {
+            delegate.setNPS(rating:currentRating)
+        }
         setNpsResponse(id: currentQuestion.id, val: sender.tag)
         let responseAnswer = getResponseAnswer(id: currentQuestion.id)
         if(responseAnswer != nil) {

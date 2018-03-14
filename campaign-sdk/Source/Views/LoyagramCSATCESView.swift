@@ -10,7 +10,7 @@ import UIKit
 
 
 protocol LoyagramCSATCESDelegate: class {
-    func setOptions()
+    func setOptions(option:String!)
 }
 
 class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate, UITextViewDelegate, UITextFieldDelegate {
@@ -51,7 +51,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     var radioGroup = [LoyagramRadioButton]()
     var staticTexts : StaticTextTranslation!
     var response: Response!
-    var csatcesOption: String!
+    var csatcesOption = "nuetral"
     
     public init(frame: CGRect, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, isCSAT: Bool, campaignView:LoyagramCampaignView, staticTexts: StaticTextTranslation, response:Response) {
         super.init(frame: frame)
@@ -360,9 +360,6 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             $0.isSelected = false
         }
         sender.isSelected = !sender.isSelected
-        if(delegate != nil) {
-            delegate.setOptions()
-        }
         setCSATCESResponse(id: CUnsignedLong(sender.tag), val: 1)
         switch(sender.csatcesOption) {
         case "very_dissatisfied":
@@ -397,6 +394,9 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             break
         default:
             break
+        }
+        if(delegate != nil) {
+            delegate.setOptions(option:csatcesOption)
         }
         
     }
