@@ -260,6 +260,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         }
         sender.isSelected = !sender.isSelected
         setSingleSelectResposne(id: CUnsignedLong(sender.tag))
+        saveResponseToDB()
     }
     
     
@@ -269,6 +270,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         } else {
             setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 0)
         }
+        saveResponseToDB()
     }
     
     override public func layoutSubviews() {
@@ -378,6 +380,14 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         responseAnswer.at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
         responseAnswer.id = UUID().uuidString
         return responseAnswer
+    }
+    
+    @objc func saveResponseToDB() {
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(response)
+        let stringResponse = String(data: data, encoding: .utf8)!
+        DBManager.instance.createTableResponse()
+        DBManager.instance.insertResponseIntoDB(response: stringResponse)
     }
    
 }

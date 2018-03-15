@@ -18,7 +18,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     func ratingChangedValue(ratingBar: LoyagramRatingBar) {
         
         setRatingResposne(id: CUnsignedLong(ratingBar.tag), rating:Int(ratingBar.rating))
-        //print("current rating\(ratingBar.rating)")
+        saveResponseToDB()
     }
     
     var mainView: UIView!
@@ -276,5 +276,11 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         responseAnswer.id = UUID().uuidString
         return responseAnswer
     }
-    
+    @objc func saveResponseToDB() {
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(response)
+        let stringResponse = String(data: data, encoding: .utf8)!
+        DBManager.instance.createTableResponse()
+        DBManager.instance.insertResponseIntoDB(response: stringResponse)
+    }
 }

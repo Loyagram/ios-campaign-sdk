@@ -848,7 +848,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let jsonData = try? JSONSerialization.data(withJSONObject: dict)
         //let valid = JSONSerialization.isValidJSONObject(jsonData)
         print(String(data:jsonData!, encoding : .utf8)!)
-
+        
         SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
             print("sucessfully submited")
         }, failure: {() -> Void in
@@ -863,6 +863,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func closeButtonAction(sender:UIButton!) {
         closeCampaignController()
+        DBManager.instance.closeDB()
     }
     
     @objc func closeCampaignController() {
@@ -1099,6 +1100,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 60.0).isActive = true
         
         DispatchQueue.main.async() {
+            self.chk.isTickShown = false
             self.chk.setColorPrimary(color: self.primaryColor)
             self.chk.showCheckMarkAnimation()
         }
@@ -1324,14 +1326,49 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     //Handle Resposne
     
     @objc func initResponse() {
-        response = Response()
-        response.channel = "MOBILE-SDK"
-        response.sub_channel = "IOS"
-        response.biz_id = UInt(campaign.biz_id)
-        response.campaign_id = campaign.id
-        response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
-        if(response.response_answers == nil) {
-            response.response_answers = [ResponseAnswer]()
+        let savedCampaign = getResponseFromDB()
+        if(savedCampaign == nil) {
+            response = Response()
+            response.channel = "MOBILE-SDK"
+            response.sub_channel = "IOS"
+            response.biz_id = UInt(campaign.biz_id)
+            response.campaign_id = campaign.id
+            response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
+            if(response.response_answers == nil) {
+                response.response_answers = [ResponseAnswer]()
+            }
+            saveResponseToDB()
+        }else if(savedCampaign?.campaign_id == campaign.id) {
+            response = savedCampaign
+        } else {
+            response = Response()
+            response.channel = "MOBILE-SDK"
+            response.sub_channel = "IOS"
+            response.biz_id = UInt(campaign.biz_id)
+            response.campaign_id = campaign.id
+            response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
+            if(response.response_answers == nil) {
+                response.response_answers = [ResponseAnswer]()
+            }
+            saveResponseToDB()
         }
+    }
+    
+    @objc func saveResponseToDB() {
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(response)
+        let stringResponse = String(data: data, encoding: .utf8)!
+        //DBManager.instance.createTableResponse()
+        DBManager.instance.insertResponseIntoDB(response: stringResponse)
+    }
+    
+    func getResponseFromDB() ->Response? {
+        if(DBManager.instance.getResponseFromDB() != nil) {
+            let jsonData = DBManager.instance.getResponseFromDB()!.data(using: .utf8)!
+            let decoder = JSONDecoder()
+            let response = try! decoder.decode(Response.self, from: jsonData)
+            return response
+        }
+        return nil
     }
 }

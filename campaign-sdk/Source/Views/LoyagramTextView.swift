@@ -249,6 +249,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         if (response.response_answer_text != nil) {
             response.response_answer_text.text = textViewText
         }
+        saveResponseToDB()
         return true
     }
     
@@ -258,6 +259,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         if (response.response_answer_text != nil) {
             response.response_answer_text.text = textFieldText
         }
+        saveResponseToDB()
         return true
     }
     func setTextResposne(id: CUnsignedLong, rating:Int) -> ResponseAnswer {
@@ -300,6 +302,12 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         responseAnswer.id = UUID().uuidString
         return responseAnswer
     }
-
+    @objc func saveResponseToDB() {
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(response)
+        let stringResponse = String(data: data, encoding: .utf8)!
+        DBManager.instance.createTableResponse()
+        DBManager.instance.insertResponseIntoDB(response: stringResponse)
+    }
     
 }

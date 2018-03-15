@@ -361,6 +361,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         }
         sender.isSelected = !sender.isSelected
         setCSATCESResponse(id: CUnsignedLong(sender.tag), val: 1)
+        saveResponseToDB()
         switch(sender.csatcesOption) {
         case "very_dissatisfied":
             csatcesOption = "dissatisfied"
@@ -581,7 +582,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         } else {
             setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 0)
         }
-        
+        saveResponseToDB()
     }
     
     @objc func changeLabelLanguage() {
@@ -691,6 +692,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         if (response?.response_answer_text != nil) {
             response?.response_answer_text.text = textViewText
         }
+        saveResponseToDB()
         return true
     }
     
@@ -698,8 +700,15 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let textFieldText = textField.text! + string
         //Set FollowUP Email
         response.customer_email = textFieldText
+        saveResponseToDB()
         return true
     }
     
-    
+    @objc func saveResponseToDB() {
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(response)
+        let stringResponse = String(data: data, encoding: .utf8)!
+        DBManager.instance.createTableResponse()
+        DBManager.instance.insertResponseIntoDB(response: stringResponse)
+    }
 }

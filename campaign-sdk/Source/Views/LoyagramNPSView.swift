@@ -303,6 +303,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             delegate.setNPS(rating:currentRating)
         }
         setNpsResponse(id: currentQuestion.id, val: sender.tag)
+        saveResponseToDB()
         let responseAnswer = getResponseAnswer(id: currentQuestion.id)
         if(responseAnswer != nil) {
             if(sender.tag == responseAnswer?.answer) {
@@ -524,6 +525,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         } else {
             setMultiSelectResponse(id: CUnsignedLong(sender.tag), val: 0)
         }
+        saveResponseToDB()
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -680,6 +682,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         if (response?.response_answer_text != nil) {
             response?.response_answer_text.text = textViewText
         }
+        saveResponseToDB()
         return true
     }
     
@@ -687,7 +690,14 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let textFieldText = textField.text! + string
         //Set FollowUP Email
         response.customer_email = textFieldText
+        saveResponseToDB()
         return true
     }
-    
+    @objc func saveResponseToDB() {
+        let encoder = JSONEncoder()
+        let data = try! encoder.encode(response)
+        let stringResponse = String(data: data, encoding: .utf8)!
+        DBManager.instance.createTableResponse()
+        DBManager.instance.insertResponseIntoDB(response: stringResponse)
+    }
 }

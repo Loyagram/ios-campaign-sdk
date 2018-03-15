@@ -20,8 +20,8 @@ struct GlobalConstants {
     
     static func unpackFonts() {
         do {
-            let bundle1 = Bundle(for: LoyagramCampaignView.self)
-            let fontPath = bundle1.path(forResource: "ProximaNova-Regular", ofType: "otf")
+            let bundle = Bundle(for: LoyagramCampaignView.self)
+            let fontPath = bundle.path(forResource: "ProximaNova-Regular", ofType: "otf")
             let fontBinary  = try NSData(contentsOfFile: fontPath!, options: NSData.ReadingOptions())
             let error: UnsafeMutablePointer<Unmanaged<CFError>?>? = nil
             let dataProvider = CGDataProvider(data: fontBinary as CFData)
