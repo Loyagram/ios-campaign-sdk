@@ -58,7 +58,8 @@ class CampaignViewController: UIViewController {
             if questionCount > 0 {
                 
                 DispatchQueue.main.async() {
-                    self.campaignView.setCampaign(campaign: campaign)
+                    //self.campaignView.setCampaign(campaign: campaign)
+                    self.campaignView.campaignErrorHandler()
                 }
             } else {
                 DispatchQueue.main.async() {

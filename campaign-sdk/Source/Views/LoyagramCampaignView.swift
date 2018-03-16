@@ -116,6 +116,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         currentLang = 0
         showActivityIndicator()
         hideCampaignView()
+        if(isColorSet) {
+            setTheme(colorTheme: primaryColor, isColorPrimarySet: true)
+        } else{
+            setTheme(colorTheme: UIColor.white, isColorPrimarySet: false)
+        }
     }
     
     required public init?(coder aDecoder: NSCoder) {
@@ -126,15 +131,19 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         self.viewController = vc
     }
     
-    func setTheme() {
-        activityIndicator.color = primaryColor
-        headerView.backgroundColor = primaryColor
+    func setTheme(colorTheme: UIColor, isColorPrimarySet:Bool) {
+        if(!isColorPrimarySet) {
+            activityIndicator.color = UIColor.lightGray
+        }else {
+            activityIndicator.color = colorTheme
+        }
+        headerView.backgroundColor = colorTheme
         contentView.backgroundColor = UIColor.white
-        footerView.backgroundColor = primaryColor
-        btnStart.backgroundColor = primaryColor
-        btnPrev.layer.borderColor = primaryColor.cgColor
-        btnNext.layer.borderColor = primaryColor.cgColor
-        btnStart.layer.borderColor = primaryColor.cgColor
+        footerView.backgroundColor = colorTheme
+        btnStart.backgroundColor = colorTheme
+        btnPrev.layer.borderColor = colorTheme.cgColor
+        btnNext.layer.borderColor = colorTheme.cgColor
+        btnStart.layer.borderColor = colorTheme.cgColor
     }
     
     @objc func initMainView() {
@@ -528,7 +537,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnStart.layer.borderWidth = 1.0
         btnStart.layer.cornerRadius = 15
         //btnStart.layer.borderColor = primaryColor.cgColor
-//        btnStart.backgroundColor = primaryColor
+        //        btnStart.backgroundColor = primaryColor
         btnStart.setTitleColor(UIColor.white, for: .normal)
         initWelcomeView()
         //Start Button Container
@@ -943,7 +952,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         self.campaign = campaign
         if(!isColorSet && campaign.color_primary != nil) {
             primaryColor = getColorFromHex(hexString: campaign.color_primary!)
-            setTheme()
+            setTheme(colorTheme: primaryColor, isColorPrimarySet: true)
         }
         currentQuestion = campaign.questions?[0]
         questionNumber = 1
@@ -978,6 +987,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     func campaignErrorHandler() {
         hideActivityIndicator()
         showAlert()
+        primaryColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+        setTheme(colorTheme: primaryColor, isColorPrimarySet: true)
     }
     func showAlert() {
         if(viewController != nil) {
@@ -1405,16 +1416,12 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             cString.remove(at: cString.startIndex)
         }
         if ((cString.count) != 6) {
-            return UIColor.gray
+            return UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
         }
         var rgbValue:UInt32 = 0
         Scanner(string: cString).scanHexInt32(&rgbValue)
         
-        return UIColor(
-            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
-            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
-            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
-            alpha: CGFloat(1.0)
+        return UIColor(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,blue: CGFloat(rgbValue & 0x0000FF) / 255.0,alpha: CGFloat(1.0)
         )
     }
 }
