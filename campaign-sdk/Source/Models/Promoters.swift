@@ -2,10 +2,10 @@
 
 import Foundation
 class Promoters : Codable {
-	let disabled : Bool!
-	let auto : Bool!
-	let message : String!
-	let links : [String]!
+	let disabled : Bool?
+	let auto : Bool?
+	let message : String?
+	let links : [String]?
 
 	enum CodingKeys: String, CodingKey {
 

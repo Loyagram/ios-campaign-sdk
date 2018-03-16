@@ -118,8 +118,8 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let settingsTranslations = currentQuestion.settings_translations
         for sT in settingsTranslations! {
             if(sT.language_code == langCode) {
-                let requestReasonSettings = sT.text.settings.nps_settings.request_reason_settings
-                txtFeedBackQuestion.text = requestReasonSettings?.all.message
+                let requestReasonSettings = sT.text?.settings?.nps_settings?.request_reason_settings
+                txtFeedBackQuestion.text = requestReasonSettings?.all?.message
                 break
             }
         }
@@ -281,7 +281,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             npsButton.addTarget(self, action: #selector(npsButtonAction(sender:)), for: .touchUpInside)
             npsButtons.append(npsButton)
             //
-            let responseAnswer = getResponseAnswer(id: currentQuestion.id)
+            let responseAnswer = getResponseAnswer(id: currentQuestion.id!)
             if(responseAnswer != nil) {
                 if( i == responseAnswer?.answer) {
                   npsButton.backgroundColor = primaryColor
@@ -302,9 +302,9 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         if(delegate != nil && currentRating != nil) {
             delegate.setNPS(rating:currentRating)
         }
-        setNpsResponse(id: currentQuestion.id, val: sender.tag)
+        setNpsResponse(id: currentQuestion.id!, val: sender.tag)
         saveResponseToDB()
-        let responseAnswer = getResponseAnswer(id: currentQuestion.id)
+        let responseAnswer = getResponseAnswer(id: currentQuestion.id!)
         if(responseAnswer != nil) {
             if(sender.tag == responseAnswer?.answer) {
                 sender.backgroundColor = primaryColor
@@ -390,7 +390,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
         
         let rect = CGRect(x: 0, y: 0, width: 320, height: 35)
-        chk = LoyagramCheckBox(frame: rect)
+        chk = LoyagramCheckBox(frame: rect, colorPrimary:primaryColor)
         chk.showTextLabel = true
         chk.tag = 1001
         chk.text = staticTextes.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
@@ -491,7 +491,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         if(campaignType == "NPS") {
             //table View height
             let viewHeight = self.frame.height
-            let requiredHeight = CGFloat(followUpQuestion.labels.count) * 35
+            let requiredHeight = CGFloat(followUpQuestion.labels?.count ?? 0) * 35
             if(requiredHeight <= viewHeight - 60) {
                 tblHeight.constant = requiredHeight
             } else {
@@ -554,7 +554,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return followUpQuestion.labels.count
+        return followUpQuestion.labels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -566,14 +566,14 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     }
     
     @objc func getMultiSelectCell(checkBoxContainer: UIView, row:Int) {
-        let label = followUpQuestion.labels[row]
+        let label = followUpQuestion.labels?[row]
         let rect = CGRect(x: 0, y: 0, width: 220, height: 35)
-        let chk = LoyagramCheckBox(frame: rect)
+        let chk = LoyagramCheckBox(frame: rect, colorPrimary:primaryColor)
         chk.showTextLabel = true
         checkBoxContainer.addSubview(chk)
-        chk.tag = Int(label.id)
+        chk.tag = Int(label?.id ?? 0)
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
-        let labelTranslations = label.label_translations
+        let labelTranslations = label?.label_translations
         let langCode = currentLanguage.language_code
         for labelTranslation in labelTranslations! {
             if(labelTranslation.language_code == langCode) {
@@ -582,7 +582,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             }
         }
         
-        let responseAnswer = getMulResponseAnswer(id: label.id)
+        let responseAnswer = getMulResponseAnswer(id: (label?.id!)!)
         if(responseAnswer != nil) {
             chk.isChecked = true
         }
@@ -597,10 +597,10 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let settingsTransaltions = currentQuestion.settings_translations!
         for st in settingsTransaltions {
             if(st.language_code == currentLanguage.language_code) {
-                let npsSettings = st.text.settings.nps_settings!
-                    let widget = npsSettings.widget!
-                    txtLikely.text = widget.very_likely
-                    txtNotLikely.text = widget.not_likely
+                let npsSettings = st.text?.settings?.nps_settings!
+                let widget = npsSettings?.widget!
+                txtLikely.text = widget?.very_likely
+                txtNotLikely.text = widget?.not_likely
                 break
                 }
             }
@@ -678,7 +678,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let textViewText = textView.text + text
-        let response = getResponseAnswer(id: currentQuestion.id)
+        let response = getResponseAnswer(id: currentQuestion.id!)
         if (response?.response_answer_text != nil) {
             response?.response_answer_text.text = textViewText
         }

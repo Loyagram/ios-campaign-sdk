@@ -9,8 +9,8 @@
 import Foundation
 
 class ThankYouTranslation : Codable {
-    let language_code : String!
-    let text : Thank_you_and_redirect_settings!
+    let language_code : String?
+    let text : Thank_you_and_redirect_settings?
     
     enum CodingKeys: String, CodingKey {
         

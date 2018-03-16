@@ -64,7 +64,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         self.campaignView = campaignView
         self.campaignView.campaignButtonDelegate =  self
         self.campaignView.languageDelegate = self
-        noOfRows = question.labels.count
+        noOfRows = question.labels?.count
         isFollowUp = false
         self.staticTexts = staticTexts
         self.response = response
@@ -110,11 +110,11 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             if(sT.language_code == langCode) {
                 //txtFollowUpQuestion.text = questionTranslation.text
                 if(isCSAT) {
-                    let requestReasonSettings = sT.text.settings.csat_settings.request_reason_settings
-                    txtFeedbackQuestion.text = requestReasonSettings?.all.message
+                    let requestReasonSettings = sT.text?.settings?.csat_settings?.request_reason_settings
+                    txtFeedbackQuestion.text = requestReasonSettings?.all?.message
                 } else {
-                    let requestReasonSettings = sT.text.settings.ces_settings.request_reason_settings
-                    txtFeedbackQuestion.text = requestReasonSettings?.all.message
+                    let requestReasonSettings = sT.text?.settings?.ces_settings?.request_reason_settings
+                    txtFeedbackQuestion.text = requestReasonSettings?.all?.message
                 }
                 break
             }
@@ -232,7 +232,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
         
         let rect = CGRect(x: 0, y: 0, width: 320, height: 35)
-        chk = LoyagramCheckBox(frame: rect)
+        chk = LoyagramCheckBox(frame: rect, colorPrimary:primaryColor)
         chk.showTextLabel = true
         chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
         chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
@@ -410,14 +410,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             isFollowUp = false
             txtQuestion.isHidden = false
             txtFollowUpQuestion.isHidden = true
-            noOfRows = currentQuestion.labels.count
+            noOfRows = currentQuestion.labels?.count
             csatcesTableView.reloadData()
             self.layoutSubviews()
             break
         case 2:
             csatcesScrollView.isHidden = true
             isFollowUp = true
-            noOfRows = followUpQuestion.labels.count
+            noOfRows = followUpQuestion.labels?.count
             txtFollowUpQuestion.isHidden = false
             csatcesTableView.isHidden = false
             csatcesTableView.reloadData()
@@ -432,7 +432,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         switch iterator {
         case 0:
             isFollowUp = true
-            noOfRows = followUpQuestion.labels.count
+            noOfRows = followUpQuestion.labels?.count
             txtFollowUpQuestion.isHidden = false
             txtQuestion.isHidden = true
             csatcesTableView.reloadData()
@@ -502,7 +502,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     
     @objc func getSingleSelectCell(radioButtonContainer: UIView, row:Int) {
         
-        let label = currentQuestion.labels[row]
+        let label = currentQuestion.labels?[row]
         let rect = CGRect(x: 0, y: 10, width: 20, height: 20)
         let radioButton = LoyagramRadioButton(frame: rect, primaryColor: primaryColor)
         radioButtonContainer.addSubview(radioButton)
@@ -511,12 +511,12 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         //radioButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
-        radioLabel.tag = Int(label.id)
-        radioButton.tag = Int(label.id)
-        radioButton.csatcesOption = label.name
+        radioLabel.tag = Int(label?.id ?? 0)
+        radioButton.tag = Int(label?.id ?? 0)
+        radioButton.csatcesOption = (label?.name!)!
         
-        let ra = getResponseAnswer(id: label.id)
-        if(ra != nil && ra?.question_label_id == label.id) {
+        let ra = getResponseAnswer(id: (label?.id!)!)
+        if(ra != nil && ra?.question_label_id == label?.id) {
             radioButton.isSelected = true
         }
         
@@ -542,7 +542,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         radioButton.addTarget(self, action: #selector(radioButtonAction(sender:)), for: .touchUpInside)
         radioGroup.append(radioButton)
         
-        let labelTranslations = label.label_translations
+        let labelTranslations = label?.label_translations
         let langCode = currentLanguage.language_code
         
         for labelTranslation in labelTranslations! {
@@ -554,14 +554,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
     }
     @objc func getMultiSelectCell(checkBoxContainer: UIView, row:Int) {
-        let label = followUpQuestion.labels[row]
+        let label = followUpQuestion.labels?[row]
         let rect = CGRect(x: 0, y: 0, width: 220, height: 35)
-        let chk = LoyagramCheckBox(frame: rect)
+        let chk = LoyagramCheckBox(frame: rect, colorPrimary:primaryColor)
         chk.showTextLabel = true
-        chk.tag = Int(label.id)
+        chk.tag = Int(label?.id ?? 0)
         checkBoxContainer.addSubview(chk)
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
-        let labelTranslations = label.label_translations
+        let labelTranslations = label?.label_translations
         let langCode = currentLanguage.language_code
         for labelTranslation in labelTranslations! {
             if(labelTranslation.language_code == langCode) {
@@ -570,7 +570,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             }
         }
         
-        let responseAnswer = getMulResponseAnswer(id: label.id)
+        let responseAnswer = getMulResponseAnswer(id: (label?.id!)!)
         if(responseAnswer != nil) {
             chk.isChecked = true
         }
@@ -593,8 +593,8 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             for labelTranslation in labelTranslations {
                 if (labelTranslation.language_code == currentLanguage.language_code) {
                     if(currentQuestion.type == "SINGLE_SELECT") {
-                        if(self.viewWithTag(Int(ql.id)) != nil) {
-                            let radioLabel:UILabel = self.viewWithTag(Int(ql.id)) as! UILabel
+                        if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
+                            let radioLabel:UILabel = self.viewWithTag(Int(ql.id ?? 0)) as! UILabel
                             radioLabel.text = labelTranslation.text
                         }
                     }
@@ -654,7 +654,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     }
     
     func setCSATCESResponse(id: CUnsignedLong, val:Int) {
-        let responseAnswer = getResponseAnswerByQuestionId(id: currentQuestion.id)
+        let responseAnswer = getResponseAnswerByQuestionId(id: currentQuestion.id!)
         if(responseAnswer != nil) {
             responseAnswer?.answer = Int(id)
             responseAnswer?.question_label_id = id
@@ -688,7 +688,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let textViewText = textView.text + text
-        let response = getResponseAnswerByQuestionId(id: currentQuestion.id)
+        let response = getResponseAnswerByQuestionId(id: currentQuestion.id!)
         if (response?.response_answer_text != nil) {
             response?.response_answer_text.text = textViewText
         }

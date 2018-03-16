@@ -2,8 +2,8 @@
 
 import Foundation
 class Thank_you_and_redirect_settings : Codable {
-	let all : All!
-	let type : String!
+	let all : All?
+	let type : String?
 	let custom : CustomThankYouAndRedirectSettings!
 
 	enum CodingKeys: String, CodingKey {

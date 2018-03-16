@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     var rdbGroup: [LGRadioButton]!
     var campaignId = "1020-f6c94dd5-d8c2-4f2d-9c8c-88d7237a8812"
     //var campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
+    let colorPrimary = UIColor(red: 26.0/255.0, green: 55.0/255.0, blue: 156.0/255.0, alpha: 1.0)
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -149,7 +150,7 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
+        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
     }
     
     @objc func dialogButtonAction(sender:UIButton!) {
@@ -158,7 +159,7 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
+        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
     }
     @objc func slideButtonAction(sender:UIButton!) {
         
@@ -166,7 +167,7 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
+        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
     }
     
     @objc func previewButtonAction(sender:UIButton!) {

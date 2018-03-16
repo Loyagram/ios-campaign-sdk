@@ -2,8 +2,8 @@
 
 import Foundation
 class Welcome_message_translations : Codable {
-	let text : String!
-	let language_code : String!
+	let text : String?
+	let language_code : String?
 
 	enum CodingKeys: String, CodingKey {
 

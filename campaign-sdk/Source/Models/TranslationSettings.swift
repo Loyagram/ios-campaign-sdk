@@ -10,9 +10,9 @@ import Foundation
 
 class TranslationSettings : Codable {
     
-    let nps_settings : Nps_settings!
-    let csat_settings : Csat_settings!
-    let ces_settings : Ces_settings!
+    let nps_settings : Nps_settings?
+    let csat_settings : Csat_settings?
+    let ces_settings : Ces_settings?
     
     enum CodingKeys: String, CodingKey {
         

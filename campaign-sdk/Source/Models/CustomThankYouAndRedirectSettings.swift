@@ -9,14 +9,14 @@
 import Foundation
 
 class CustomThankYouAndRedirectSettings: Codable {
-    let promoters : ThankYouAndRedirectSetting!
-    let detractors : ThankYouAndRedirectSetting!
-    let passives : ThankYouAndRedirectSetting!
-    let neutral : ThankYouAndRedirectSetting!
-    let disagree : ThankYouAndRedirectSetting!
-    let agree : ThankYouAndRedirectSetting!
-    let dissatisfied : ThankYouAndRedirectSetting!
-    let satisfied : ThankYouAndRedirectSetting!
+    let promoters : ThankYouAndRedirectSetting?
+    let detractors : ThankYouAndRedirectSetting?
+    let passives : ThankYouAndRedirectSetting?
+    let neutral : ThankYouAndRedirectSetting?
+    let disagree : ThankYouAndRedirectSetting?
+    let agree : ThankYouAndRedirectSetting?
+    let dissatisfied : ThankYouAndRedirectSetting?
+    let satisfied : ThankYouAndRedirectSetting?
     
     enum CodingKeys: String, CodingKey {
         

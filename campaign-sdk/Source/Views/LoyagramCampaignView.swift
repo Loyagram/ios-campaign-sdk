@@ -68,10 +68,27 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var response: Response!
     var chk: CheckBox!
     var thankYouView: UIView!
+    var isColorSet = false
     
     public override init(frame: CGRect){
         super.init(frame: frame)
-        primaryColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+    }
+    
+    init(frame:CGRect, color:UIColor) {
+        super.init(frame:frame)
+        
+        if(color == UIColor.clear) {
+            let tintColor = getTintColor()
+            if(tintColor != nil) {
+                isColorSet = true
+                primaryColor = tintColor
+            } else {
+                primaryColor = UIColor.lightGray
+            }
+        } else {
+            primaryColor = color
+            isColorSet = true
+        }
         //self.layoutIfNeeded()
         self.isUserInteractionEnabled = true
         
@@ -99,23 +116,25 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         currentLang = 0
         showActivityIndicator()
         hideCampaignView()
-        
     }
     
     required public init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
-    //    override public func layoutSubviews() {
-    //        super.layoutSubviews()
-    //        //self.layoutSubviews()
-    //        //layoutIfNeeded()
-    //
-    //    }
-    
-    
     @objc func setViewController(vc:UIViewController!) {
         self.viewController = vc
+    }
+    
+    func setTheme() {
+        activityIndicator.color = primaryColor
+        headerView.backgroundColor = primaryColor
+        contentView.backgroundColor = UIColor.white
+        footerView.backgroundColor = primaryColor
+        btnStart.backgroundColor = primaryColor
+        btnPrev.layer.borderColor = primaryColor.cgColor
+        btnNext.layer.borderColor = primaryColor.cgColor
+        btnStart.layer.borderColor = primaryColor.cgColor
     }
     
     @objc func initMainView() {
@@ -166,7 +185,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         headerView.addSubview(lblQuestionCount)
         mainView.addSubview(headerView)
         
-        headerView.backgroundColor = primaryColor
+        //headerView.backgroundColor = primaryColor
         headerView.translatesAutoresizingMaskIntoConstraints = false
         brandView.translatesAutoresizingMaskIntoConstraints = false
         lblBrand.translatesAutoresizingMaskIntoConstraints = false
@@ -358,7 +377,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnPrev = UIButton(type: .system)
         
         mainView.addSubview(contentView)
-        contentView.backgroundColor = UIColor.white
+        //contentView.backgroundColor = UIColor.white
         nextPrevButtonView.addSubview(btnPrev)
         nextPrevButtonView.addSubview(btnNext)
         contentView.addSubview(nextPrevButtonView)
@@ -378,17 +397,15 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //Style buttons
         btnPrev.layer.borderWidth = 2
         btnPrev.layer.cornerRadius = 15
-        btnPrev.layer.borderColor = primaryColor.cgColor
+        //btnPrev.layer.borderColor = primaryColor.cgColor
         
         btnNext.layer.borderWidth = 2
         btnNext.layer.cornerRadius = 15
-        btnNext.layer.borderColor = primaryColor.cgColor
+        //btnNext.layer.borderColor = primaryColor.cgColor
         
         btnPrev.setTitleColor(primaryColor, for: .normal)
         btnNext.setTitleColor(primaryColor, for: .normal)
         
-        btnPrev.setTitle("Previous", for: .normal)
-        btnNext.setTitle("Next", for: .normal)
         
         //Content View constraints
         
@@ -470,7 +487,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func initFooterView() {
         
         footerView = UIView()
-        footerView.backgroundColor = primaryColor
+        //footerView.backgroundColor = primaryColor
         mainView.addSubview(footerView)
         lblPoweredBy = UILabel()
         //lblPoweredBy.text = "Powered by Loyagram"
@@ -510,8 +527,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnStart.setTitle("Start", for: .normal)
         btnStart.layer.borderWidth = 1.0
         btnStart.layer.cornerRadius = 15
-        btnStart.layer.borderColor = primaryColor.cgColor
-        btnStart.backgroundColor = primaryColor
+        //btnStart.layer.borderColor = primaryColor.cgColor
+//        btnStart.backgroundColor = primaryColor
         btnStart.setTitleColor(UIColor.white, for: .normal)
         initWelcomeView()
         //Start Button Container
@@ -586,7 +603,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 showNPSView()
             }
             else {
-                switch(currentQuestion.type) {
+                switch(currentQuestion.type ?? "") {
                 case "SINGLE_SELECT":
                     showSurveyView()
                     break
@@ -763,21 +780,20 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             case 2: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             submitCampaign()
             followUpIterator = 0
-            
                 break
             default:
                 break
             }
-            
             return
         }
-            
         else {
-            questionNumber += 1
+            print("pressed before submit")
             if(btnNext.titleLabel?.text == staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"]) {
+                print("pressed when text is submit")
                 submitCampaign()
                 return
             }
+            questionNumber += 1
             if(questionNumber == noOfQuestions) {
                 btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
             }
@@ -834,27 +850,29 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func submitCampaign() {
         showThankYou()
-//        let encoder = JSONEncoder()
-//        encoder.outputFormatting = .prettyPrinted
-//        response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
-//        response.language_code = currentLanguage.language_code
-//        let data = try! encoder.encode(response)
-//        let jsonString = String(data:data, encoding: .utf8)
-//        //let jsonString = String(data: data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\\", with: "")
-//        //let jsonStringWithData:[String:Any] = ["data":jsonString]
-//
-//
-//        let dict = NSMutableDictionary()
-//        dict.setValue(jsonString, forKey: "data")
-//        let jsonData = try? JSONSerialization.data(withJSONObject: dict)
-//        //let valid = JSONSerialization.isValidJSONObject(jsonData)
-//        print(String(data:jsonData!, encoding : .utf8)!)
-        
-//        SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
-//            print("sucessfully submited")
-//        }, failure: {() -> Void in
-//            print("failed to submit response")
-//        })
+        /*
+         let encoder = JSONEncoder()
+         encoder.outputFormatting = .prettyPrinted
+         response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
+         response.language_code = currentLanguage.language_code
+         let data = try! encoder.encode(response)
+         let jsonString = String(data:data, encoding: .utf8)
+         //let jsonString = String(data: data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\\", with: "")
+         //let jsonStringWithData:[String:Any] = ["data":jsonString]
+         
+         
+         let dict = NSMutableDictionary()
+         dict.setValue(jsonString, forKey: "data")
+         let jsonData = try? JSONSerialization.data(withJSONObject: dict)
+         //let valid = JSONSerialization.isValidJSONObject(jsonData)
+         print(String(data:jsonData!, encoding : .utf8)!)
+         
+         SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
+         print("sucessfully submited")
+         }, failure: {() -> Void in
+         print("failed to submit response")
+         })
+         */
     }
     
     @objc func resetCampaign() {
@@ -912,18 +930,21 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         cell.backgroundColor = UIColor.white
         cell.lblLanguage.textColor = primaryColor
         tableViewLanguage.reloadData()
-        let languages = campaign?.settings.translation!
+        let languages = campaign?.settings?.translation!
         if(currentLanguage.language_code != languages![indexPath.row].language_code) {
             currentLanguage = languages![indexPath.row]
             btnLanguage.setTitle(currentLanguage.name, for: .normal)
             changeLanguage()
         }
-        
     }
     
     func setCampaign(campaign:Campaign) {
         
         self.campaign = campaign
+        if(!isColorSet && campaign.color_primary != nil) {
+            primaryColor = getColorFromHex(hexString: campaign.color_primary!)
+            setTheme()
+        }
         currentQuestion = campaign.questions?[0]
         questionNumber = 1
         noOfQuestions = (campaign.questions?.count)!
@@ -937,18 +958,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         hideActivityIndicator()
         showCampaignView()
         if(Reachability.isConnectedToNetwork()) {
-            getDataFromUrl(url: URL(string:campaign.biz.img_url)!, completion: ({ (data, response, error) in
+            getDataFromUrl(url: URL(string:(campaign.biz?.img_url)!)!, completion: ({ (data, response, error) in
                 if(data != nil)  {
                     DispatchQueue.main.async() {
                         let image = UIImage(data: data!)
                         self.imageViewBrand.image = image
-                        self.lblBrand.text = campaign.biz.name
+                        self.lblBrand.text = campaign.biz?.name
                     }
                 }
                 
             }))
         } else {
-            self.lblBrand.text = campaign.biz.name
+            self.lblBrand.text = campaign.biz?.name
         }
         initResponse()
     }
@@ -989,9 +1010,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     func loadLanguages() {
-        languages = (campaign?.settings.translation)!
+        languages = (campaign?.settings?.translation)!
         for language in languages {
-            if(language.primary) {
+            if(language.primary)! {
                 currentLanguage = language
                 primaryLanguage = language
                 break
@@ -1026,7 +1047,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 self.topConstraint.constant  = 0
             }
         })
-        
     }
     
     @objc func changeLanguage () {
@@ -1038,20 +1058,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func showThankYou() {
-        
         if(campaign?.thankyou_message_enabled)! {
             initThankYouView()
             self.perform(#selector(closeCampaignController), with: self, afterDelay: 3.0)
         } else {
             closeCampaignController()
         }
-        
-        
     }
     
     @objc func initThankYouView() {
         removeSubViews(view: self.campaignView)
         nextPrevButtonView.isHidden = true
+        print("nextPrevButtonView hidden")
         thankYouView = UIView()
         contentView.addSubview(thankYouView)
         thankYouView.translatesAutoresizingMaskIntoConstraints = false
@@ -1141,17 +1159,17 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         for thankYouTranslation in thankYouTranslations! {
             if(langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
-                switch(thankYouAndRedirectSettings.type) {
+                switch(thankYouAndRedirectSettings.type ?? "") {
                 case "all" :
-                    strThankYou = (thankYouAndRedirectSettings.all.message)!
+                    strThankYou = (thankYouAndRedirectSettings.all?.message)!
                     break
                 case "score" :
                     if(npsRating <= 6) {
-                        strThankYou = thankYouAndRedirectSettings.custom.detractors.message
+                        strThankYou = (thankYouAndRedirectSettings.custom?.detractors?.message)!
                     } else if(npsRating <= 8) {
-                        strThankYou = thankYouAndRedirectSettings.custom.passives.message
+                        strThankYou = (thankYouAndRedirectSettings.custom?.passives?.message)!
                     } else {
-                        strThankYou = thankYouAndRedirectSettings.custom.promoters.message
+                        strThankYou = (thankYouAndRedirectSettings.custom?.promoters?.message)!
                     }
                     break
                 default:
@@ -1169,7 +1187,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         for thankYouTranslation in thankYouTranslations! {
             if(langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
-                strThankYou = (thankYouAndRedirectSettings.all.message)!
+                strThankYou = (thankYouAndRedirectSettings.all?.message)!
             }
         }
         return strThankYou
@@ -1182,27 +1200,27 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         for thankYouTranslation in thankYouTranslations! {
             if(langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
-                switch(thankYouAndRedirectSettings.type) {
+                switch(thankYouAndRedirectSettings.type ?? "") {
                 case "all" :
-                    strThankYou = (thankYouAndRedirectSettings.all.message)!
+                    strThankYou = (thankYouAndRedirectSettings.all?.message)!
                     break
                 case "custom" :
                     let customThankYou = thankYouAndRedirectSettings.custom!
                     switch(cescsatOption) {
                     case "neutral" :
-                        strThankYou = customThankYou.neutral.message
+                        strThankYou = (customThankYou.neutral?.message)!
                         break
                     case "dissatisfied" :
-                        strThankYou = customThankYou.dissatisfied.message
+                        strThankYou = (customThankYou.dissatisfied?.message)!
                         break
                     case "satisfied" :
-                        strThankYou = customThankYou.satisfied.message
+                        strThankYou = (customThankYou.satisfied?.message!)!
                         break
                     case "agree" :
-                        strThankYou = customThankYou.agree.message
+                        strThankYou = (customThankYou.agree?.message!)!
                         break
                     case "disagree" :
-                        strThankYou = customThankYou.disagree.message
+                        strThankYou = (customThankYou.disagree?.message!)!
                         break
                     default:
                         break
@@ -1224,8 +1242,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = ""
         for staticTranslation in staticTranslations! {
             if(currentLanguage.language_code == staticTranslation.language_code) {
-                staticText = staticTranslation.text
-                switch(staticTranslation.static_text_id) {
+                staticText = staticTranslation.text!
+                switch(staticTranslation.static_text_id ?? "") {
                 case "CAMPAIGN_MODE_BACK_BUTTON_TEXT":
                     staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = staticText
                     break;
@@ -1314,7 +1332,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func showActivityIndicator() {
         
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
-        activityIndicator.color = primaryColor
+        //activityIndicator.color = primaryColor
         activityIndicator.translatesAutoresizingMaskIntoConstraints = false
         contentView.addSubview(activityIndicator)
         //constrinats
@@ -1375,5 +1393,28 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             return response
         }
         return nil
+    }
+    func getTintColor() -> UIColor? {
+        let window: UIWindow = (UIApplication.shared.delegate?.window as? UIWindow)!
+        return window.tintColor
+    }
+    
+    func getColorFromHex(hexString: String) -> UIColor {
+        var cString:String = hexString.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        if (cString.hasPrefix("#")) {
+            cString.remove(at: cString.startIndex)
+        }
+        if ((cString.count) != 6) {
+            return UIColor.gray
+        }
+        var rgbValue:UInt32 = 0
+        Scanner(string: cString).scanHexInt32(&rgbValue)
+        
+        return UIColor(
+            red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgbValue & 0x0000FF) / 255.0,
+            alpha: CGFloat(1.0)
+        )
     }
 }

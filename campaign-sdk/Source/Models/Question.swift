@@ -2,20 +2,20 @@
 
 import Foundation
 class Question : Codable {
-	let order_no : UInt!
-    let settings : Settings!
-    let optional : Bool!
-    let labels : [Labels]!
-    let question : String!
-    let campaign_id : UInt!
-    let question_translations : [QuestionTranslations]!
-    let others_entry : Bool!
-    let settings_translations : [SettingsTranslations]!
-    let placeholders : Placeholders!
-    let parent_question_id : String!
-    let type : String!
-    let id : UInt!
-    let img_url : String!
+	let order_no : UInt?
+    let settings : Settings?
+    let optional : Bool?
+    let labels : [Labels]?
+    let question : String?
+    let campaign_id : UInt?
+    let question_translations : [QuestionTranslations]?
+    let others_entry : Bool?
+    let settings_translations : [SettingsTranslations]?
+    let placeholders : Placeholders?
+    let parent_question_id : String?
+    let type : String?
+    let id : UInt?
+    let img_url : String?
 
 	enum CodingKeys: String, CodingKey {
 

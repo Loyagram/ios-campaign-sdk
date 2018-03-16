@@ -1,10 +1,10 @@
 
 import Foundation
 class Text : Codable {
-    let all : All!
-    let type : String!
-    let custom : Custom!
-    let settings : TranslationSettings!
+    let all : All?
+    let type : String?
+    let custom : Custom?
+    let settings : TranslationSettings?
 
 	enum CodingKeys: String, CodingKey {
 

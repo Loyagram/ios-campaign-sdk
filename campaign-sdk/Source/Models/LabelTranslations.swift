@@ -2,9 +2,9 @@
 
 import Foundation
 class LabelTranslations : Codable {
-	let text : String!
-	let auto : Bool!
-	let language_code : String!
+	let text : String?
+	let auto : Bool?
+	let language_code : String?
 
 	enum CodingKeys: String, CodingKey {
 

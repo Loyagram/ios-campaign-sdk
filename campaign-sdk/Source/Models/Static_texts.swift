@@ -2,9 +2,9 @@
 
 import Foundation
 class Static_texts : Codable {
-	let text : String!
-	let static_text_id : String!
-	let language_code : String!
+	let text : String?
+	let static_text_id : String?
+	let language_code : String?
 
 	enum CodingKeys: String, CodingKey {
 

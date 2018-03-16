@@ -1,8 +1,8 @@
 
 import Foundation
 class Widget : Codable {
-	let very_likely : String!
-	let not_likely : String!
+	let very_likely : String?
+	let not_likely : String?
 
 	enum CodingKeys: String, CodingKey {
 

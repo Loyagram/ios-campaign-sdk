@@ -10,10 +10,11 @@ import Foundation
 
 public class LoyagramCampaignManager {
     
-    @objc public class func showAsViewController(VC:UIViewController, campaignId: String) {
+    @objc public class func showAsViewController(VC:UIViewController, campaignId: String, colorPrimary: UIColor = UIColor.clear) {
         let CVC:CampaignViewController = CampaignViewController()
         CVC.modalPresentationStyle = .fullScreen
         CVC.campaignId = campaignId
+        CVC.colorPrimary = colorPrimary
         VC.present(CVC,animated: true, completion: nil)
     }
     

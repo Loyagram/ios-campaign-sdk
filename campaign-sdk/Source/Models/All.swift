@@ -1,10 +1,10 @@
 
 import Foundation
 class All : Codable {
-	let disabled : Bool!
-	let auto : Bool!
-	let message : String!
-	let links : [String]!
+	let disabled : Bool?
+	let auto : Bool?
+	let message : String?
+	let links : [String]?
 
 	enum CodingKeys: String, CodingKey {
 

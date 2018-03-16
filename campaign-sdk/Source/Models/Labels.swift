@@ -2,21 +2,21 @@
 
 import Foundation
 class Labels : Codable {
-	let field_type : String!
-	let name : String!
-	let order_no : UInt!
-	let settings : Settings!
-	let deleted : Bool!
-	let max_value : Int!
-	let min_value : Int!
-	let enabled : Bool!
-	let value : String!
-	let label : String!
-	let label_translations : [LabelTranslations]!
-	let step_value : Int!
-	let img_url : String!
-	let id : UInt!
-	let question_id : UInt!
+	let field_type : String?
+	let name : String?
+	let order_no : UInt?
+	let settings : Settings?
+	let deleted : Bool?
+	let max_value : Int?
+	let min_value : Int?
+	let enabled : Bool?
+	let value : String?
+	let label : String?
+	let label_translations : [LabelTranslations]?
+	let step_value : Int?
+	let img_url : String?
+	let id : UInt?
+	let question_id : UInt?
 
 	enum CodingKeys: String, CodingKey {
 

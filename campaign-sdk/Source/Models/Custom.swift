@@ -2,9 +2,9 @@
 
 import Foundation
 class Custom : Codable {
-	let promoters : Promoters!
-	let detractors : Detractors!
-	let passives : Passives!
+	let promoters : Promoters?
+	let detractors : Detractors?
+	let passives : Passives?
 
 	enum CodingKeys: String, CodingKey {
 

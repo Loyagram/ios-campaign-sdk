@@ -1,6 +1,6 @@
 import Foundation
 class Ces_settings : Codable {
-    let request_reason_settings : Request_reason_settings!
+    let request_reason_settings : Request_reason_settings?
     
     enum CodingKeys: String, CodingKey {
         

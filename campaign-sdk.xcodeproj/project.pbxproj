@@ -33,6 +33,7 @@
 		D3713736204ECCF300047606 /* Reachability.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3713735204ECCF300047606 /* Reachability.swift */; };
 		D3713738204ECEAB00047606 /* RequestQuestion.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3713737204ECEAB00047606 /* RequestQuestion.swift */; };
 		D38D18602045560F00505EC8 /* RatingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38D185F2045560F00505EC8 /* RatingTableViewCell.swift */; };
+		D38EC14A205BC3D600896F9D /* LoyagramAttribute.swift in Sources */ = {isa = PBXBuildFile; fileRef = D38EC149205BC3D600896F9D /* LoyagramAttribute.swift */; };
 		D391C5D52051539C0026DA31 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = D391C5D42051539C0026DA31 /* Response.swift */; };
 		D391C5D720515C100026DA31 /* ResponseAnswer.swift in Sources */ = {isa = PBXBuildFile; fileRef = D391C5D620515C100026DA31 /* ResponseAnswer.swift */; };
 		D391C5D920515C2E0026DA31 /* ResponseAnswerText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D391C5D820515C2E0026DA31 /* ResponseAnswerText.swift */; };
@@ -151,6 +152,7 @@
 		D3713735204ECCF300047606 /* Reachability.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Reachability.swift; sourceTree = "<group>"; };
 		D3713737204ECEAB00047606 /* RequestQuestion.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestQuestion.swift; sourceTree = "<group>"; };
 		D38D185F2045560F00505EC8 /* RatingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RatingTableViewCell.swift; sourceTree = "<group>"; };
+		D38EC149205BC3D600896F9D /* LoyagramAttribute.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramAttribute.swift; sourceTree = "<group>"; };
 		D391C5D42051539C0026DA31 /* Response.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		D391C5D620515C100026DA31 /* ResponseAnswer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseAnswer.swift; sourceTree = "<group>"; };
 		D391C5D820515C2E0026DA31 /* ResponseAnswerText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseAnswerText.swift; sourceTree = "<group>"; };
@@ -274,6 +276,7 @@
 		D36D532C202DA01700258DCA /* Source */ = {
 			isa = PBXGroup;
 			children = (
+				D38EC148205BC3B900896F9D /* Globals */,
 				D3F94780205A3EC900E0C9A2 /* SQLite */,
 				D3E3B14E2057DDD0005A4175 /* Animation */,
 				D3F17CCD20501E8400F431F5 /* Fonts */,
@@ -362,6 +365,14 @@
 				D3BEFB9F2056755D006822A0 /* SubmitResponse.swift */,
 			);
 			path = RestApi;
+			sourceTree = "<group>";
+		};
+		D38EC148205BC3B900896F9D /* Globals */ = {
+			isa = PBXGroup;
+			children = (
+				D38EC149205BC3D600896F9D /* LoyagramAttribute.swift */,
+			);
+			path = Globals;
 			sourceTree = "<group>";
 		};
 		D3B07FF8202B0068009B046B = {
@@ -714,6 +725,7 @@
 				D3D9F9A320347A250054F7FF /* Biz.swift in Sources */,
 				D3713731204EB0EC00047606 /* StaticTextTranslation.swift in Sources */,
 				D3BEFBA02056755D006822A0 /* SubmitResponse.swift in Sources */,
+				D38EC14A205BC3D600896F9D /* LoyagramAttribute.swift in Sources */,
 				D3D9F9AB20347A250054F7FF /* Widget.swift in Sources */,
 				D340FCD2204D508100D87B5B /* ThankYouAndRedirectSetting.swift in Sources */,
 				D33CF1B7204806080062EF01 /* TranslationSettings.swift in Sources */,

@@ -1,8 +1,8 @@
 
 import Foundation
 class Request_reason_settings : Codable {
-	let all : All!
-	let type : String!
+	let all : All?
+	let type : String?
 
 	enum CodingKeys: String, CodingKey {
 

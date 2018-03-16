@@ -13,6 +13,7 @@ class CampaignViewController: UIViewController {
     var mainView : UIView!
     var campaignId: String!
     var campaignView: LoyagramCampaignView!
+    var colorPrimary: UIColor!
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView = UIView()
@@ -30,7 +31,7 @@ class CampaignViewController: UIViewController {
         
         NSLayoutConstraint.activate([mainViewTrailing,mainViewLeading,mainViewTop,mainViewBottom])
         self.view.layoutIfNeeded()
-        campaignView = LoyagramCampaignView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        campaignView = LoyagramCampaignView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), color:colorPrimary)
         campaignView.setViewController(vc: self)
         self.mainView.addSubview(campaignView)
         

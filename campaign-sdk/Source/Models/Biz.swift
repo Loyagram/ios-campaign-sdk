@@ -2,22 +2,22 @@
 
 import Foundation
 class Biz : Codable {
-	let color_accent : String!
-	let in_url_channel : Bool!
-	let color_primary : String!
-	let name : String!
-	let color_secondary : String!
-	let in_web_channel : Bool!
-	let in_app_channel : Bool!
-	let number : String!
-	let id : UInt!
-	let in_pack_channel : Bool!
-	let user_updated : Bool!
-	let in_sms_channel : Bool!
-	let in_store_channel : Bool!
-	let img_url : String!
-	let email : String!
-	let in_mail_channel : Bool!
+	let color_accent : String?
+	let in_url_channel : Bool?
+	let color_primary : String?
+	let name : String?
+	let color_secondary : String?
+	let in_web_channel : Bool?
+	let in_app_channel : Bool?
+	let number : String?
+	let id : UInt?
+	let in_pack_channel : Bool?
+	let user_updated : Bool?
+	let in_sms_channel : Bool?
+	let in_store_channel : Bool?
+	let img_url : String?
+	let email : String?
+	let in_mail_channel : Bool?
 
 	enum CodingKeys: String, CodingKey {
 

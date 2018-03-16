@@ -165,7 +165,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return currentQuestion.labels.count
+        return currentQuestion.labels!.count
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -179,7 +179,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     @objc func getSingleSelectCell(radioButtonContainer: UIView, row:Int) {
         
-        let label = currentQuestion.labels[row]
+        let label = currentQuestion.labels![row]
         let rect = CGRect(x: 0, y: 10, width: 20, height: 20)
         let radioButton = LoyagramRadioButton(frame: rect, primaryColor: primaryColor)
         radioButtonContainer.addSubview(radioButton)
@@ -189,9 +189,9 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         //radioButtonContainer.translatesAutoresizingMaskIntoConstraints = false
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
-        radioLabel.tag = Int(label.id)
-        radioButton.tag = Int(label.id)
-        let ra = getResponseAnswer(id: label.id)
+        radioLabel.tag = Int(label.id ?? 0)
+        radioButton.tag = Int(label.id ?? 0)
+        let ra = getResponseAnswer(id: label.id!)
         if(ra != nil && ra?.question_label_id == label.id) {
             radioButton.isSelected = true
         }
@@ -231,14 +231,14 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     }
     
     @objc func getMultiSelectCell(checkBoxContainer: UIView, row:Int) {
-        let label = currentQuestion.labels[row]
+        let label = currentQuestion.labels![row]
         let rect = CGRect(x: 0, y: 0, width: 220, height: 35)
-        let chk = LoyagramCheckBox(frame: rect)
+        let chk = LoyagramCheckBox(frame: rect, colorPrimary:primaryColor)
         chk.showTextLabel = true
         checkBoxContainer.addSubview(chk)
-        chk.tag = Int(label.id)
+        chk.tag = Int(label.id ?? 0)
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
-        let responseAnswer = getResponseAnswer(id: label.id)
+        let responseAnswer = getResponseAnswer(id: label.id!)
         if(responseAnswer != nil) {
            chk.isChecked = true
         }
@@ -277,7 +277,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         super.layoutSubviews()
         //surveyTableView.reloadData()
         let viewHeight = self.frame.height
-        let requiredHeight = CGFloat(currentQuestion.labels.count) * 35
+        let requiredHeight = CGFloat((currentQuestion.labels?.count)!) * 35
         
         if(requiredHeight <= viewHeight - 60) {
             tblHeight.constant = requiredHeight
@@ -293,13 +293,13 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             for labelTranslation in labelTranslations {
                 if (labelTranslation.language_code == currentLanguage.language_code) {
                     if(currentQuestion.type == "SINGLE_SELECT") {
-                        if(self.viewWithTag(Int(ql.id)) != nil) {
-                            let radioLabel:UILabel = self.viewWithTag(Int(ql.id)) as! UILabel
+                        if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
+                            let radioLabel:UILabel = self.viewWithTag(Int(ql.id ?? 0)) as! UILabel
                             radioLabel.text = labelTranslation.text
                         }
                     } else {
-                        if(self.viewWithTag(Int(ql.id)) != nil) {
-                            let checkBox:LoyagramCheckBox = viewWithTag(Int(ql.id)) as! LoyagramCheckBox
+                        if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
+                            let checkBox:LoyagramCheckBox = viewWithTag(Int(ql.id ?? 0)) as! LoyagramCheckBox
                             checkBox.text = labelTranslation.text
                         }
                     }
@@ -343,7 +343,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     }
     
     func setSingleSelectResposne(id: CUnsignedLong){
-        let answers = getResponseAnswerByQuestionId(id: currentQuestion.id)
+        let answers = getResponseAnswerByQuestionId(id: currentQuestion.id!)
         if(answers.count > 0) {
             let ra = answers[0]
             ra.answer = Int(id)
@@ -361,7 +361,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     func getResponseAnswer(id:CUnsignedLong) -> ResponseAnswer! {
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
-                if(ra.question_label_id == id) {
+                if(ra.question_label_id != nil && ra.question_label_id == id) {
                     return ra
                 }
             }

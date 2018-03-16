@@ -1,11 +1,11 @@
 
 import Foundation
 class Language : Codable {
-	let language_code : String!
-	let name_en : String!
-	let selected : Bool!
-	let name : String!
-	let primary : Bool!
+	let language_code : String?
+	let name_en : String?
+	let selected : Bool?
+	let name : String?
+	let primary : Bool?
 
 	enum CodingKeys: String, CodingKey {
 

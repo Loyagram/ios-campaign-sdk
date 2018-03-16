@@ -2,9 +2,9 @@
 
 import Foundation
 class Settings : Codable {
-	let follow_up_request_enabled : Bool!
-	let follow_up_question_enabled : Bool!
-	let translation : [Language]!
+	let follow_up_request_enabled : Bool?
+	let follow_up_question_enabled : Bool?
+	let translation : [Language]?
 
 	enum CodingKeys: String, CodingKey {
 

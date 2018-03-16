@@ -1,10 +1,10 @@
 
 import Foundation
 class Nps_settings : Codable {
-	let nps_type : String!
-	let widget : Widget!
-	let shape : String!
-	let request_reason_settings : Request_reason_settings!
+	let nps_type : String?
+	let widget : Widget?
+	let shape : String?
+	let request_reason_settings : Request_reason_settings?
 
 	enum CodingKeys: String, CodingKey {
 

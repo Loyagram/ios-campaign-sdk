@@ -109,8 +109,9 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         
         //let rect = CGRect(x: 0, y: 30, width: 280, height: 20)
         
-        if (currentQuestion.labels.count > 0) {
-            let label = currentQuestion.labels[0]
+        let questionCount = currentQuestion.labels?.count ?? 0
+        if (questionCount > 0) {
+            let label = currentQuestion.labels![0]
             questionLabelId = label.id
             fieldType = label.field_type
             var textFieldHeight:CGFloat = 40
@@ -245,7 +246,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let textViewText = textView.text + text
-        let response = setTextResposne(id: currentQuestion.id, rating: 1)
+        let response = setTextResposne(id: currentQuestion.id!, rating: 1)
         if (response.response_answer_text != nil) {
             response.response_answer_text.text = textViewText
         }
@@ -255,7 +256,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         let textFieldText = textField.text! + string
-        let response = setTextResposne(id: currentQuestion.id, rating: 1)
+        let response = setTextResposne(id: currentQuestion.id!, rating: 1)
         if (response.response_answer_text != nil) {
             response.response_answer_text.text = textFieldText
         }

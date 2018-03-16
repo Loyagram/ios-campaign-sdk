@@ -2,8 +2,8 @@
 
 import Foundation
 class Placeholders : Codable {
-	let original_text : String!
-	let brand_name : String!
+	let original_text : String?
+	let brand_name : String?
 
 	enum CodingKeys: String, CodingKey {
 

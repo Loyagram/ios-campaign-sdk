@@ -33,6 +33,12 @@ class LoyagramCheckBox: UIControl {
         
     }
     
+    init(frame:CGRect, colorPrimary:UIColor) {
+        super.init(frame: frame)
+        primaryColor = colorPrimary
+        self.initInternals()
+    }
+    
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
         //self.initInternals()

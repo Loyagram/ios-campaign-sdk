@@ -126,7 +126,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let label = currentQuestion.labels[indexPath.row]
+        let label = currentQuestion.labels![indexPath.row]
         
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
         
@@ -142,9 +142,9 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         ratingBar.translatesAutoresizingMaskIntoConstraints = false
         ratingBar.isEditable = true
         ratingBar.delegate = self
-        ratingLabel.tag = Int(label.id)
-        ratingBar.tag = Int(label.id)
-        let responseAnswer = getResponseAnswer(id: label.id)
+        ratingLabel.tag = Int(label.id ?? 0)
+        ratingBar.tag = Int(label.id ?? 0)
+        let responseAnswer = getResponseAnswer(id: label.id!)
         if(responseAnswer != nil) {
             ratingBar.rating = Float((responseAnswer?.answer)!)
         }
@@ -197,7 +197,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         
-        return currentQuestion.labels.count
+        return currentQuestion.labels?.count ?? 0
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -213,7 +213,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         super.layoutSubviews()
         //self.tableView.reloadData()
         let viewHeight = self.frame.height
-        let requiredHeight = CGFloat(currentQuestion.labels.count) * 35
+        let requiredHeight = CGFloat((currentQuestion.labels?.count ?? 0)!) * 35
         
         if(requiredHeight <= viewHeight - 60) {
             tblHeight.constant = requiredHeight
@@ -229,8 +229,8 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             let labelTranslations = ql.label_translations!
             for labelTranslation in labelTranslations {
                 if (labelTranslation.language_code == currentLanguage.language_code) {
-                        if(self.viewWithTag(Int(ql.id)) != nil) {
-                            let radioLabel:UITextView = self.viewWithTag(Int(ql.id)) as! UITextView
+                        if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
+                            let radioLabel:UITextView = self.viewWithTag(Int(ql.id ?? 0)) as! UITextView
                             radioLabel.text = labelTranslation.text
                     }
                     break

@@ -9,8 +9,8 @@
 import Foundation
 
 class ThankYouAndRedirectSetting : Codable {
-    let message : String!
-    let disabled : Bool!
+    let message : String?
+    let disabled : Bool?
     
     enum CodingKeys: String, CodingKey {
         
