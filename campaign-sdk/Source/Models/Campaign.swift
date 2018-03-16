@@ -9,7 +9,7 @@ class  Campaign : Codable {
     let in_store_channel : Bool!
     let thank_you_and_redirect_settings : Thank_you_and_redirect_settings!
     let in_sms_channel : Bool!
-    let questions : [Question]!
+    let questions : [Question]?
     let thankyou_message : String!
 	let brand_title : String!
     let id : UInt!

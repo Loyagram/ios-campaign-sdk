@@ -53,10 +53,15 @@ class CampaignViewController: UIViewController {
     @objc func getCampaignFromServer(campaignId: String) {
         
         LoyagramCampaignManager.requestCampaignFromServer(campaignId: campaignId, completion: { (campaign) -> Void in
-            if campaign.questions.count > 0 {
+            let questionCount: Int = campaign.questions?.count ?? 0
+            if questionCount > 0 {
                 
                 DispatchQueue.main.async() {
                     self.campaignView.setCampaign(campaign: campaign)
+                }
+            } else {
+                DispatchQueue.main.async() {
+                    self.campaignView.campaignErrorHandler()
                 }
             }
             

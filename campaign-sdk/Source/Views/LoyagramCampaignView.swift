@@ -45,7 +45,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var btnPrev: UIButton!
     var campaignView: UIView!
     var campaignFrame: CGRect!
-    var campaign: Campaign!
+    var campaign: Campaign?
     var currentQuestion : Question!
     var currentLanguage : Language!
     var primaryLanguage : Language!
@@ -67,6 +67,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var activityIndicator: UIActivityIndicatorView!
     var response: Response!
     var chk: CheckBox!
+    var thankYouView: UIView!
     
     public override init(frame: CGRect){
         super.init(frame: frame)
@@ -574,9 +575,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func showQuestion() {
-        
-        currentQuestion = campaign.questions[questionNumber-1]
-        let campaignType = campaign.type
+        currentQuestion = campaign?.questions?[questionNumber-1]
+        let campaignType = campaign?.type
         if(campaignType != nil) {
             if(campaignType == "SAT" ) {
                 showCSATCESView(isCSAT: true)
@@ -651,8 +651,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
     }
     @objc func showNPSView() {
-        let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:campaign.type, question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint, staticTextes:staticTexts, response:response)
+        let followUpQuestion = campaign?.questions?[1]
+        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:(campaign?.type)!, question: currentQuestion, followUpQuestion: followUpQuestion!, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint, staticTextes:staticTexts, response:response)
         campaignView.addSubview(campaignContentView)
         campaignContentView.isUserInteractionEnabled = true
         campaignContentView.delegate = self
@@ -682,8 +682,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     @objc func showCSATCESView(isCSAT: Bool) {
-        let followUpQuestion = campaign.questions[1]
-        let campaignContentView = LoyagramCSATCESView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self, staticTexts: staticTexts, response:response)
+        let followUpQuestion = campaign?.questions?[1]
+        let campaignContentView = LoyagramCSATCESView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion!, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self, staticTexts: staticTexts, response:response)
         campaignContentView.delegate = self
         campaignView.addSubview(campaignContentView)
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
@@ -713,7 +713,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         brandView.isHidden = false
         lblPoweredBy.isHidden = false
         startButtonContainerView.isHidden = false
-        if(campaign.type == "SURVEY") {
+        if(campaign?.type == "SURVEY") {
             lblQuestionCount.isHidden = false
         }
         if(languages.count > 1) {
@@ -746,7 +746,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func showNextQuestion() {
-        let campaignType = campaign.type
+        let campaignType = campaign?.type
         btnNext.backgroundColor = primaryColor
         btnNext.setTitleColor(UIColor.white, for: .normal)
         btnPrev.setTitleColor(primaryColor, for: .normal)
@@ -785,7 +785,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
             lblQuestionCount.text = questionCount
             removeSubViews(view:self.campaignView)
-            showQuestion()
+            if(questionNumber <= (campaign?.questions?.count)!) {
+                showQuestion()
+            }
         }
     }
     
@@ -795,7 +797,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         }
     }
     @objc func showPrevQuestion() {
-        let campaignType = campaign.type
+        let campaignType = campaign?.type
         btnPrev.backgroundColor = primaryColor
         btnPrev.setTitleColor(UIColor.white, for: .normal)
         btnNext.setTitleColor(primaryColor, for: .normal)
@@ -814,7 +816,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             default:
                 break
             }
-            
             return
         } else {
             if(questionNumber < 2) {
@@ -832,41 +833,44 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func submitCampaign() {
-        
-        let encoder = JSONEncoder()
-        encoder.outputFormatting = .prettyPrinted
-        response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
-        response.language_code = currentLanguage.language_code
-        let data = try! encoder.encode(response)
-        let jsonString = String(data:data, encoding: .utf8)
-        //let jsonString = String(data: data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\\", with: "")
-        //let jsonStringWithData:[String:Any] = ["data":jsonString]
-        
-        
-        let dict = NSMutableDictionary()
-        dict.setValue(jsonString, forKey: "data")
-        let jsonData = try? JSONSerialization.data(withJSONObject: dict)
-        //let valid = JSONSerialization.isValidJSONObject(jsonData)
-        print(String(data:jsonData!, encoding : .utf8)!)
-        
-        SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
-            print("sucessfully submited")
-        }, failure: {() -> Void in
-            print("failed to submit response")
-        })
         showThankYou()
-        resetCampaign()
+//        let encoder = JSONEncoder()
+//        encoder.outputFormatting = .prettyPrinted
+//        response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
+//        response.language_code = currentLanguage.language_code
+//        let data = try! encoder.encode(response)
+//        let jsonString = String(data:data, encoding: .utf8)
+//        //let jsonString = String(data: data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\\", with: "")
+//        //let jsonStringWithData:[String:Any] = ["data":jsonString]
+//
+//
+//        let dict = NSMutableDictionary()
+//        dict.setValue(jsonString, forKey: "data")
+//        let jsonData = try? JSONSerialization.data(withJSONObject: dict)
+//        //let valid = JSONSerialization.isValidJSONObject(jsonData)
+//        print(String(data:jsonData!, encoding : .utf8)!)
+        
+//        SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
+//            print("sucessfully submited")
+//        }, failure: {() -> Void in
+//            print("failed to submit response")
+//        })
     }
     
     @objc func resetCampaign() {
         followUpIterator = 0
+        if(thankYouView != nil) {
+            thankYouView.removeFromSuperview()
+        }
     }
     @objc func closeButtonAction(sender:UIButton!) {
         closeCampaignController()
         DBManager.instance.closeDB()
+        
     }
     
     @objc func closeCampaignController() {
+        resetCampaign()
         self.viewController.dismiss(animated: true, completion: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
@@ -908,9 +912,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         cell.backgroundColor = UIColor.white
         cell.lblLanguage.textColor = primaryColor
         tableViewLanguage.reloadData()
-        let languages = campaign.settings.translation!
-        if(currentLanguage.language_code != languages[indexPath.row].language_code) {
-            currentLanguage = languages[indexPath.row]
+        let languages = campaign?.settings.translation!
+        if(currentLanguage.language_code != languages![indexPath.row].language_code) {
+            currentLanguage = languages![indexPath.row]
             btnLanguage.setTitle(currentLanguage.name, for: .normal)
             changeLanguage()
         }
@@ -920,9 +924,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     func setCampaign(campaign:Campaign) {
         
         self.campaign = campaign
-        currentQuestion = campaign.questions[0]
+        currentQuestion = campaign.questions?[0]
         questionNumber = 1
-        noOfQuestions = campaign.questions.count
+        noOfQuestions = (campaign.questions?.count)!
         let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
         lblQuestionCount.text = questionCount
         loadLanguages()
@@ -985,7 +989,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     func loadLanguages() {
-        languages = campaign.settings.translation
+        languages = (campaign?.settings.translation)!
         for language in languages {
             if(language.primary) {
                 currentLanguage = language
@@ -1035,7 +1039,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func showThankYou() {
         
-        if(campaign.thankyou_message_enabled) {
+        if(campaign?.thankyou_message_enabled)! {
             initThankYouView()
             self.perform(#selector(closeCampaignController), with: self, afterDelay: 3.0)
         } else {
@@ -1048,7 +1052,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func initThankYouView() {
         removeSubViews(view: self.campaignView)
         nextPrevButtonView.isHidden = true
-        let thankYouView = UIView()
+        thankYouView = UIView()
         contentView.addSubview(thankYouView)
         thankYouView.translatesAutoresizingMaskIntoConstraints = false
         let txtThankYou = UITextView()
@@ -1099,6 +1103,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 60.0).isActive = true
         NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 60.0).isActive = true
         
+        
         DispatchQueue.main.async() {
             self.chk.isTickShown = false
             self.chk.setColorPrimary(color: self.primaryColor)
@@ -1110,7 +1115,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func setThankYouMessage() -> String {
         
         var strThankYou = String()
-        switch (campaign.type) {
+        switch (campaign?.type ?? "") {
         case "NPS":
             strThankYou = getNPSThankYou();
             break;
@@ -1132,7 +1137,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func getNPSThankYou() -> String {
         var strThankYou = String()
         let langCode = currentLanguage.language_code
-        let thankYouTranslations = campaign.thank_you_and_redirect_settings_translations
+        let thankYouTranslations = campaign?.thank_you_and_redirect_settings_translations
         for thankYouTranslation in thankYouTranslations! {
             if(langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
@@ -1160,7 +1165,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func getSurveyThankYou() -> String {
         var strThankYou = String()
         let langCode = currentLanguage.language_code
-        let thankYouTranslations = campaign.thank_you_and_redirect_settings_translations
+        let thankYouTranslations = campaign?.thank_you_and_redirect_settings_translations
         for thankYouTranslation in thankYouTranslations! {
             if(langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
@@ -1173,7 +1178,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func getCSATCESThankYou() -> String {
         var strThankYou = String()
         let langCode = currentLanguage.language_code
-        let thankYouTranslations = campaign.thank_you_and_redirect_settings_translations
+        let thankYouTranslations = campaign?.thank_you_and_redirect_settings_translations
         for thankYouTranslation in thankYouTranslations! {
             if(langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
@@ -1214,7 +1219,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func getStaticTexts() {
         //staticTexts = [String: String]()
-        let staticTranslations = campaign.static_texts
+        let staticTranslations = campaign?.static_texts
         var staticText = String()
         staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = ""
         for staticTranslation in staticTranslations! {
@@ -1288,7 +1293,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func setStaticTexts() {
         if (noOfQuestions == 1 || questionNumber == noOfQuestions) {
             btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
-        } else if (campaign.type == "SURVEY") {
+        } else if (campaign?.type == "SURVEY") {
             if (followUpIterator == 2) {
                 btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
             } else {
@@ -1331,21 +1336,21 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             response = Response()
             response.channel = "MOBILE-SDK"
             response.sub_channel = "IOS"
-            response.biz_id = UInt(campaign.biz_id)
-            response.campaign_id = campaign.id
+            response.biz_id = UInt(campaign?.biz_id ?? 0)
+            response.campaign_id = campaign?.id
             response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
             if(response.response_answers == nil) {
                 response.response_answers = [ResponseAnswer]()
             }
             saveResponseToDB()
-        }else if(savedCampaign?.campaign_id == campaign.id) {
+        }else if(savedCampaign?.campaign_id == campaign?.id) {
             response = savedCampaign
         } else {
             response = Response()
             response.channel = "MOBILE-SDK"
             response.sub_channel = "IOS"
-            response.biz_id = UInt(campaign.biz_id)
-            response.campaign_id = campaign.id
+            response.biz_id = UInt(campaign?.biz_id ?? 0)
+            response.campaign_id = campaign?.id
             response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
             if(response.response_answers == nil) {
                 response.response_answers = [ResponseAnswer]()

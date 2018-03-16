@@ -118,9 +118,9 @@ class CheckBox: UIControl, CAAnimationDelegate {
     }
 
     @objc func showCheckMarkAnimation() {
-        onTintColor = colorPrimary
-        setOn(!on, animated: true)
-        sendActions(for: .valueChanged)
+        self.perform(#selector(showStrokeAnimation), with: self, afterDelay: 0)
+        self.perform(#selector(showFillAnimation), with: self, afterDelay: 0.5)
+        //sendActions(for: .valueChanged)
     }
     
     override func point(inside point: CGPoint, with event: UIEvent?) -> Bool {
@@ -206,9 +206,7 @@ class CheckBox: UIControl, CAAnimationDelegate {
         layer.addSublayer(checkMarkLayer)
     }
     func addOnAnimation() {
-        if self.animationDuration == 0.0 {
-            return
-        }
+        self.animationDuration == 0.5
         switch self.onAnimationType {
         case "stroke":
             let animation: CABasicAnimation = self.animationManager.strokeAnimationReverse(false)!
@@ -236,7 +234,20 @@ class CheckBox: UIControl, CAAnimationDelegate {
                 onBoxLayer.removeFromSuperlayer()
                 checkMarkLayer.removeFromSuperlayer()
             }
-            if(!isTickShown) {
+            
+        }
+    }
+    
+    deinit {
+        //delegate = nil
+    }
+    
+    @objc func showStrokeAnimation() {
+        onTintColor = colorPrimary
+        setOn(!on, animated: true)
+    }
+    @objc func showFillAnimation() {
+        if(!isTickShown) {
             isTickShown = true
             onFillColor = colorPrimary
             offFillColor = UIColor.clear
@@ -244,14 +255,8 @@ class CheckBox: UIControl, CAAnimationDelegate {
             onAnimationType = "fill"
             offAnimationType = "fill"
             setOn(on, animated: true)
-            sendActions(for: .valueChanged)
-            }
+            //sendActions(for: .valueChanged)
         }
     }
-    
-    deinit {
-        //delegate = nil
-    }
-        
 }
 
