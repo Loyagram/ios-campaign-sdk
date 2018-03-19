@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:campaign-sdk.xcodeproj">
+      location = "self:/Users/ios-app/Desktop/loyagram/iOS/campaign-sdk/campaign_sdk.xcodeproj">
    </FileRef>
 </Workspace>

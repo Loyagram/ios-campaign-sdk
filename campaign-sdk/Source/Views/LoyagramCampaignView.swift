@@ -21,6 +21,8 @@ protocol LoyagramLanguageDelegate: class {
     
 }
 
+
+
 public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCSATCESDelegate, LoyagramNPSDelegate {
     
     var headerView: UIView!
@@ -54,6 +56,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var btnStart: UIButton!
     var startButtonContainerView: UIView!
     var campaignButtonDelegate: LoyagramCampaignButtonDelegate!
+    var onSuccess: (() -> Void)?
+    var onError: (() -> Void)?
     var languageDelegate: LoyagramLanguageDelegate!
     var followUpIterator: Int = 0
     var bottomConstraint : NSLayoutConstraint!
@@ -859,7 +863,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func submitCampaign() {
         showThankYou()
-        /*
+        
          let encoder = JSONEncoder()
          encoder.outputFormatting = .prettyPrinted
          response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
@@ -867,21 +871,25 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
          let data = try! encoder.encode(response)
          let jsonString = String(data:data, encoding: .utf8)
          //let jsonString = String(data: data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\\", with: "")
-         //let jsonStringWithData:[String:Any] = ["data":jsonString]
-         
-         
-         let dict = NSMutableDictionary()
-         dict.setValue(jsonString, forKey: "data")
-         let jsonData = try? JSONSerialization.data(withJSONObject: dict)
+         let jsonStringWithData:[String:Any] = ["data":jsonString ?? ""]
+//         let dict = NSMutableDictionary()
+//         dict.setValue(jsonString, forKey: "data")
+         let jsonData = try? JSONSerialization.data(withJSONObject: jsonStringWithData)
          //let valid = JSONSerialization.isValidJSONObject(jsonData)
-         print(String(data:jsonData!, encoding : .utf8)!)
-         
-         SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
-         print("sucessfully submited")
+        print(String(data:jsonData!, encoding : .utf8)!)
+//        campaignDelegate = viewController.self as! LoyagramCampaignCallback!
+        
+        SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
+            if let successCallback = self.onSuccess {
+                successCallback ()
+            }
+         //print("sucessfully submited")
          }, failure: {() -> Void in
-         print("failed to submit response")
+            if let successCallback = self.onError {
+                successCallback ()
+            }
+         //print("failed to submit response")
          })
-         */
     }
     
     @objc func resetCampaign() {
@@ -1371,6 +1379,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             if(response.response_answers == nil) {
                 response.response_answers = [ResponseAnswer]()
             }
+            
+            let attr = LoyagramAttribute.getInstance().attributes
+            if(attr.count > 0) {
+                response.attr = attr
+            }
             saveResponseToDB()
         }else if(savedCampaign?.campaign_id == campaign?.id) {
             response = savedCampaign
@@ -1383,6 +1396,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
             if(response.response_answers == nil) {
                 response.response_answers = [ResponseAnswer]()
+            }
+            let attr = LoyagramAttribute.getInstance().attributes
+            if(attr.count > 0) {
+                response.attr = attr
             }
             saveResponseToDB()
         }

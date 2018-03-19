@@ -14,6 +14,8 @@ class CampaignViewController: UIViewController {
     var campaignId: String!
     var campaignView: LoyagramCampaignView!
     var colorPrimary: UIColor!
+    var onSuccess: (() -> Void)?
+    var onError: (() -> Void)?
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView = UIView()
@@ -49,6 +51,8 @@ class CampaignViewController: UIViewController {
         
         getCampaignFromServer(campaignId: campaignId)
         
+        campaignView.onError = self.onError
+        campaignView.onSuccess = self.onSuccess
     }
     
     @objc func getCampaignFromServer(campaignId: String) {
@@ -56,10 +60,8 @@ class CampaignViewController: UIViewController {
         LoyagramCampaignManager.requestCampaignFromServer(campaignId: campaignId, completion: { (campaign) -> Void in
             let questionCount: Int = campaign.questions?.count ?? 0
             if questionCount > 0 {
-                
                 DispatchQueue.main.async() {
-                    //self.campaignView.setCampaign(campaign: campaign)
-                    self.campaignView.campaignErrorHandler()
+                    self.campaignView.setCampaign(campaign: campaign)
                 }
             } else {
                 DispatchQueue.main.async() {

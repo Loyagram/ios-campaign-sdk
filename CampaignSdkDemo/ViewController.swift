@@ -24,7 +24,6 @@ class ViewController: UIViewController {
         //radioGroupView.backgroundColor = UIColor.red
         radioGroupView.translatesAutoresizingMaskIntoConstraints = false;
         mainView.addSubview(radioGroupView)
-        
         setRdbLayoutConstaints()
         
         initRadioButtonView()
@@ -94,7 +93,7 @@ class ViewController: UIViewController {
             //campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
             break
         case 102:
-             //campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
+            //campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
             campaignId = "1020-80c64203-5484-4a52-b41d-5ef485cc80f1"
             break
         case 103:
@@ -150,7 +149,18 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
+        
+        var attributes = [String:String] ()
+        attributes["username"] = "sandhil"
+        attributes["cusotmerId"] = "1234"
+        LoyagramCampaignManager.addAttributes(attributes: attributes)
+        //LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
+        LoyagramCampaignManager.showAsViewController(VC: self, campaignId: campaignId, colorPrimary: colorPrimary, onSucces: {
+            () -> Void in
+            print("campaign success")
+        }, onError:{ () -> Void in
+            print("campaign error")
+        })
     }
     
     @objc func dialogButtonAction(sender:UIButton!) {
@@ -159,7 +169,8 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
+        //LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
+        LoyagramCampaignManager.showAsDialog(VC: self, campaignId: campaignId, colorPrimary: colorPrimary)
     }
     @objc func slideButtonAction(sender:UIButton!) {
         
@@ -176,6 +187,8 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
+        LoyagramCampaignManager.addAttribute(key: "username", value: "sandhil")
+        LoyagramCampaignManager.addAttribute(key: "customerId", value: "123")
         LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
     }
     
@@ -189,7 +202,7 @@ class ViewController: UIViewController {
         btnVC.setTitleColor(color, for: .normal)
         
         btnVC.addTarget(self, action: #selector(controllerButtonAction(sender:)), for: .touchUpInside)
-
+        
         let btnDialog = UIButton(type: .system)
         btnDialog.setTitle("SHOW AS DIALOG", for: .normal)
         btnDialog.layer.cornerRadius = 2

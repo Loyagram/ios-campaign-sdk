@@ -206,7 +206,7 @@ class CheckBox: UIControl, CAAnimationDelegate {
         layer.addSublayer(checkMarkLayer)
     }
     func addOnAnimation() {
-        self.animationDuration == 0.5
+        self.animationDuration = 0.5
         switch self.onAnimationType {
         case "stroke":
             let animation: CABasicAnimation = self.animationManager.strokeAnimationReverse(false)!
