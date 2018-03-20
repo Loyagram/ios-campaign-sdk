@@ -10,9 +10,10 @@ import UIKit
 
 class LoyagramDialog: UIView {
     
-    var backgroundView = UIView()
+    var backgroundView: UIView!
     var campaignView: LoyagramCampaignView!
-    var dialogHeight: NSLayoutConstraint?
+    var dialogTop: NSLayoutConstraint?
+    var dialogBottom: NSLayoutConstraint?
     
     init(frame: CGRect, campaignId: String, colorPrimary:UIColor) {
         super.init(frame: frame)
@@ -25,14 +26,16 @@ class LoyagramDialog: UIView {
     
     
     func initDialogView(colorPrimary: UIColor, campaignId: String) {
-        backgroundView.frame = frame
+        //backgroundView.frame = frame
+        backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         backgroundView.backgroundColor = UIColor.black
-        //backgroundView.alpha = 0.6
+        backgroundView.alpha = 0.5
         addSubview(backgroundView)
         
         campaignView = LoyagramCampaignView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), color:colorPrimary)
-        
-        //addSubview(campaignView)
+        campaignView.setCampaignType(type: 1)
+        campaignView.setDialogView(view:self)
+        addSubview(campaignView)
         
         campaignView.translatesAutoresizingMaskIntoConstraints = false
         backgroundView.translatesAutoresizingMaskIntoConstraints = false
@@ -49,28 +52,40 @@ class LoyagramDialog: UIView {
         
         
         //Campaign View constraints
-//        let campaignViewTrailing  = NSLayoutConstraint(item: campaignView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
-//        let campaignViewLeading  = NSLayoutConstraint(item: campaignView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
-//
-//        let campaignCenterX  = NSLayoutConstraint(item: campaignView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
-//
-//        let campaignCenterY  = NSLayoutConstraint(item: campaignView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0.0)
-//
-//        dialogHeight = NSLayoutConstraint(item: campaignView, attribute: .height
-//            , relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 400.0)
-//
-//        NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignCenterX,campaignCenterY, dialogHeight!])
+        let campaignViewTrailing  = NSLayoutConstraint(item: campaignView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let campaignViewLeading  = NSLayoutConstraint(item: campaignView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0)
+
+        let campaignCenterX  = NSLayoutConstraint(item: campaignView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0)
+
+        let campaignCenterY  = NSLayoutConstraint(item: campaignView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0.0)
+
+
+        dialogBottom = NSLayoutConstraint(item: campaignView, attribute: .bottom, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .bottom, multiplier: 1.0, constant: 0.0)
+        dialogTop =  NSLayoutConstraint(item: campaignView, attribute: .top, relatedBy: .greaterThanOrEqual, toItem: self, attribute: .top, multiplier: 1.0, constant: 0.0)
+        dialogTop?.priority = UILayoutPriority(rawValue: 999)
+        dialogBottom?.priority = UILayoutPriority(rawValue: 999)
+        NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignCenterX,campaignCenterY, dialogBottom!, dialogTop!])
         
         getCampaignFromServer(campaignId: campaignId)
     }
     
     override func layoutSubviews() {
-        if(dialogHeight != nil)  {
-            if(self.frame.height < self.frame.width) {
-                dialogHeight?.constant = self.frame.width - 50
-            } else {
-                dialogHeight?.constant = 400
-            }
+        
+        let screenSize: CGRect = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+        //portrait
+        if(screenHeight > screenWidth) {
+            dialogTop?.constant = 100.0
+            dialogBottom?.constant = -100.0
+        //landscape
+        } else if(screenHeight > 375){
+            let constant = (screenHeight - 375)/2
+            dialogTop?.constant = constant
+            dialogBottom?.constant = -constant
+        } else {
+            dialogTop?.constant = 0.0
+            dialogBottom?.constant = 0.0
         }
     }
     

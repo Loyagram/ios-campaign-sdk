@@ -30,8 +30,9 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     var staticTexts: StaticTextTranslation!
     var response:Response!
     var questionLabelId: CUnsignedLong!
+    var campaignView: LoyagramCampaignView!
     
-    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, staticTexts:StaticTextTranslation, response:Response) {
+    public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, staticTexts:StaticTextTranslation, response:Response, campaignView:LoyagramCampaignView) {
         super.init(frame: frame)
         currentQuestion = question
         currentLanguage = currentLang
@@ -39,6 +40,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         primaryColor = color
         self.staticTexts = staticTexts
         self.response = response
+        campaignView.languageDelegate = self
         initTextView()
         setQuestion()
         showTextView()

@@ -37,6 +37,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var lblQuestionCount : UILabel!
     var btnLanguage: UIButton!
     var viewController : UIViewController!
+    var dialogView: UIView!
     var tableViewLanguage : UITableView!
     var tableViewContainer : UIView!
     var languages = [Language]()
@@ -73,6 +74,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var chk: CheckBox!
     var thankYouView: UIView!
     var isColorSet = false
+    var campaignViewType: Int?
+    var isNextActive = false
+    var isPrevActive = false
+    var statusBar: UIView?
     
     public override init(frame: CGRect){
         super.init(frame: frame)
@@ -87,7 +92,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 isColorSet = true
                 primaryColor = tintColor
             } else {
-                primaryColor = UIColor.lightGray
+                primaryColor = UIColor.white
             }
         } else {
             primaryColor = color
@@ -131,8 +136,19 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         fatalError("init(coder:) has not been implemented")
     }
     
-    @objc func setViewController(vc:UIViewController!) {
+    @objc func setViewController(vc:UIViewController!, statusBar: UIView) {
         self.viewController = vc
+        self.statusBar = statusBar
+        statusBar.backgroundColor = primaryColor
+    }
+    
+    @objc func setDialogView(view:UIView!) {
+        dialogView = view
+    }
+    
+    // 0 for controller , 1 for dialog
+    @objc func setCampaignType(type:Int) {
+        campaignViewType = type
     }
     
     func setTheme(colorTheme: UIColor, isColorPrimarySet:Bool) {
@@ -140,6 +156,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             activityIndicator.color = UIColor.lightGray
         }else {
             activityIndicator.color = colorTheme
+        }
+        if(statusBar != nil) {
+            statusBar?.backgroundColor = colorTheme
         }
         headerView.backgroundColor = colorTheme
         contentView.backgroundColor = UIColor.white
@@ -266,7 +285,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                                                    attribute: .bottom, relatedBy: .equal, toItem: headerView, attribute: .bottom,  multiplier: 1.0,  constant: -5.0)
         
         let btnLanguageLeading = NSLayoutConstraint(item: btnLanguage,
-                                                    attribute: .leading, relatedBy: .equal, toItem: headerView, attribute: .leading, multiplier: 1.0, constant: 5.0)
+                                                    attribute: .leading, relatedBy: .equal, toItem: headerView, attribute: .leading, multiplier: 1.0, constant: 15.0)
         
         NSLayoutConstraint.activate([btnLanguageHeight, btnLanguageWidth, btnLanguageBottom, btnLanguageLeading])
         
@@ -279,9 +298,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //Height
         let closeButtonWidth = NSLayoutConstraint(item: btnClose, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,   multiplier: 1.0,  constant: 20.0)
         
-        let closeButtonTop = NSLayoutConstraint(item: btnClose, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 30.0)
+        let closeButtonTop = NSLayoutConstraint(item: btnClose, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 10.0)
         
-        let closeButtonTrailing = NSLayoutConstraint(item: btnClose, attribute: .trailing, relatedBy: .equal, toItem: headerView, attribute: .trailing, multiplier: 1.0, constant: -15.0)
+        let closeButtonTrailing = NSLayoutConstraint(item: btnClose, attribute: .trailing, relatedBy: .equal, toItem: headerView, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
         NSLayoutConstraint.activate([closeButtonWidth, closeButtonHeight, closeButtonTop, closeButtonTrailing])
         
@@ -289,7 +308,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //BrandView Constraints
         let brandCenterHorizontally = NSLayoutConstraint(item: brandView, attribute: .centerX, relatedBy: .equal, toItem: headerView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let brandTop = NSLayoutConstraint(item: brandView, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 20.0)
+        let brandTop = NSLayoutConstraint(item: brandView, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 15.0)
         
         //Height
         let brandHeight = NSLayoutConstraint(item: brandView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0)
@@ -303,7 +322,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //Brand Image Constraints
         let imgBrandCenterHorizontally = NSLayoutConstraint(item: imageViewBrand, attribute: .centerX, relatedBy: .equal, toItem: brandView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let imgBrandTop =  NSLayoutConstraint(item: imageViewBrand, attribute: .top, relatedBy: .equal,  toItem: brandView,  attribute: .top, multiplier: 1.0, constant: 15.0)
+        let imgBrandTop =  NSLayoutConstraint(item: imageViewBrand, attribute: .top, relatedBy: .equal,  toItem: brandView,  attribute: .top, multiplier: 1.0, constant: 0.0)
         
         
         let imgBrandWidth = NSLayoutConstraint(item: imageViewBrand, attribute: .width, relatedBy: .equal,  toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 70.0)
@@ -321,7 +340,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let lblBrandCenterHorizontally = NSLayoutConstraint(item: lblBrand, attribute: .centerX, relatedBy: .equal, toItem: brandView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .bottom, relatedBy: .equal, toItem: brandView, attribute: .bottom, multiplier: 1.0, constant: 5.0)
+        let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .top, relatedBy: .equal, toItem: imageViewBrand, attribute: .bottom, multiplier: 1.0, constant: 2.0)
         
         NSLayoutConstraint.activate([lblBrandWidth, lblBrandHeight, lblBrandCenterHorizontally, lblBrandTop]) 
     }
@@ -601,45 +620,45 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func startButtonAction(sender: UIButton!) {
         startButtonContainerView.isHidden = true
         nextPrevButtonView.isHidden = false
-        showQuestion()
+        showQuestion(isFromRight: true)
     }
     
-    @objc func showQuestion() {
+    @objc func showQuestion(isFromRight:Bool) {
         currentQuestion = campaign?.questions?[questionNumber-1]
         let campaignType = campaign?.type
         if(campaignType != nil) {
             if(campaignType == "SAT" ) {
-                showCSATCESView(isCSAT: true)
+                showCSATCESView(isCSAT: true, isFromRight: isFromRight)
             } else if(campaignType == "ES") {
-                showCSATCESView(isCSAT: false)
+                showCSATCESView(isCSAT: false,isFromRight: isFromRight)
             } else if (campaignType == "NPS") {
-                showNPSView()
+                showNPSView(isFromRight: isFromRight)
             }
             else {
                 switch(currentQuestion.type ?? "") {
                 case "SINGLE_SELECT":
-                    showSurveyView()
+                    showSurveyView(isFromRight: isFromRight)
                     break
                 case "MULTI_SELECT":
-                    showSurveyView()
+                    showSurveyView(isFromRight: isFromRight)
                     break
                 case "RATING":
-                    showRatingView()
+                    showRatingView(isFromRight: isFromRight)
                     break
                 case "NPS":
-                    showNPSView()
+                    showNPSView(isFromRight: isFromRight)
                     break
                 case "PARAGRAPH":
-                    showTextView()
+                    showTextView(isFromRight: isFromRight)
                     break
                 case "SHORT_ANSWER":
-                    showTextView()
+                    showTextView(isFromRight: isFromRight)
                     break
                 case "EMAIL":
-                    showTextView()
+                    showTextView(isFromRight: isFromRight)
                     break
                 case "NUMBER":
-                    showTextView()
+                    showTextView(isFromRight: isFromRight)
                     break
                 default :
                     break
@@ -649,10 +668,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     //MARK : Show Question Views
-    @objc func showSurveyView() {
+    @objc func showSurveyView(isFromRight:Bool) {
         let campaignContentView = LoyagramSurveyView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self, resposne:response)
+        animateCampaignView(isFromRight: isFromRight)
         campaignView.addSubview(campaignContentView)
-        
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
         let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
@@ -664,10 +683,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
-    @objc func showRatingView() {
+    @objc func showRatingView(isFromRight:Bool) {
         let campaignContentView = LoyagramRatingView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self, response:response)
+        animateCampaignView(isFromRight: isFromRight)
         campaignView.addSubview(campaignContentView)
-        
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
         let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
@@ -680,9 +699,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
         
     }
-    @objc func showNPSView() {
+    @objc func showNPSView(isFromRight:Bool) {
         let followUpQuestion = campaign?.questions?[1]
         let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:(campaign?.type)!, question: currentQuestion, followUpQuestion: followUpQuestion!, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint, staticTextes:staticTexts, response:response)
+        animateCampaignView(isFromRight: isFromRight)
         campaignView.addSubview(campaignContentView)
         campaignContentView.isUserInteractionEnabled = true
         campaignContentView.delegate = self
@@ -697,8 +717,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
-    @objc func showTextView() {
-        let campaignContentView = LoyagramTextView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, staticTexts: staticTexts, response:response)
+    @objc func showTextView(isFromRight:Bool) {
+        let campaignContentView = LoyagramTextView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, staticTexts: staticTexts, response:response, campaignView:self)
+        animateCampaignView(isFromRight: isFromRight)
         campaignView.addSubview(campaignContentView)
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
@@ -711,10 +732,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
-    @objc func showCSATCESView(isCSAT: Bool) {
+    @objc func showCSATCESView(isCSAT: Bool, isFromRight:Bool) {
         let followUpQuestion = campaign?.questions?[1]
         let campaignContentView = LoyagramCSATCESView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, followUpQuestion: followUpQuestion!, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, isCSAT:isCSAT, campaignView: self, staticTexts: staticTexts, response:response)
         campaignContentView.delegate = self
+        animateCampaignView(isFromRight: isFromRight)
         campaignView.addSubview(campaignContentView)
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
@@ -728,6 +750,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([campaignViewTrailing,campaignViewLeading,campaignViewTop,campaignViewBottom])
     }
     
+    @objc func animateCampaignView(isFromRight:Bool) {
+        campaignView.layer.removeAllAnimations()
+        let transition = CATransition()
+        transition.type = kCATransitionPush
+        if(isFromRight) {
+            transition.subtype = kCATransitionFromRight
+            
+        } else {
+            transition.subtype = kCATransitionFromLeft
+        }
+        campaignView.layer.add(transition, forKey: nil)
+    }
     
     @objc func hideCampaignView() {
         btnLanguage.isHidden = true
@@ -765,13 +799,25 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func nextButtonAction(sender:UIButton!) {
         
-        showNextQuestion()
+        if(!isNextActive) {
+            isNextActive = true
+            showNextQuestion()
+            DispatchQueue.main.asyncAfter(deadline: .now() + (0.2)) {
+                self.isNextActive = false
+            }
+        }
         
     }
     
     @objc func prevButtonAction(sender:UIButton!) {
         
-        showPrevQuestion()
+        if(!isPrevActive) {
+            isPrevActive = true
+            showPrevQuestion()
+            DispatchQueue.main.asyncAfter(deadline: .now() + (0.2)) {
+                self.isPrevActive = false
+            }
+        }
         
     }
     
@@ -783,8 +829,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnPrev.backgroundColor = UIColor.white
         if(campaignType != "SURVEY" && campaignButtonDelegate != nil) {
             switch(followUpIterator) {
-            case 0: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
-            followUpIterator += 1
+            case 0:
+                
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                    self.campaignButtonDelegate.nextButtonPressed(iterator: self.followUpIterator)
+                    self.followUpIterator += 1
+                }
+                
                 break
             case 1: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             followUpIterator += 1
@@ -811,11 +862,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
             }
             
-            let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
+            let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
             lblQuestionCount.text = questionCount
             removeSubViews(view:self.campaignView)
             if(questionNumber <= (campaign?.questions?.count)!) {
-                showQuestion()
+                showQuestion(isFromRight: true)
             }
         }
     }
@@ -835,7 +886,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             switch(followUpIterator) {
             case 0:
                 break
-            case 1: campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
+            case 1: 
+                campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
             followUpIterator -= 1
                 break
             case 2: campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
@@ -854,10 +906,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
             }
             questionNumber -= 1
-            let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
+            let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
             lblQuestionCount.text = questionCount
             removeSubViews(view:self.campaignView)
-            showQuestion()
+            showQuestion(isFromRight: false)
         }
     }
     
@@ -899,14 +951,25 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         }
     }
     @objc func closeButtonAction(sender:UIButton!) {
-        closeCampaignController()
+        closeCampaign()
         DBManager.instance.closeDB()
         
     }
     
-    @objc func closeCampaignController() {
+    @objc func closeCampaign() {
         resetCampaign()
-        self.viewController.dismiss(animated: true, completion: nil)
+            switch(campaignViewType ?? 5) {
+            case 0 :
+                self.viewController.dismiss(animated: true, completion: nil)
+                break
+            case 1 :
+                dialogView.removeFromSuperview()
+                break
+            default:
+                break
+            }
+        
+        
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
@@ -965,7 +1028,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         currentQuestion = campaign.questions?[0]
         questionNumber = 1
         noOfQuestions = (campaign.questions?.count)!
-        let questionCount: String = "\(questionNumber) / \(noOfQuestions)"
+        let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
         lblQuestionCount.text = questionCount
         loadLanguages()
         btnLanguage.setTitle(currentLanguage.name, for: .normal)
@@ -1079,9 +1142,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func showThankYou() {
         if(campaign?.thankyou_message_enabled)! {
             initThankYouView()
-            self.perform(#selector(closeCampaignController), with: self, afterDelay: 3.0)
+            self.perform(#selector(closeCampaign), with: self, afterDelay: 3.0)
         } else {
-            closeCampaignController()
+            closeCampaign()
         }
     }
     
@@ -1156,10 +1219,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         case "NPS":
             strThankYou = getNPSThankYou();
             break;
-        case "SAT":
+        case "CSAT":
             strThankYou = getCSATCESThankYou();
             break;
-        case "ES":
+        case "CES":
             strThankYou = getCSATCESThankYou();
             break;
         case "SURVEY":

@@ -190,7 +190,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.tag = Int(label.id ?? 0)
-        radioButton.tag = Int(label.id ?? 0)
+        radioButton.labelId = Int(label.id ?? 0)
         let ra = getResponseAnswer(id: label.id!)
         if(ra != nil && ra?.question_label_id == label.id) {
             radioButton.isSelected = true
@@ -259,7 +259,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             $0.isSelected = false
         }
         sender.isSelected = !sender.isSelected
-        setSingleSelectResposne(id: CUnsignedLong(sender.tag))
+        setSingleSelectResposne(id: CUnsignedLong(sender.labelId))
         saveResponseToDB()
     }
     
@@ -301,6 +301,7 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
                         if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
                             let checkBox:LoyagramCheckBox = viewWithTag(Int(ql.id ?? 0)) as! LoyagramCheckBox
                             checkBox.text = labelTranslation.text
+                            checkBox.setNeedsDisplay()
                         }
                     }
                     break

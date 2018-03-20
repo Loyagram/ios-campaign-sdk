@@ -360,7 +360,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             $0.isSelected = false
         }
         sender.isSelected = !sender.isSelected
-        setCSATCESResponse(id: CUnsignedLong(sender.tag), val: 1)
+        setCSATCESResponse(id: CUnsignedLong(sender.labelId), val: 1)
         saveResponseToDB()
         switch(sender.csatcesOption) {
         case "very_dissatisfied":
@@ -512,7 +512,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         radioButton.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.tag = Int(label?.id ?? 0)
-        radioButton.tag = Int(label?.id ?? 0)
+        radioButton.labelId = Int(label?.id ?? 0)
         radioButton.csatcesOption = (label?.name!)!
         
         let ra = getResponseAnswer(id: (label?.id!)!)

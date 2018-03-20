@@ -17,7 +17,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     func ratingChangedValue(ratingBar: LoyagramRatingBar) {
         
-        setRatingResposne(id: CUnsignedLong(ratingBar.tag), rating:Int(ratingBar.rating))
+        setRatingResposne(id: CUnsignedLong(ratingBar.labelId), rating:Int(ratingBar.rating))
         saveResponseToDB()
     }
     
@@ -143,7 +143,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         ratingBar.isEditable = true
         ratingBar.delegate = self
         ratingLabel.tag = Int(label.id ?? 0)
-        ratingBar.tag = Int(label.id ?? 0)
+        ratingBar.labelId = Int(label.id ?? 0)
         let responseAnswer = getResponseAnswer(id: label.id!)
         if(responseAnswer != nil) {
             ratingBar.rating = Float((responseAnswer?.answer)!)

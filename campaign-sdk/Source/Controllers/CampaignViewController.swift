@@ -11,6 +11,7 @@ import UIKit
 class CampaignViewController: UIViewController {
     
     var mainView : UIView!
+    var statusBar: UIView!
     var campaignId: String!
     var campaignView: LoyagramCampaignView!
     var colorPrimary: UIColor!
@@ -34,16 +35,36 @@ class CampaignViewController: UIViewController {
         NSLayoutConstraint.activate([mainViewTrailing,mainViewLeading,mainViewTop,mainViewBottom])
         self.view.layoutIfNeeded()
         campaignView = LoyagramCampaignView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), color:colorPrimary)
-        campaignView.setViewController(vc: self)
+        campaignView.setCampaignType(type: 0)
         self.mainView.addSubview(campaignView)
         
         campaignView.translatesAutoresizingMaskIntoConstraints = false
+        
+        statusBar = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
+        
+        statusBar.translatesAutoresizingMaskIntoConstraints = false
+        
+        //
+        mainView.addSubview(statusBar)
+        campaignView.setViewController(vc: self, statusBar: statusBar)
+        //statusbar constrinats
+        let statusBarTrailing  = NSLayoutConstraint(item: statusBar, attribute: .trailing, relatedBy: .equal, toItem: mainView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        let statusBarLeading  = NSLayoutConstraint(item: statusBar, attribute: .leading, relatedBy: .equal, toItem: mainView, attribute: .leading, multiplier: 1.0, constant: 0.0)
+        
+        let statusBarHeight  = NSLayoutConstraint(item: statusBar, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20.0)
+        
+        NSLayoutConstraint.activate([statusBarTrailing,statusBarLeading,statusBarHeight])
+        if(colorPrimary != nil) {
+            statusBar.backgroundColor = colorPrimary
+        } else {
+            statusBar.backgroundColor = UIColor.white
+        }
         
         //Campaign View Constrinats
         let campaignViewTrailing  = NSLayoutConstraint(item: campaignView, attribute: .trailing, relatedBy: .equal, toItem: mainView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
         let campaignViewLeading  = NSLayoutConstraint(item: campaignView, attribute: .leading, relatedBy: .equal, toItem: mainView, attribute: .leading, multiplier: 1.0, constant: 0.0)
         
-        let campaignViewTop  = NSLayoutConstraint(item: campaignView, attribute: .top, relatedBy: .equal, toItem: mainView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        let campaignViewTop  = NSLayoutConstraint(item: campaignView, attribute: .top, relatedBy: .equal, toItem: mainView, attribute: .top, multiplier: 1.0, constant: 20.0)
         
         let campaignViewBottom  = NSLayoutConstraint(item: campaignView, attribute: .bottom, relatedBy: .equal, toItem: mainView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         

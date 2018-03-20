@@ -30,6 +30,7 @@ class LoyagramRatingBar: UIView {
     var  allowsSwipeWhenEditable : Bool!
     var  allowsHalfIntegralRatings : Bool!
     var  delegate: LoyagramRatingViewDelegate!
+    var  labelId = Int()
     
     init(starSize: CGSize, numberOfStars: NSInteger, rating: Float, fillColor: UIColor, unfilledColor: UIColor, strokeColor: UIColor) {
         super.init(frame: CGRect.zero)

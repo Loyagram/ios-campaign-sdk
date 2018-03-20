@@ -276,7 +276,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             npsButton.layer.borderWidth = 1.0
             npsButton.layer.borderColor = primaryColor.cgColor
             npsContainer.addSubview(npsButton)
-            npsButton.tag = i
+            npsButton.tag = i + 1
             npsButton.setTitleColor(primaryColor, for: .normal)
             npsButton.addTarget(self, action: #selector(npsButtonAction(sender:)), for: .touchUpInside)
             npsButtons.append(npsButton)
@@ -294,15 +294,17 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     @objc func npsButtonAction (sender: UIButton) {
         
         if(currentRating != nil) {
-            let button = self.viewWithTag(currentRating) as! UIButton
-            button.backgroundColor = UIColor.white
-            button.setTitleColor(primaryColor, for: .normal)
+            if(self.viewWithTag(currentRating) as? UIButton != nil) {
+                let button:UIButton = self.viewWithTag(currentRating) as! UIButton
+                button.backgroundColor = UIColor.white
+                button.setTitleColor(primaryColor, for: .normal)
+            }
         }
         currentRating = sender.tag
         if(delegate != nil && currentRating != nil) {
-            delegate.setNPS(rating:currentRating)
+            delegate.setNPS(rating:currentRating - 1)
         }
-        setNpsResponse(id: currentQuestion.id!, val: sender.tag)
+        setNpsResponse(id: currentQuestion.id!, val: sender.tag - 1)
         saveResponseToDB()
         let responseAnswer = getResponseAnswer(id: currentQuestion.id!)
         if(responseAnswer != nil) {
@@ -353,9 +355,6 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         }
     }
     
-    func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("sdc")
-    }
     @objc func initFeedbackView() {
         
         
@@ -606,7 +605,6 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             }
         }
     @objc func changeLabelLanguage() {
-        
         followUpTableView.reloadData()
     }
     
