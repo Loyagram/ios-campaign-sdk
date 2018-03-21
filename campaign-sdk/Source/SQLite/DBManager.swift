@@ -104,6 +104,40 @@ class DBManager {
         return responseString
         
     }
+    
+    func deleteResponseFromDB() -> Bool {
+      let queryString = "DELETE FROM RESPONSE WHERE kioskStatus = 0"
+        var deleteStatement: OpaquePointer?
+        var isSuccess = false
+        if sqlite3_prepare_v2(db, queryString, -1, &deleteStatement, nil) == SQLITE_OK{
+            if (sqlite3_step(deleteStatement) == SQLITE_DONE) {
+            }
+            isSuccess = true
+        } else {
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("error preparing insert: \(errmsg)")
+        }
+        
+        sqlite3_finalize(deleteStatement)
+        return isSuccess
+        
+    }
+    
+    func getRowCount() -> Int {
+        
+        let query = "SELECT COUNT(*) AS c FROM RESPONSE"
+        var count = -1
+        var readStatement:OpaquePointer?
+        if sqlite3_prepare(db, query, -1, &readStatement, nil) != SQLITE_OK{
+            let errmsg = String(cString: sqlite3_errmsg(db)!)
+            print("error preparing insert: \(errmsg)")
+            return count
+        }
+        while( sqlite3_step(readStatement) == SQLITE_ROW ){
+            count = Int(sqlite3_column_int(readStatement, 0));
+        }
+        return count
+    }
     func closeDB() {
 //        if sqlite3_close(db) != SQLITE_OK {
 //            print("cannot close db")

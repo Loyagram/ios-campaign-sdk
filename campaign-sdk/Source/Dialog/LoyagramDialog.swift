@@ -80,7 +80,7 @@ class LoyagramDialog: UIView {
             dialogBottom?.constant = -100.0
         //landscape
         } else if(screenHeight > 375){
-            let constant = (screenHeight - 375)/2
+            let constant = (screenHeight - 375)/4
             dialogTop?.constant = constant
             dialogBottom?.constant = -constant
         } else {

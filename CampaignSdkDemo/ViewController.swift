@@ -17,7 +17,8 @@ class ViewController: UIViewController {
     //var campaignId = "1020-f6c94dd5-d8c2-4f2d-9c8c-88d7237a8812"
     var campaignId = "1020-49bd1a50-1c51-445d-8043-fa8f907a0078"
     let colorPrimary = UIColor(red: 26.0/255.0, green: 55.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-    
+    var campaignView: UIView!
+    var campaignViewHeight: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
         radioGroupView = UIView()
@@ -28,7 +29,7 @@ class ViewController: UIViewController {
         
         initRadioButtonView()
         initButtonView()
-        
+
         
     }
     override func didReceiveMemoryWarning() {
@@ -149,13 +150,18 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
+        let date = Date()
+        let calendar = Calendar.current
+        let minutes = calendar.component(.minute, from: date)
+        let seconds = calendar.component(.second, from: date)
+        print("----------start time \(minutes) : \(seconds)")
         
         var attributes = [String:String] ()
         attributes["username"] = "sandhil"
         attributes["cusotmerId"] = "1234"
         LoyagramCampaignManager.addAttributes(attributes: attributes)
         //LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
-        LoyagramCampaignManager.showAsViewController(VC: self, campaignId: campaignId, colorPrimary: colorPrimary, onSucces: {
+        LoyagramCampaignManager.showAsViewController(viewController: self, campaignId: campaignId, colorPrimary: colorPrimary, onSucces: {
             () -> Void in
             print("campaign success")
         }, onError:{ () -> Void in
@@ -171,7 +177,7 @@ class ViewController: UIViewController {
         //mainView.addSubview(campaignView)
         //LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
         //LoyagramCampaignManager.showAsDialog(VC: self, campaignId: campaignId, colorPrimary: colorPrimary)
-        LoyagramCampaignManager.showAsDialog(VC: self, campaignView: mainView, campaignId: campaignId, colorPrimary: colorPrimary)
+        LoyagramCampaignManager.showAsDialog(viewController: self, campaignView: mainView, campaignId: campaignId, colorPrimary: colorPrimary)
     }
     @objc func slideButtonAction(sender:UIButton!) {
         
@@ -179,7 +185,11 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
+        //LoyagramCampaignManager.showAsViewController(viewController:self, campaignId: campaignId, colorPrimary: colorPrimary)
+        
+        
+        initBottomCampaignView()
+        LoyagramCampaignManager.showFromBottom(viewController: self, campaignView: campaignView, campaignId: campaignId, colorPrimary: colorPrimary)
     }
     
     @objc func previewButtonAction(sender:UIButton!) {
@@ -188,9 +198,9 @@ class ViewController: UIViewController {
         //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
         //let campaignView = LoyagramCampaignView(frame:rect)
         //mainView.addSubview(campaignView)
-        LoyagramCampaignManager.addAttribute(key: "username", value: "sandhil")
-        LoyagramCampaignManager.addAttribute(key: "customerId", value: "123")
-        LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId)
+//        LoyagramCampaignManager.addAttribute(key: "username", value: "sandhil")
+//        LoyagramCampaignManager.addAttribute(key: "customerId", value: "123")
+//        LoyagramCampaignManager.showAsViewController(viewController:self, campaignId: campaignId)
     }
     
     @objc func initButtonView() {
@@ -222,25 +232,25 @@ class ViewController: UIViewController {
         
         btnSlideBottom.addTarget(self, action: #selector(slideButtonAction(sender:)), for: .touchUpInside)
         
-        let btnPreview = UIButton(type: .system)
-        btnPreview.setTitle("PREVIEW", for: .normal)
-        btnPreview.layer.cornerRadius = 2
-        btnPreview.layer.borderWidth = 2
-        btnPreview.layer.borderColor = color.cgColor
-        btnPreview.setTitleColor(color, for: .normal)
+//        let btnPreview = UIButton(type: .system)
+//        btnPreview.setTitle("PREVIEW", for: .normal)
+//        btnPreview.layer.cornerRadius = 2
+//        btnPreview.layer.borderWidth = 2
+//        btnPreview.layer.borderColor = color.cgColor
+//        btnPreview.setTitleColor(color, for: .normal)
         
-        btnPreview.addTarget(self, action: #selector(previewButtonAction(sender:)), for: .touchUpInside)
+        //btnPreview.addTarget(self, action: #selector(previewButtonAction(sender:)), for: .touchUpInside)
         
         radioGroupView.addSubview(btnVC)
         radioGroupView.addSubview(btnDialog)
         radioGroupView.addSubview(btnSlideBottom)
-        radioGroupView.addSubview(btnPreview)
+        //radioGroupView.addSubview(btnPreview)
         
         //Constraints for first show from controller botton
         btnVC.translatesAutoresizingMaskIntoConstraints = false;
         btnDialog.translatesAutoresizingMaskIntoConstraints = false;
         btnSlideBottom.translatesAutoresizingMaskIntoConstraints = false;
-        btnPreview.translatesAutoresizingMaskIntoConstraints = false;
+        //btnPreview.translatesAutoresizingMaskIntoConstraints = false;
         
         //top
         let btnVCTop = NSLayoutConstraint(item: btnVC,
@@ -354,7 +364,7 @@ class ViewController: UIViewController {
         NSLayoutConstraint.activate([btnSlideBottomTop, btnSlideBottomHeight, btnSlideBottomWidth, btnSlideBottomCenterHorizontally])
         
         //top
-        let btnPreviewTop = NSLayoutConstraint(item: btnPreview,
+      /*  let btnPreviewTop = NSLayoutConstraint(item: btnPreview,
                                                attribute: .top,
                                                relatedBy: .equal,
                                                toItem: radioGroupView,
@@ -389,7 +399,47 @@ class ViewController: UIViewController {
                                                               constant: 0.0)
         
         NSLayoutConstraint.activate([btnPreviewTop, btnPreviewHeight, btnPreviewWidth, btnPreviewCenterHorizontally])
+ */
         
+    }
+    
+    @objc func initBottomCampaignView() {
+        
+        campaignView = UIView()
+        //campaignView.isHidden = false
+        campaignView.translatesAutoresizingMaskIntoConstraints = false
+        mainView.addSubview(campaignView)
+        NSLayoutConstraint(item: campaignView, attribute: .leading, relatedBy: .equal, toItem: mainView, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: campaignView, attribute: .trailing, relatedBy: .equal, toItem: mainView, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
+        NSLayoutConstraint(item: campaignView, attribute: .bottom, relatedBy: .equal, toItem: mainView, attribute: .bottom, multiplier: 1.0, constant: 0.0).isActive = true
+        campaignViewHeight = NSLayoutConstraint(item: campaignView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([campaignViewHeight])
+        
+        
+    }
+    override func viewDidLayoutSubviews() {
+        
+        if(campaignView == nil) {
+            return
+        }
+        let screenSize: CGRect = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+        //portrait
+        if(screenHeight > screenWidth) {
+            campaignViewHeight.constant = 400
+            //landscape
+        } else if(screenHeight > 375){
+            if(screenHeight > 575) {
+                let constant = 375 + (screenHeight - 200)
+                campaignViewHeight.constant = constant
+            } else {
+                campaignViewHeight.constant = 375
+            }
+        } else {
+            campaignViewHeight.constant = screenHeight
+        }
     }
     
 }

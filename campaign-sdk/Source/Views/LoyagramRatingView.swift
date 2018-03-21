@@ -256,7 +256,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
-                if(ra.question_label_id == id) {
+                if(ra.question_label_id != nil && ra.question_label_id == id) {
                     return ra
                 }
             }

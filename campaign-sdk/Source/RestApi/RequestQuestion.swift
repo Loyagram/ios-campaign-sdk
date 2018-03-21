@@ -17,9 +17,19 @@ class RequestQuestion {
         sessionConfig.timeoutIntervalForResource = 15.0
         let session = URLSession(configuration: sessionConfig)
         if(Reachability.isConnectedToNetwork()) {
+            let date = Date()
+            let calendar = Calendar.current
+            let minutes = calendar.component(.minute, from: date)
+            let seconds = calendar.component(.second, from: date)
+            print("---------- time before request \(minutes) : \(seconds)")
             let request = URLRequest(url:url!)
             let task = session.dataTask(with:request) { (data, response, error) in
                 do {
+                    let date = Date()
+                    let calendar = Calendar.current
+                    let minutes = calendar.component(.minute, from: date)
+                    let seconds = calendar.component(.second, from: date)
+                    print("---------- after response \(minutes) : \(seconds)")
                     if(data != nil) {
                     let jsonDecoder = JSONDecoder()
                     let campaign = try jsonDecoder.decode(Campaign.self, from: data!)

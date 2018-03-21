@@ -20,9 +20,6 @@ protocol LoyagramLanguageDelegate: class {
     func languageChanged(lang: Language)
     
 }
-
-
-
 public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCSATCESDelegate, LoyagramNPSDelegate {
     
     var headerView: UIView!
@@ -85,7 +82,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     init(frame:CGRect, color:UIColor) {
         super.init(frame:frame)
-        
         if(color == UIColor.clear) {
             let tintColor = getTintColor()
             if(tintColor != nil) {
@@ -98,10 +94,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             primaryColor = color
             isColorSet = true
         }
-        //self.layoutIfNeeded()
         self.isUserInteractionEnabled = true
-        
         GlobalConstants.initContstants()
+        
         initMainView()
         initHeaderView()
         initFooterView()
@@ -146,7 +141,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         dialogView = view
     }
     
-    // 0 for controller , 1 for dialog
+    // 0 for controller , 1 for dialog, 2 for animate from bottom
     @objc func setCampaignType(type:Int) {
         campaignViewType = type
     }
@@ -252,7 +247,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //Top
         let headerTop = NSLayoutConstraint(item: headerView, attribute: .top, relatedBy: .equal, toItem: mainView,  attribute: .top, multiplier: 1.0, constant: 0.0)
         //Height
-        let headerHeight = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 150.0)
+        let headerHeight = NSLayoutConstraint(item: headerView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 130.0)
         
         NSLayoutConstraint.activate([headerLeading, headerTrailing, headerTop, headerHeight])
         
@@ -308,7 +303,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         //BrandView Constraints
         let brandCenterHorizontally = NSLayoutConstraint(item: brandView, attribute: .centerX, relatedBy: .equal, toItem: headerView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let brandTop = NSLayoutConstraint(item: brandView, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 15.0)
+        let brandTop = NSLayoutConstraint(item: brandView, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 10.0)
         
         //Height
         let brandHeight = NSLayoutConstraint(item: brandView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 110.0)
@@ -340,7 +335,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let lblBrandCenterHorizontally = NSLayoutConstraint(item: lblBrand, attribute: .centerX, relatedBy: .equal, toItem: brandView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
         
-        let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .top, relatedBy: .equal, toItem: imageViewBrand, attribute: .bottom, multiplier: 1.0, constant: 2.0)
+        let lblBrandTop =  NSLayoutConstraint(item: lblBrand, attribute: .top, relatedBy: .equal, toItem: imageViewBrand, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
         NSLayoutConstraint.activate([lblBrandWidth, lblBrandHeight, lblBrandCenterHorizontally, lblBrandTop]) 
     }
@@ -408,6 +403,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnNext = UIButton(type: .system)
         btnPrev = UIButton(type: .system)
         
+        campaignView.backgroundColor = UIColor.red
         mainView.addSubview(contentView)
         //contentView.backgroundColor = UIColor.white
         nextPrevButtonView.addSubview(btnPrev)
@@ -482,17 +478,17 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let btnPrevWidth = NSLayoutConstraint(item: btnPrev, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
         let btnPrevleading = NSLayoutConstraint(item: btnPrev, attribute: .leading,  relatedBy: .equal, toItem: nextPrevButtonView, attribute: .leading, multiplier: 1.0, constant: 50.0)
         
-        let btnPrevCenterVertically = NSLayoutConstraint(item: btnPrev, attribute: .centerY, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .centerY, multiplier: 1.0, constant: 0.0)
+        let btnPrevCenterVertically = NSLayoutConstraint(item: btnPrev, attribute: .centerY, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .centerY, multiplier: 1.0, constant: 3.0)
         
         NSLayoutConstraint.activate([btnPrevHeight, btnPrevWidth, btnPrevleading, btnPrevCenterVertically])
         
-        //Next Button Constrinats
+        //Next Button Constraints
         
         let btnNextHeight = NSLayoutConstraint(item: btnNext, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
         
         let btnNextWidth = NSLayoutConstraint(item: btnNext, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
         
-        let btnNextCenterVertically = NSLayoutConstraint(item: btnNext, attribute: .centerY,  relatedBy: .equal, toItem: nextPrevButtonView, attribute: .centerY,  multiplier: 1.0, constant: 0.0)
+        let btnNextCenterVertically = NSLayoutConstraint(item: btnNext, attribute: .centerY,  relatedBy: .equal, toItem: nextPrevButtonView, attribute: .centerY,  multiplier: 1.0, constant: 3.0)
         
         let btnNextTrailing = NSLayoutConstraint(item: btnNext, attribute: .trailing, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .trailing, multiplier: 1.0, constant: -50.0)
         
@@ -556,7 +552,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnStart = UIButton(type:.system)
         btnStart.translatesAutoresizingMaskIntoConstraints = false
         startButtonContainerView.addSubview(btnStart)
-        btnStart.setTitle("Start", for: .normal)
+        //btnStart.setTitle("Start", for: .normal)
         btnStart.layer.borderWidth = 1.0
         btnStart.layer.cornerRadius = 15
         //btnStart.layer.borderColor = primaryColor.cgColor
@@ -576,7 +572,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let btnWidth = NSLayoutConstraint(item: btnStart, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 80.0)
         
-        let btnTop = NSLayoutConstraint(item: btnStart, attribute: .top,  relatedBy: .equal, toItem: txtWelcomeMessage, attribute: .bottom,  multiplier: 1.0, constant: 0.0)
+        let btnTop = NSLayoutConstraint(item: btnStart, attribute: .top,  relatedBy: .equal, toItem: txtWelcomeMessage, attribute: .bottom,  multiplier: 1.0, constant: 5.0)
         
         let btnCenterHorizontally = NSLayoutConstraint(item: btnStart, attribute: .centerX,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .centerX,  multiplier: 1.0, constant: 0.0)
         
@@ -594,26 +590,30 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         startButtonContainerView.addSubview(txtWelcomeMessage)
         txtWelcomeMessage.textAlignment = .center
         
+        //txtWelcomeMessage.backgroundColor = UIColor.red
         txtWelcomeTip = UITextView()
         txtWelcomeTip.isEditable = false
         txtWelcomeTip.translatesAutoresizingMaskIntoConstraints = false
         txtWelcomeTip.textAlignment = .center
+        //txtWelcomeTip.backgroundColor = UIColor.red
         startButtonContainerView.addSubview(txtWelcomeTip)
         
-        txtWelcomeTip.font = GlobalConstants.FONT_MEDIUM
+        txtWelcomeTip.font = GlobalConstants.FONT_SMALL
         txtWelcomeMessage.font = GlobalConstants.FONT_MEDIUM
+        txtWelcomeTip.textColor = UIColor.lightGray
         
+        showHideWelcomeScreen(isShow: false)
         //Welcome message constrinats
         NSLayoutConstraint(item: txtWelcomeMessage, attribute: .leading,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .leading,  multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: txtWelcomeMessage, attribute: .trailing,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .trailing,  multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: txtWelcomeMessage, attribute: .top,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .top,  multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: txtWelcomeMessage, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 50.0).isActive = true
+        NSLayoutConstraint(item: txtWelcomeMessage, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 45.0).isActive = true
         
         //Welcome Tip constrinats
         NSLayoutConstraint(item: txtWelcomeTip, attribute: .leading,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .leading,  multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: txtWelcomeTip, attribute: .trailing,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .trailing,  multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: txtWelcomeTip, attribute: .bottom,  relatedBy: .equal, toItem: startButtonContainerView, attribute: .bottom,  multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: txtWelcomeTip, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 40.0).isActive = true
+        NSLayoutConstraint(item: txtWelcomeTip, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 35.0).isActive = true
         
         
     }
@@ -915,7 +915,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func submitCampaign() {
         showThankYou()
-        
          let encoder = JSONEncoder()
          encoder.outputFormatting = .prettyPrinted
          response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
@@ -932,6 +931,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
 //        campaignDelegate = viewController.self as! LoyagramCampaignCallback!
         
         SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
+           self.deleteResponse()
             if let successCallback = self.onSuccess {
                 successCallback ()
             }
@@ -963,6 +963,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 self.viewController.dismiss(animated: true, completion: nil)
                 break
             case 1 :
+                dialogView.removeFromSuperview()
+                break
+            case 2 :
                 dialogView.removeFromSuperview()
                 break
             default:
@@ -1036,6 +1039,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         getStaticTexts()
         setStaticTexts()
         hideActivityIndicator()
+        if(campaign.welcome_message_enabled!) {
+            showHideWelcomeScreen(isShow: true)
+        }
         showCampaignView()
         if(Reachability.isConnectedToNetwork()) {
             getDataFromUrl(url: URL(string:(campaign.biz?.img_url)!)!, completion: ({ (data, response, error) in
@@ -1043,6 +1049,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                     DispatchQueue.main.async() {
                         let image = UIImage(data: data!)
                         self.imageViewBrand.image = image
+                        self.lblBrand.text = campaign.biz?.name
+                    }
+                } else {
+                    DispatchQueue.main.async() {
                         self.lblBrand.text = campaign.biz?.name
                     }
                 }
@@ -1058,8 +1068,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     func campaignErrorHandler() {
         hideActivityIndicator()
         showAlert()
-        primaryColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
-        setTheme(colorTheme: primaryColor, isColorPrimarySet: true)
+        if(!isColorSet) {
+            primaryColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
+            setTheme(colorTheme: primaryColor, isColorPrimarySet: true)
+        } 
     }
     func showAlert() {
         if(viewController != nil) {
@@ -1409,8 +1421,33 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         if (btnStart != nil) {
             btnStart.setTitle(staticTexts.translation["CAMPAIGN_MODE_START_BUTTON_TEXT"], for: .normal)
         }
+        if(txtWelcomeTip != nil && txtWelcomeMessage != nil) {
+            txtWelcomeTip.text = staticTexts.translation["WIDGET_WELCOME_TIP"]
+            txtWelcomeMessage.text = getWelcomeText()
+        }
     }
     
+    @objc func getWelcomeText() -> String? {
+        let welcomeTranslations = campaign?.welcome_message_translations
+        var str:String?
+        for welcomeTranslation in welcomeTranslations! {
+            if(welcomeTranslation.language_code != nil && welcomeTranslation.language_code == currentLanguage.language_code) {
+              str = welcomeTranslation.text
+                break
+            }
+        }
+        return str
+    }
+    
+    @objc func showHideWelcomeScreen(isShow:Bool) {
+        if(isShow) {
+            txtWelcomeMessage.isHidden = false
+            txtWelcomeTip.isHidden = false
+        } else {
+            txtWelcomeMessage.isHidden = true
+            txtWelcomeTip.isHidden = true
+        }
+    }
     @objc func showActivityIndicator() {
         
         activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
@@ -1426,6 +1463,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func hideActivityIndicator() {
         activityIndicator.stopAnimating()
+        let date = Date()
+        let calendar = Calendar.current
+        let minutes = calendar.component(.minute, from: date)
+        let seconds = calendar.component(.second, from: date)
+        print("---------- time  in hide activity\(minutes) : \(seconds)")
     }
     
     //Handle Resposne
@@ -1476,6 +1518,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         DBManager.instance.insertResponseIntoDB(response: stringResponse)
     }
     
+    @objc func deleteResponse() {
+        if(DBManager.instance.deleteResponseFromDB()) {
+        } else {
+        }
+    }
     func getResponseFromDB() ->Response? {
         if(DBManager.instance.getResponseFromDB() != nil) {
             let jsonData = DBManager.instance.getResponseFromDB()!.data(using: .utf8)!

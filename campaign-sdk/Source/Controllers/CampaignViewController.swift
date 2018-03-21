@@ -17,6 +17,8 @@ class CampaignViewController: UIViewController {
     var colorPrimary: UIColor!
     var onSuccess: (() -> Void)?
     var onError: (() -> Void)?
+    var statusBarTop: NSLayoutConstraint!
+    var campaignViewTop: NSLayoutConstraint!
     override func viewDidLoad() {
         super.viewDidLoad()
         mainView = UIView()
@@ -53,7 +55,9 @@ class CampaignViewController: UIViewController {
         
         let statusBarHeight  = NSLayoutConstraint(item: statusBar, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 20.0)
         
-        NSLayoutConstraint.activate([statusBarTrailing,statusBarLeading,statusBarHeight])
+        statusBarTop = NSLayoutConstraint(item: statusBar, attribute: .top, relatedBy: .equal, toItem: mainView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([statusBarTrailing,statusBarLeading,statusBarHeight, statusBarTop])
         if(colorPrimary != nil) {
             statusBar.backgroundColor = colorPrimary
         } else {
@@ -64,7 +68,7 @@ class CampaignViewController: UIViewController {
         let campaignViewTrailing  = NSLayoutConstraint(item: campaignView, attribute: .trailing, relatedBy: .equal, toItem: mainView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
         let campaignViewLeading  = NSLayoutConstraint(item: campaignView, attribute: .leading, relatedBy: .equal, toItem: mainView, attribute: .leading, multiplier: 1.0, constant: 0.0)
         
-        let campaignViewTop  = NSLayoutConstraint(item: campaignView, attribute: .top, relatedBy: .equal, toItem: mainView, attribute: .top, multiplier: 1.0, constant: 20.0)
+        campaignViewTop  = NSLayoutConstraint(item: campaignView, attribute: .top, relatedBy: .equal, toItem: mainView, attribute: .top, multiplier: 1.0, constant: 0.0)
         
         let campaignViewBottom  = NSLayoutConstraint(item: campaignView, attribute: .bottom, relatedBy: .equal, toItem: mainView, attribute: .bottom, multiplier: 1.0, constant: 0.0)
         
@@ -109,5 +113,22 @@ class CampaignViewController: UIViewController {
         // Pass the selected object to the new view controller.
     }
     
-    
+    override func viewDidLayoutSubviews() {
+        
+        if(statusBarTop == nil || campaignViewTop == nil) {
+            return
+        }
+        let screenSize: CGRect = UIScreen.main.bounds
+        let screenWidth = screenSize.width
+        let screenHeight = screenSize.height
+        
+        if(screenHeight > screenWidth) {
+            statusBarTop.constant = 0
+            campaignViewTop.constant = 20
+        } else {
+            statusBarTop.constant = -20
+            campaignViewTop.constant = 0
+        }
+        
+    }
 }

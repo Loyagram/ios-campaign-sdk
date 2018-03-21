@@ -22,7 +22,7 @@ class SubmitResponse {
             let task = session.dataTask(with:request) { (data, response, error) in
                 do {
                     if(data != nil) {
-                        print(String(data: data!, encoding: .utf8)!)
+                        //print(String(data: data!, encoding: .utf8)!)
                         success()
                     } else {
                         failure()

@@ -414,7 +414,6 @@
 		D3B08004202B0068009B046B /* campaign-sdk */ = {
 			isa = PBXGroup;
 			children = (
-				D3F17CC82050140900F431F5 /* ProximaNova-Regular.otf */,
 				D36D532C202DA01700258DCA /* Source */,
 				D3B08005202B0068009B046B /* campaign_sdk.h */,
 				D3B08006202B0068009B046B /* Info.plist */,
@@ -476,6 +475,7 @@
 		D3F17CCD20501E8400F431F5 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
+				D3F17CC82050140900F431F5 /* ProximaNova-Regular.otf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";

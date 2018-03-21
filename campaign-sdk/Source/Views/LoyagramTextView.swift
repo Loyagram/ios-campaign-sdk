@@ -24,7 +24,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     var textField: UITextField!
     var textView: UITextView!
     var fieldType: String!
-    var txtQuestionCenterY: NSLayoutConstraint!
+    var scrollViewCenterY: NSLayoutConstraint!
     var textScrollView: UIScrollView!
     var scrollViewHeight: NSLayoutConstraint!
     var staticTexts: StaticTextTranslation!
@@ -83,11 +83,9 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         txtQuestion.textAlignment = .center
         txtQuestion.font = GlobalConstants.FONT_MEDIUM
         txtQuestion.isEditable = false
-        
+        txtQuestion.isUserInteractionEnabled = false
         //TextView Question constraints
         let txtTop = NSLayoutConstraint(item: txtQuestion, attribute: .top, relatedBy: .equal, toItem: textScrollView, attribute: .top, multiplier: 1.0, constant: 0.0)
-        
-//        txtQuestionCenterY = NSLayoutConstraint(item: txtQuestion, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: -20.0)
         
         let txtQuestionLeading = NSLayoutConstraint(item: txtQuestion, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 10.0)
         
@@ -100,10 +98,10 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         NSLayoutConstraint(item: textScrollView, attribute: .leading, relatedBy: .equal, toItem: self, attribute: .leading, multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: textScrollView, attribute: .trailing, relatedBy: .equal, toItem: self, attribute: .trailing, multiplier: 1.0, constant: 0.0).isActive = true
         NSLayoutConstraint(item: textScrollView, attribute: .centerX, relatedBy: .equal, toItem: self, attribute: .centerX, multiplier: 1.0, constant: 0.0).isActive = true
-        NSLayoutConstraint(item: textScrollView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0.0).isActive = true
+        scrollViewCenterY = NSLayoutConstraint(item: textScrollView, attribute: .centerY, relatedBy: .equal, toItem: self, attribute: .centerY, multiplier: 1.0, constant: 0.0)
         scrollViewHeight = NSLayoutConstraint(item: textScrollView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 0.0)
         
-        NSLayoutConstraint.activate([scrollViewHeight])
+        NSLayoutConstraint.activate([scrollViewHeight, scrollViewCenterY])
         
     }
     
@@ -208,12 +206,30 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     
     override func layoutSubviews() {
         super.layoutSubviews()
-         let viewHeight = self.frame.height
-        if(viewHeight <= 150) {
+        let viewHeight = self.frame.height
+        var contentHeight:CGFloat = 0
+        if(viewHeight <= 130) {
             scrollViewHeight.constant = viewHeight
+            if(fieldType == "EMAIL" || fieldType == "NUMBER") {
+                contentHeight = 70
+                scrollViewCenterY.constant = 25
+            } else if(fieldType == "SHORT_ANSWER"){
+                contentHeight = 90
+                scrollViewCenterY.constant = 15
+            }
+            else {
+                scrollViewCenterY.constant = 25
+                contentHeight = 130
+                scrollViewCenterY.constant = 0
+            }
+            
         } else {
-            scrollViewHeight.constant = 150.0
+            scrollViewHeight.constant = 130
+            scrollViewCenterY.constant = 25
+            
         }
+        
+        
         setBorderForTextField()
     }
     
@@ -244,7 +260,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         default:
             break;
         }
-    
+        
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let textViewText = textView.text + text
