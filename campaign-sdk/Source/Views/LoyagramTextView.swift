@@ -31,6 +31,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     var response:Response!
     var questionLabelId: CUnsignedLong!
     var campaignView: LoyagramCampaignView!
+    var textViewPlaceHolderText = ""
     
     public init(frame: CGRect, question: Question, currentLang: Language, primaryLang: Language, color: UIColor, staticTexts:StaticTextTranslation, response:Response, campaignView:LoyagramCampaignView) {
         super.init(frame: frame)
@@ -41,10 +42,10 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         self.staticTexts = staticTexts
         self.response = response
         campaignView.languageDelegate = self
+        textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
         initTextView()
         setQuestion()
         showTextView()
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -119,6 +120,12 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
             switch(fieldType) {
             case "SHORT_ANSWER":
                 textView = UITextView()
+                let currentText = getTextResponse()
+                if(currentText != "") {
+                    textView.text = currentText
+                } else {
+                    applyPlaceholderStyle(textView: textView, placeholderText: textViewPlaceHolderText)
+                }
                 textScrollView.addSubview(textView)
                 textView.translatesAutoresizingMaskIntoConstraints = false
                 textFieldHeight = 40
@@ -129,6 +136,12 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 textView.delegate = self
             case "PARAGRAPH":
                 textView = UITextView()
+                let currentText = getTextResponse()
+                if(currentText != "") {
+                    textView.text = currentText
+                } else {
+                    applyPlaceholderStyle(textView: textView, placeholderText: textViewPlaceHolderText)
+                }
                 textScrollView.addSubview(textView)
                 textView.translatesAutoresizingMaskIntoConstraints = false
                 textFieldHeight = 80
@@ -144,7 +157,13 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 textFieldHeight = 20
                 textField.keyboardType = .emailAddress
                 textField.autocorrectionType = .no
-                textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+                let currentText = getTextResponse()
+                if(currentText != "") {
+                    textField.text = currentText
+                } else {
+                    textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+                }
+                
                 textField.delegate = self
                 type = "textField"
             case "NUMBER":
@@ -154,11 +173,22 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 textFieldHeight = 20
                 textField.keyboardType = .phonePad
                 textField.autocorrectionType = .no
-                textField.placeholder = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]
+                let currentText = getTextResponse()
+                if(currentText != "") {
+                    textField.text = currentText
+                } else {
+                    textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+                }
                 textField.delegate = self
                 type = "textField"
             default:
                 textView = UITextView()
+                let currentText = getTextResponse()
+                if(currentText != "") {
+                    textView.text = currentText
+                } else {
+                    applyPlaceholderStyle(textView: textView, placeholderText: textViewPlaceHolderText)
+                }
                 textView.addSubview(textField)
                 textView.translatesAutoresizingMaskIntoConstraints = false
                 type = "textView"
@@ -219,8 +249,8 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 contentHeight = 130
             }
             if(viewHeight > contentHeight) {
-            let constant = (viewHeight - contentHeight)/2
-            scrollViewCenterY.constant = constant
+                let constant = (viewHeight - contentHeight)/2
+                scrollViewCenterY.constant = constant
             } else {
                 scrollViewCenterY.constant = 0
             }
@@ -250,40 +280,72 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     @objc func setPlaceHolderText(){
         switch (fieldType) {
         case "SHORT_ANSWER":
+            if textView.text == textViewPlaceHolderText {
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textView.text = textViewPlaceHolderText
+                 moveCursorToStart(txtView: textView)
+            } else {
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            }
             break
         case "PARAGRAPH":
+            if textView.text == textViewPlaceHolderText {
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textView.text = textViewPlaceHolderText
+                moveCursorToStart(txtView: textView)
+            } else {
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            }
             break
         case "NUMBER":
             textField.placeholder = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]
             break;
         case "EMAIL":
             textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
-            break;
+            break
         default:
-            break;
+            if textView.text == textViewPlaceHolderText {
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textView.text = textViewPlaceHolderText
+                moveCursorToStart(txtView: textView)
+            } else {
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            }
+            break
         }
         
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let textViewText = textView.text + text
-        let response = setTextResposne(id: currentQuestion.id!, rating: 1)
-        if (response.response_answer_text != nil) {
-            response.response_answer_text?.text = textViewText
+        let newLength = textView.text.utf16.count + text.utf16.count - range.length
+        if newLength > 0 {
+            // check if the only text is the placeholder and remove it if needed
+            if textView.text == textViewPlaceHolderText {
+                applyNonPlaceholderStyle(textView: textView)
+                textView.text = ""
+            }
         }
-        saveResponseToDB()
         return true
     }
-    
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let textFieldText = textField.text! + string
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let textFieldText = textField.text
         let response = setTextResposne(id: currentQuestion.id!, rating: 1)
         if (response.response_answer_text != nil) {
             response.response_answer_text?.text = textFieldText
         }
         saveResponseToDB()
-        return true
+        
     }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        let textViewText = textView.text
+        let response = setTextResposne(id: currentQuestion.id!, rating: 1)
+        if (response.response_answer_text != nil) {
+            response.response_answer_text?.text = textViewText
+        }
+        saveResponseToDB()
+    }
+    
     func setTextResposne(id: CUnsignedLong, rating:Int) -> ResponseAnswer {
         let answer = getResponseAnswer(id: id)
         if(answer != nil) {
@@ -324,6 +386,19 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         responseAnswer.id = UUID().uuidString
         return responseAnswer
     }
+    
+    @objc func getTextResponse() -> String {
+        var text = ""
+        let responseAnswers:[ResponseAnswer] = response.response_answers
+        for responseAnswer in responseAnswers {
+            if(currentQuestion.id == responseAnswer.question_id) {
+                text = (responseAnswer.response_answer_text?.text)!
+                break
+            }
+        }
+        return text
+    }
+    
     @objc func saveResponseToDB() {
         let encoder = JSONEncoder()
         let data = try! encoder.encode(response)
@@ -332,4 +407,29 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         DBManager.instance.insertResponseIntoDB(response: stringResponse)
     }
     
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] {
+            // move cursor to start
+            moveCursorToStart(txtView:textView)
+        }
+        return true
+    }
+    
+    func applyPlaceholderStyle(textView: UITextView, placeholderText: String) {
+        // make it look (initially) like a placeholder
+        textView.textColor = .lightGray
+        textView.text = placeholderText
+    }
+    
+    func applyNonPlaceholderStyle(textView: UITextView) {
+        // make it look like normal text instead of a placeholder
+        textView.textColor = .black
+        textView.alpha = 1.0
+    }
+    
+    func moveCursorToStart(txtView: UITextView) {
+        DispatchQueue.main.async() {
+            self.textView.selectedRange = NSMakeRange(0, 0)
+        }
+    }
 }

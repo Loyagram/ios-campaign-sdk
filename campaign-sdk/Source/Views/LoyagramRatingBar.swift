@@ -175,4 +175,6 @@ class LoyagramRatingBar: UIView {
         super.layoutSubviews()
         self.layoutIfNeeded()
     }
+    
+    
 }
