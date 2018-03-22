@@ -11,6 +11,8 @@ import UIKit
 
 protocol LoyagramCSATCESDelegate: class {
     func setOptions(option:String!)
+    func enableCSATCESFollowUp(enable:Bool)
+    func setCSATCESFollowUpEmail(email:String)
 }
 
 class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate, UITextViewDelegate, UITextFieldDelegate {
@@ -300,7 +302,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
         //TextField Constraints
         
-        let textFieldTop = NSLayoutConstraint(item: feedbackTextField, attribute: .top, relatedBy: .equal, toItem: chkContainer, attribute: .bottom, multiplier: 1.0, constant: 10.0)
+        let textFieldTop = NSLayoutConstraint(item: feedbackTextField, attribute: .top, relatedBy: .equal, toItem: chkContainer, attribute: .bottom, multiplier: 1.0, constant: 20.0)
         
         let textFieldBottom = NSLayoutConstraint(item: feedbackTextField, attribute: .bottom, relatedBy: .equal, toItem: csatcesScrollView, attribute: .bottom, multiplier: 1.0, constant: -5.0)
         
@@ -319,6 +321,15 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     
     @objc func followUpCheckBoxAction (sender: LoyagramCheckBox) {
         
+        if(sender.isChecked) {
+            if(delegate != nil) {
+                delegate.enableCSATCESFollowUp(enable: true)
+            }
+        } else {
+            if(delegate != nil) {
+                delegate.enableCSATCESFollowUp(enable: false)
+            }
+        }
         feedbackTextField.isHidden = !feedbackTextField.isHidden
         
     }
@@ -690,7 +701,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let textViewText = textView.text + text
         let response = getResponseAnswerByQuestionId(id: currentQuestion.id!)
         if (response?.response_answer_text != nil) {
-            response?.response_answer_text.text = textViewText
+            response?.response_answer_text?.text = textViewText
         }
         saveResponseToDB()
         return true
@@ -700,6 +711,9 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let textFieldText = textField.text! + string
         //Set FollowUP Email
         response.customer_email = textFieldText
+        if(delegate != nil) {
+            delegate.setCSATCESFollowUpEmail(email: textFieldText)
+        }
         saveResponseToDB()
         return true
     }

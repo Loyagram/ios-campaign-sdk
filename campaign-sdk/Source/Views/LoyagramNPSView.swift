@@ -10,6 +10,8 @@ import UIKit
 
 protocol LoyagramNPSDelegate: class {
     func setNPS(rating: Int!)
+    func enableNPSFollowUp(enable:Bool)
+    func setNPSFollowUpEmail(email:String)
 }
 
 class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCampaignButtonDelegate, UITextFieldDelegate, UITextViewDelegate, LoyagramLanguageDelegate {
@@ -301,17 +303,17 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             }
         }
         currentRating = sender.tag
-        if(delegate != nil && currentRating != nil) {
-            delegate.setNPS(rating:currentRating - 1)
-        }
         setNpsResponse(id: currentQuestion.id!, val: sender.tag - 1)
         saveResponseToDB()
         let responseAnswer = getResponseAnswer(id: currentQuestion.id!)
         if(responseAnswer != nil) {
-            if(sender.tag == responseAnswer?.answer) {
+            if(sender.tag - 1 == responseAnswer?.answer) {
                 sender.backgroundColor = primaryColor
                 sender.setTitleColor(UIColor.white, for: .normal)
             }
+        }
+        if(delegate != nil && currentRating != nil) {
+            delegate.setNPS(rating:currentRating - 1)
         }
     }
     
@@ -461,7 +463,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         //TextField Constraints
         
-        let textFieldTop = NSLayoutConstraint(item: feedbackTextField, attribute: .top, relatedBy: .equal, toItem: chkContainer, attribute: .bottom, multiplier: 1.0, constant: 10.0)
+        let textFieldTop = NSLayoutConstraint(item: feedbackTextField, attribute: .top, relatedBy: .equal, toItem: chkContainer, attribute: .bottom, multiplier: 1.0, constant: 20.0)
         
         let textFieldBottom = NSLayoutConstraint(item: feedbackTextField, attribute: .bottom, relatedBy: .equal, toItem: scrollView, attribute: .bottom, multiplier: 1.0, constant: -5.0)
         
@@ -479,7 +481,16 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     }
     
     @objc func followUpCheckBoxAction (sender: LoyagramCheckBox) {
-        
+        if(sender.isChecked) {
+            if(delegate != nil) {
+                delegate.enableNPSFollowUp(enable: true)
+            }
+            
+        } else {
+            if(delegate != nil) {
+                delegate.enableNPSFollowUp(enable: false)
+            }
+        }
         feedbackTextField.isHidden = !feedbackTextField.isHidden
         
     }
@@ -678,7 +689,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let textViewText = textView.text + text
         let response = getResponseAnswer(id: currentQuestion.id!)
         if (response?.response_answer_text != nil) {
-            response?.response_answer_text.text = textViewText
+            response?.response_answer_text?.text = textViewText
         }
         saveResponseToDB()
         return true
@@ -688,6 +699,9 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let textFieldText = textField.text! + string
         //Set FollowUP Email
         response.customer_email = textFieldText
+        if(delegate != nil) {
+            delegate.setNPSFollowUpEmail(email: textFieldText)
+        }
         saveResponseToDB()
         return true
     }

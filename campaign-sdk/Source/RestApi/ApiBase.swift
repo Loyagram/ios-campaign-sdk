@@ -10,7 +10,7 @@ import Foundation
 
 class ApiBase {
 
-    static let HOST:String  = "https://loyagram.com"
+    static let HOST:String  = "https://cx.loyagram.com"
     //static let AUTHENTICATED_PATH:String  = "/api/v0.0.1beta"
     
     class func getApiPath() -> String {

@@ -208,23 +208,25 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         super.layoutSubviews()
         let viewHeight = self.frame.height
         var contentHeight:CGFloat = 0
-        if(viewHeight <= 130) {
+        if(viewHeight <= 175) {
             scrollViewHeight.constant = viewHeight
             if(fieldType == "EMAIL" || fieldType == "NUMBER") {
                 contentHeight = 70
-                scrollViewCenterY.constant = 25
             } else if(fieldType == "SHORT_ANSWER"){
                 contentHeight = 90
-                scrollViewCenterY.constant = 15
             }
             else {
-                scrollViewCenterY.constant = 25
                 contentHeight = 130
+            }
+            if(viewHeight > contentHeight) {
+            let constant = (viewHeight - contentHeight)/2
+            scrollViewCenterY.constant = constant
+            } else {
                 scrollViewCenterY.constant = 0
             }
             
         } else {
-            scrollViewHeight.constant = 130
+            scrollViewHeight.constant = 150
             scrollViewCenterY.constant = 25
             
         }
@@ -262,11 +264,12 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         }
         
     }
+    
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
         let textViewText = textView.text + text
         let response = setTextResposne(id: currentQuestion.id!, rating: 1)
         if (response.response_answer_text != nil) {
-            response.response_answer_text.text = textViewText
+            response.response_answer_text?.text = textViewText
         }
         saveResponseToDB()
         return true
@@ -276,7 +279,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         let textFieldText = textField.text! + string
         let response = setTextResposne(id: currentQuestion.id!, rating: 1)
         if (response.response_answer_text != nil) {
-            response.response_answer_text.text = textFieldText
+            response.response_answer_text?.text = textFieldText
         }
         saveResponseToDB()
         return true

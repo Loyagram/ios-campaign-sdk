@@ -12,10 +12,12 @@ struct GlobalConstants {
     
     static var FONT_MEDIUM = UIFont.systemFont(ofSize: 17)
     static var FONT_SMALL = UIFont.systemFont(ofSize: 12)
+    static var FONT_XSMALL = UIFont.systemFont(ofSize: 10)
     static func initContstants() {
         unpackFonts()
         FONT_MEDIUM = UIFont(name:"Proxima Nova", size: 17)!
-        FONT_SMALL = UIFont(name:"Proxima Nova", size: 14)!
+        FONT_SMALL = UIFont(name:"Proxima Nova", size: 12)!
+        FONT_XSMALL = UIFont(name:"Proxima Nova", size: 10)!
     }
     
     static func unpackFonts() {

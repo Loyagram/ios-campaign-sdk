@@ -21,6 +21,30 @@ protocol LoyagramLanguageDelegate: class {
     
 }
 public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCSATCESDelegate, LoyagramNPSDelegate {
+    func setCSATCESFollowUpEmail(email: String) {
+        followUpEmail = email
+    }
+    
+    func setNPSFollowUpEmail(email: String) {
+        followUpEmail = email
+    }
+    
+
+    func enableCSATCESFollowUp(enable: Bool) {
+        isEmailFollowUpEnabled = enable
+        if(!enable) {
+            txtValidation.isHidden = true
+        }
+    }
+    
+    func enableNPSFollowUp(enable: Bool) {
+        isEmailFollowUpEnabled = enable
+        if(!enable) {
+            txtValidation.isHidden = true
+        }
+    }
+    
+
     
     var headerView: UIView!
     var contentView: UIView!
@@ -75,6 +99,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var isNextActive = false
     var isPrevActive = false
     var statusBar: UIView?
+    var txtValidation: UITextView!
+    var currentValidationString = ""
+    var isEmailFollowUpEnabled = false
+    var followUpEmail = ""
     
     public override init(frame: CGRect){
         super.init(frame: frame)
@@ -403,7 +431,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnNext = UIButton(type: .system)
         btnPrev = UIButton(type: .system)
         
-        campaignView.backgroundColor = UIColor.red
+        //campaignView.backgroundColor = UIColor.red
         mainView.addSubview(contentView)
         //contentView.backgroundColor = UIColor.white
         nextPrevButtonView.addSubview(btnPrev)
@@ -434,6 +462,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnPrev.setTitleColor(primaryColor, for: .normal)
         btnNext.setTitleColor(primaryColor, for: .normal)
         
+        txtValidation = UITextView()
+        txtValidation.isEditable = false
+        txtValidation.translatesAutoresizingMaskIntoConstraints = false
+        txtValidation.isHidden = true
+        txtValidation.font = GlobalConstants.FONT_SMALL
+        
+        nextPrevButtonView.addSubview(txtValidation)
+        
+        //txtValidation.text = "This field is required"
+        
+        txtValidation.textColor = UIColor.red
+        txtValidation.textAlignment = .center
         
         //Content View constraints
         
@@ -468,7 +508,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             attribute: .bottom,
             multiplier: 1.0,
             constant: -5.0)
-        let buttonViewHeight = NSLayoutConstraint(item: nextPrevButtonView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant:35.0)
+        let buttonViewHeight = NSLayoutConstraint(item: nextPrevButtonView, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant:55.0)
         
         NSLayoutConstraint.activate([buttonViewLeading, buttonViewTrailing, buttonViewBottom, buttonViewHeight])
         
@@ -478,7 +518,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let btnPrevWidth = NSLayoutConstraint(item: btnPrev, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
         let btnPrevleading = NSLayoutConstraint(item: btnPrev, attribute: .leading,  relatedBy: .equal, toItem: nextPrevButtonView, attribute: .leading, multiplier: 1.0, constant: 50.0)
         
-        let btnPrevCenterVertically = NSLayoutConstraint(item: btnPrev, attribute: .centerY, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .centerY, multiplier: 1.0, constant: 3.0)
+        let btnPrevCenterVertically = NSLayoutConstraint(item: btnPrev, attribute: .centerY, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .centerY, multiplier: 1.0, constant: 10.0)
         
         NSLayoutConstraint.activate([btnPrevHeight, btnPrevWidth, btnPrevleading, btnPrevCenterVertically])
         
@@ -488,7 +528,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         let btnNextWidth = NSLayoutConstraint(item: btnNext, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
         
-        let btnNextCenterVertically = NSLayoutConstraint(item: btnNext, attribute: .centerY,  relatedBy: .equal, toItem: nextPrevButtonView, attribute: .centerY,  multiplier: 1.0, constant: 3.0)
+        let btnNextCenterVertically = NSLayoutConstraint(item: btnNext, attribute: .centerY,  relatedBy: .equal, toItem: nextPrevButtonView, attribute: .centerY,  multiplier: 1.0, constant: 10.0)
         
         let btnNextTrailing = NSLayoutConstraint(item: btnNext, attribute: .trailing, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .trailing, multiplier: 1.0, constant: -50.0)
         
@@ -511,6 +551,14 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         NSLayoutConstraint.activate([campaignLeading, campaignTrailing, campaignBottom, campaignTop])
         
+        
+        //TextView Validation Constraints
+        NSLayoutConstraint(item: txtValidation, attribute: .leading, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .leading, multiplier: 1, constant: 0).isActive = true
+        NSLayoutConstraint(item: txtValidation, attribute: .trailing, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .trailing, multiplier: 1, constant: 0).isActive = true
+        NSLayoutConstraint(item: txtValidation, attribute: .top, relatedBy: .equal, toItem: nextPrevButtonView, attribute: .top, multiplier: 1, constant: 0).isActive = true
+        NSLayoutConstraint(item: txtValidation, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: 20).isActive = true
+        txtValidation.isScrollEnabled = false
+        //txtValidation.backgroundColor = UIColor.green
     }
     @objc func initFooterView() {
         
@@ -822,6 +870,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func showNextQuestion() {
+        
+        if(!currentQuestion.optional!) {
+            if(isQuestionAttended(question: currentQuestion)) {
+                txtValidation.isHidden = true
+            } else {
+                txtValidation.text = staticTexts.translation["MANDATORY_QUESTION_TEXT"]
+                currentValidationString = "MANDATORY_QUESTION_TEXT"
+                txtValidation.isHidden = false
+                return
+            }
+            
+        }
         let campaignType = campaign?.type
         btnNext.backgroundColor = primaryColor
         btnNext.setTitleColor(UIColor.white, for: .normal)
@@ -841,7 +901,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             followUpIterator += 1
             btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
                 break
-            case 2: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
+            case 2:
+                if(isEmailFollowUpEnabled) {
+                if(!isValidEmail(email: followUpEmail)) {
+                    txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"]
+                    txtValidation.isHidden = false
+                    currentValidationString = "EMAIL_NOT_VALID_TEXT"
+                    return
+                } else {
+                    txtValidation.isHidden = true
+                }
+                }
+            campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             submitCampaign()
             followUpIterator = 0
                 break
@@ -851,7 +922,33 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             return
         }
         else {
-            print("pressed before submit")
+            if(!currentQuestion.optional!) {
+            switch(currentQuestion.type ?? "") {
+            case "EMAIL":
+                if(!isValidEmail(email: getTextResponse())) {
+                    txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"]
+                    txtValidation.isHidden = false
+                    currentValidationString = "EMAIL_NOT_VALID_TEXT"
+                    return
+                } else {
+                    txtValidation.isHidden = true
+                }
+                break
+            case "NUMBER":
+                if(!isValidNumber(number: getTextResponse())) {
+                    txtValidation.text = staticTexts.translation["VALIDATION_FAILED_TEXT"]
+                    txtValidation.isHidden = false
+                    currentValidationString = "VALIDATION_FAILED_TEXT"
+                    return
+                } else {
+                    txtValidation.isHidden = true
+                }
+                break
+            default:
+                break
+            }
+            }
+            
             if(btnNext.titleLabel?.text == staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"]) {
                 print("pressed when text is submit")
                 submitCampaign()
@@ -877,6 +974,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         }
     }
     @objc func showPrevQuestion() {
+        txtValidation.isHidden = true
         let campaignType = campaign?.type
         btnPrev.backgroundColor = primaryColor
         btnPrev.setTitleColor(UIColor.white, for: .normal)
@@ -1163,9 +1261,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     @objc func initThankYouView() {
         removeSubViews(view: self.campaignView)
         nextPrevButtonView.isHidden = true
-        print("nextPrevButtonView hidden")
         thankYouView = UIView()
         contentView.addSubview(thankYouView)
+        //thankYouView.backgroundColor = UIColor.gray
         thankYouView.translatesAutoresizingMaskIntoConstraints = false
         let txtThankYou = UITextView()
         txtThankYou.isEditable = false
@@ -1197,14 +1295,14 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         //ThankYou TextView constraints
         
-        let txtTop = NSLayoutConstraint(item: txtThankYou, attribute: .top, relatedBy: .equal, toItem: thankYouView, attribute: .top, multiplier: 1.0, constant: 70.0)
+        let txtTop = NSLayoutConstraint(item: txtThankYou, attribute: .top, relatedBy: .equal, toItem: thankYouView, attribute: .top, multiplier: 1.0, constant: 65.0)
         
         
         let txtLeading = NSLayoutConstraint(item: txtThankYou, attribute: .leading, relatedBy: .equal, toItem: thankYouView, attribute: .leading, multiplier: 1.0, constant: 0.0)
         
         let txtTrailing = NSLayoutConstraint(item: txtThankYou, attribute: .trailing, relatedBy: .equal, toItem: thankYouView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
         
-        let txtHeight = NSLayoutConstraint(item: txtThankYou, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 50.0)
+        let txtHeight = NSLayoutConstraint(item: txtThankYou, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 55.0)
         
         NSLayoutConstraint.activate([txtTop, txtLeading, txtTrailing, txtHeight])
         //checkmark constraints
@@ -1231,10 +1329,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         case "NPS":
             strThankYou = getNPSThankYou();
             break;
-        case "CSAT":
+        case "SAT":
             strThankYou = getCSATCESThankYou();
             break;
-        case "CES":
+        case "ES":
             strThankYou = getCSATCESThankYou();
             break;
         case "SURVEY":
@@ -1425,6 +1523,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             txtWelcomeTip.text = staticTexts.translation["WIDGET_WELCOME_TIP"]
             txtWelcomeMessage.text = getWelcomeText()
         }
+        if(currentValidationString != "") {
+            txtValidation.text = staticTexts.translation[currentValidationString]
+        }
     }
     
     @objc func getWelcomeText() -> String? {
@@ -1550,5 +1651,106 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         return UIColor(red: CGFloat((rgbValue & 0xFF0000) >> 16) / 255.0,green: CGFloat((rgbValue & 0x00FF00) >> 8) / 255.0,blue: CGFloat(rgbValue & 0x0000FF) / 255.0,alpha: CGFloat(1.0)
         )
+    }
+    
+    @objc func getTextResponse() -> String {
+        var text = " "
+        let responseAnswers:[ResponseAnswer] = response.response_answers
+        for responseAnswer in responseAnswers {
+            if(currentQuestion.id == responseAnswer.question_id) {
+                text = (responseAnswer.response_answer_text?.text)!
+                break
+            }
+        }
+        return text
+    }
+    func isQuestionAttended(question:Question) -> Bool {
+        let responseAnswers:[ResponseAnswer] = response.response_answers
+        switch currentQuestion.type ?? "" {
+        case "SINGLE_SELECT":
+            for responseAnswer in responseAnswers {
+                if(question.id == responseAnswer.question_id) {
+                    if(responseAnswer.answer > 0) {
+                        return true
+                    }
+                }
+            }
+            break
+        case "MULTI_SELECT":
+            for responseAnswer in responseAnswers {
+                if(question.id == responseAnswer.question_label_id) {
+                    if(responseAnswer.answer > 0) {
+                        return true
+                    }
+                }
+            }
+            break
+        case "RATING":
+            var attendedCount = 0
+            for responseAnswer in responseAnswers {
+                if(question.id == responseAnswer.question_label_id) {
+                    if(responseAnswer.answer > 0) {
+                        attendedCount += 1
+                    }
+                }
+                if(attendedCount == question.labels?.count) {
+                    return true
+                }
+            }
+            break
+        case "NPS":
+            for responseAnswer in responseAnswers {
+                if(question.id == responseAnswer.question_id) {
+                    return true
+                }
+            }
+            break
+        case "TEXT":
+            for responseAnswer in responseAnswers {
+                if(question.id == responseAnswer.question_id) {
+                    return true
+                }
+            }
+            break
+        case "PARAGRAPH":
+            for responseAnswer in responseAnswers {
+                if(question.id == responseAnswer.question_id) {
+                    return true
+                }
+            }
+            break
+        case "EMAIL":
+            for responseAnswer in responseAnswers {
+                if(question.id == responseAnswer.question_id) {
+                    return true
+                }
+            }
+            break
+        case "NUMBER":
+            for responseAnswer in responseAnswers {
+                if(question.id == responseAnswer.question_id) {
+                    return true
+                }
+            }
+            break
+        default:
+            return true
+        }
+        return false
+        
+    }
+    
+    @objc func isValidNumber(number:String) ->Bool {
+        if(number.count < 6 )  {
+            return false
+        }
+        let nums: Set<Character> = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "+"]
+        return Set(number).isSubset(of: nums)
+    }
+    @objc func isValidEmail(email:String) -> Bool {
+        let emailRegEx = "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,64}"
+        let emailTest = NSPredicate(format:"SELF MATCHES %@", emailRegEx)
+        return emailTest.evaluate(with: email)
+        
     }
 }

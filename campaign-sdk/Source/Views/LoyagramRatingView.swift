@@ -136,7 +136,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         let ratingLabel = UITextView(frame:CGRect(x: 0, y: 0, width: 80, height: 30))
         ratingLabel.isEditable = false
         ratingLabel.showsVerticalScrollIndicator = false
-        let ratingBar = LoyagramRatingBar(starSize: CGSize(width: 30, height:30), numberOfStars: 5, rating: 1.0, fillColor: primaryColor, unfilledColor: UIColor.clear, strokeColor: primaryColor)
+        let ratingBar = LoyagramRatingBar(starSize: CGSize(width: 30, height:30), numberOfStars: 5, rating: 0.0, fillColor: primaryColor, unfilledColor: UIColor.clear, strokeColor: primaryColor)
         ratingLabel.font = GlobalConstants.FONT_MEDIUM
         ratingLabel.translatesAutoresizingMaskIntoConstraints = false
         ratingBar.translatesAutoresizingMaskIntoConstraints = false
@@ -229,9 +229,9 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
             let labelTranslations = ql.label_translations!
             for labelTranslation in labelTranslations {
                 if (labelTranslation.language_code == currentLanguage.language_code) {
-                        if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
-                            let radioLabel:UITextView = self.viewWithTag(Int(ql.id ?? 0)) as! UITextView
-                            radioLabel.text = labelTranslation.text
+                    if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
+                        let radioLabel:UITextView = self.viewWithTag(Int(ql.id ?? 0)) as! UITextView
+                        radioLabel.text = labelTranslation.text
                     }
                     break
                 }
@@ -283,4 +283,6 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         DBManager.instance.createTableResponse()
         DBManager.instance.insertResponseIntoDB(response: stringResponse)
     }
+    
+
 }
