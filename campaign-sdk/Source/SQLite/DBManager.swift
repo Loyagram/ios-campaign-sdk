@@ -74,7 +74,7 @@ class DBManager {
             let UpdateQuery = "UPDATE RESPONSE set response = '\(response)' WHERE kioskStatus = 0"
             if sqlite3_prepare_v2(db, UpdateQuery, -1, &updateStatement, nil) == SQLITE_OK {
                 if sqlite3_step(updateStatement) == SQLITE_DONE {
-                    print("Successfully updated row.")
+                    //print("Successfully updated row.")
                 } else {
                     print("Could not update row.")
                 }

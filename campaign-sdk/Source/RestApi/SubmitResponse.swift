@@ -8,7 +8,7 @@
 
 class SubmitResponse {
     
-    class func submitResponse (response : Data, success: @escaping (() -> Void), failure: @escaping (() -> Void)) {
+    class func submitResponse (response : Data!, success: @escaping (() -> Void), failure: @escaping (() -> Void)) {
         let urlString = ApiBase.getApiPath() + getQuestionPath()
         let url = URL(string:urlString)
         let sessionConfig = URLSessionConfiguration.default
@@ -17,6 +17,8 @@ class SubmitResponse {
         let session = URLSession(configuration: sessionConfig)
         if(Reachability.isConnectedToNetwork()) {
             var request = URLRequest(url:url!)
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+            request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Accept")
             request.httpMethod = "POST"
             request.httpBody = response
             let task = session.dataTask(with:request) { (data, response, error) in

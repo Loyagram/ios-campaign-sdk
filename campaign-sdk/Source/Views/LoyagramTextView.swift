@@ -283,7 +283,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
             if textView.text == textViewPlaceHolderText {
                 textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
                 textView.text = textViewPlaceHolderText
-                 moveCursorToStart(txtView: textView)
+                moveCursorToStart(txtView: textView)
             } else {
                 textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
             }
@@ -339,11 +339,13 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     
     func textViewDidEndEditing(_ textView: UITextView) {
         let textViewText = textView.text
-        let response = setTextResposne(id: currentQuestion.id!, rating: 1)
-        if (response.response_answer_text != nil) {
-            response.response_answer_text?.text = textViewText
+        if(textViewText != textViewPlaceHolderText) {
+            let response = setTextResposne(id: currentQuestion.id!, rating: 1)
+            if (response.response_answer_text != nil) {
+                response.response_answer_text?.text = textViewText
+            }
+            saveResponseToDB()
         }
-        saveResponseToDB()
     }
     
     func setTextResposne(id: CUnsignedLong, rating:Int) -> ResponseAnswer {
@@ -391,7 +393,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         var text = ""
         let responseAnswers:[ResponseAnswer] = response.response_answers
         for responseAnswer in responseAnswers {
-            if(currentQuestion.id == responseAnswer.question_id) {
+            if(responseAnswer.question_id != nil && currentQuestion.id == responseAnswer.question_id) {
                 text = (responseAnswer.response_answer_text?.text)!
                 break
             }

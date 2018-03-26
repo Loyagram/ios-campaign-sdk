@@ -23,9 +23,19 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             setFeedBackQuestion()
             setFollowUpQuestion()
             changeLabelLanguage()
-            chk.text = staticTextes.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
+            chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
             chk.setNeedsDisplay()
-            feedbackTextField.placeholder = staticTextes.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+            feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+        }
+        if(feedbackTextView != nil) {
+            if feedbackTextView.text == placeHolderText {
+                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                feedbackTextView.text = placeHolderText
+                moveCursorToStart(txtView: feedbackTextView)
+            } else {
+                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            }
+            
         }
     }
     
@@ -52,14 +62,15 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     var scrollViewBottomConstraint : NSLayoutConstraint!
     var bottomConstraint: NSLayoutConstraint!
     var heightConsraint: NSLayoutConstraint!
-    var staticTextes: StaticTextTranslation!
+    var staticTexts: StaticTextTranslation!
     var txtLikely: UILabel!
     var txtNotLikely: UILabel!
     var response:Response!
     var currentRating: Int!
     var npsButtons : [UIButton]!
+    var placeHolderText = ""
     
-    public init(frame: CGRect, campaignType: String, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView, bottomConstraint:NSLayoutConstraint, staticTextes: StaticTextTranslation, response:Response) {
+    public init(frame: CGRect, campaignType: String, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, campaignView: LoyagramCampaignView, bottomConstraint:NSLayoutConstraint, staticTexts: StaticTextTranslation, response:Response) {
         super.init(frame: frame)
         currentQuestion = question
         self.campaignType = campaignType
@@ -74,8 +85,9 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         self.autoresizingMask = [.flexibleWidth, .flexibleHeight]
         self.isUserInteractionEnabled = true
         self.campaignView.languageDelegate = self
-        self.staticTextes = staticTextes
+        self.staticTexts = staticTexts
         self.response = response
+        placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
         initNPSView()
         addNPSButtons()
         setQuestion()
@@ -386,6 +398,13 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextView.delegate = self
         feedbackTextView.autocorrectionType = .no
         feedbackTextView.font = GlobalConstants.FONT_MEDIUM
+        let currentText = getTextResponse()
+        if(currentText != "") {
+            feedbackTextView.text = currentText
+        } else {
+            placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
+        }
         
         let chkContainer = UIView()
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -394,7 +413,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         chk = LoyagramCheckBox(frame: rect, colorPrimary:primaryColor)
         chk.showTextLabel = true
         chk.tag = 1001
-        chk.text = staticTextes.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
+        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
         
         chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
         chkContainer.addSubview(chk)
@@ -404,7 +423,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextField.isHidden = true
         feedbackTextField.delegate = self
         feedbackTextField.autocorrectionType = .no
-        feedbackTextField.placeholder = staticTextes.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
         
         scrollView.addSubview(txtFeedBackQuestion)
         scrollView.addSubview(feedbackTextField)
@@ -686,30 +705,85 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         }
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let textViewText = textView.text + text
+        
+        let newLength = textView.text.utf16.count + text.utf16.count - range.length
+        if newLength > 0 {
+            // check if the only text is the placeholder and remove it if needed
+            if textView.text == placeHolderText {
+                applyNonPlaceholderStyle(textView: feedbackTextView)
+                textView.text = ""
+            }
+        }
+        
+        return true
+    }
+    
+    @objc func getTextResponse() -> String {
+        var text = ""
+        let responseAnswers:[ResponseAnswer] = response.response_answers
+        for responseAnswer in responseAnswers {
+            if(responseAnswer.question_id != nil && currentQuestion.id == responseAnswer.question_id) {
+                text = (responseAnswer.response_answer_text?.text)!
+                break
+            }
+        }
+        return text
+    }
+    
+    func textViewDidEndEditing(_ textView: UITextView) {
+        let textViewText = textView.text
+        if(textViewText != placeHolderText) {
         let response = getResponseAnswer(id: currentQuestion.id!)
         if (response?.response_answer_text != nil) {
             response?.response_answer_text?.text = textViewText
         }
-        saveResponseToDB()
-        return true
+            saveResponseToDB()
+        }
+        if(textViewText == "") {
+            applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
+        }
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let textFieldText = textField.text! + string
-        //Set FollowUP Email
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let textFieldText = textField.text
         response.customer_email = textFieldText
         if(delegate != nil) {
-            delegate.setNPSFollowUpEmail(email: textFieldText)
+            delegate.setNPSFollowUpEmail(email: textFieldText!)
         }
         saveResponseToDB()
-        return true
     }
+    
     @objc func saveResponseToDB() {
         let encoder = JSONEncoder()
         let data = try! encoder.encode(response)
         let stringResponse = String(data: data, encoding: .utf8)!
         DBManager.instance.createTableResponse()
         DBManager.instance.insertResponseIntoDB(response: stringResponse)
+    }
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] {
+            // move cursor to start
+            moveCursorToStart(txtView:textView)
+        }
+        return true
+    }
+    
+    func applyPlaceholderStyle(textView: UITextView, placeholderText: String) {
+        // make it look (initially) like a placeholder
+        textView.textColor = .lightGray
+        textView.text = placeholderText
+    }
+    
+    func applyNonPlaceholderStyle(textView: UITextView) {
+        // make it look like normal text instead of a placeholder
+        textView.textColor = .black
+        textView.alpha = 1.0
+    }
+    
+    func moveCursorToStart(txtView: UITextView) {
+        DispatchQueue.main.async() {
+            self.feedbackTextView.selectedRange = NSMakeRange(0, 0)
+        }
     }
 }

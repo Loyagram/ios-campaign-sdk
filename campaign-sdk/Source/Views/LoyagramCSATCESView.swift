@@ -26,6 +26,16 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
         chk.setNeedsDisplay()
         feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+        if(feedbackTextView != nil) {
+            if feedbackTextView.text == placeHolderText {
+                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                feedbackTextView.text = placeHolderText
+                moveCursorToStart(txtView: feedbackTextView)
+            } else {
+                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            }
+            
+        }
     }
     
     var txtQuestion: UITextView!
@@ -54,6 +64,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     var staticTexts : StaticTextTranslation!
     var response: Response!
     var csatcesOption = "nuetral"
+    var placeHolderText = ""
     
     public init(frame: CGRect, question: Question, followUpQuestion: Question, currentLang: Language, primaryLang: Language, color: UIColor, isCSAT: Bool, campaignView:LoyagramCampaignView, staticTexts: StaticTextTranslation, response:Response) {
         super.init(frame: frame)
@@ -70,6 +81,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         isFollowUp = false
         self.staticTexts = staticTexts
         self.response = response
+        placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
         csatcesOption = String()
         initCSATCESView()
         initFollowUpView()
@@ -229,6 +241,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextView.autocorrectionType = .no
         feedbackTextView.delegate = self
         // feedbackTextView.delegate = self
+        
+        let currentText = getTextResponse()
+        if(currentText != "") {
+            feedbackTextView.text = currentText
+        } else {
+            placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
+        }
         
         let chkContainer = UIView()
         chkContainer.translatesAutoresizingMaskIntoConstraints = false
@@ -697,25 +717,51 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         }
     }
     
-    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        let textViewText = textView.text + text
-        let response = getResponseAnswerByQuestionId(id: currentQuestion.id!)
-        if (response?.response_answer_text != nil) {
-            response?.response_answer_text?.text = textViewText
+    @objc func getTextResponse() -> String {
+        var text = ""
+        let responseAnswers:[ResponseAnswer] = response.response_answers
+        for responseAnswer in responseAnswers {
+            if(responseAnswer.question_id != nil && responseAnswer.response_answer_text?.text != nil && currentQuestion.id == responseAnswer.question_id) {
+                text = responseAnswer.response_answer_text!.text
+                break
+            }
         }
-        saveResponseToDB()
+        return text
+    }
+    
+    func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        let newLength = textView.text.utf16.count + text.utf16.count - range.length
+        if newLength > 0 {
+            // check if the only text is the placeholder and remove it if needed
+            if textView.text == placeHolderText {
+                applyNonPlaceholderStyle(textView: feedbackTextView)
+                textView.text = ""
+            }
+        }
         return true
     }
     
-    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
-        let textFieldText = textField.text! + string
-        //Set FollowUP Email
+    func textViewDidEndEditing(_ textView: UITextView) {
+        let textViewText = textView.text
+        if(textViewText != placeHolderText) {
+            let response = getResponseAnswer(id: currentQuestion.id!)
+            if (response?.response_answer_text != nil) {
+                response?.response_answer_text?.text = textViewText
+            }
+            saveResponseToDB()
+        }
+        if(textViewText == "") {
+            applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
+        }
+    }
+    
+    func textFieldDidEndEditing(_ textField: UITextField) {
+        let textFieldText = textField.text
         response.customer_email = textFieldText
         if(delegate != nil) {
-            delegate.setCSATCESFollowUpEmail(email: textFieldText)
+            delegate.setCSATCESFollowUpEmail(email: textFieldText!)
         }
         saveResponseToDB()
-        return true
     }
     
     @objc func saveResponseToDB() {
@@ -724,5 +770,31 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let stringResponse = String(data: data, encoding: .utf8)!
         DBManager.instance.createTableResponse()
         DBManager.instance.insertResponseIntoDB(response: stringResponse)
+    }
+    
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] {
+            // move cursor to start
+            moveCursorToStart(txtView:textView)
+        }
+        return true
+    }
+    
+    func applyPlaceholderStyle(textView: UITextView, placeholderText: String) {
+        // make it look (initially) like a placeholder
+        textView.textColor = .lightGray
+        textView.text = placeholderText
+    }
+    
+    func applyNonPlaceholderStyle(textView: UITextView) {
+        // make it look like normal text instead of a placeholder
+        textView.textColor = .black
+        textView.alpha = 1.0
+    }
+    
+    func moveCursorToStart(txtView: UITextView) {
+        DispatchQueue.main.async() {
+            self.feedbackTextView.selectedRange = NSMakeRange(0, 0)
+        }
     }
 }

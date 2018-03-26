@@ -20,7 +20,11 @@ protocol LoyagramLanguageDelegate: class {
     func languageChanged(lang: Language)
     
 }
-public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCSATCESDelegate, LoyagramNPSDelegate {
+public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramCSATCESDelegate, LoyagramNPSDelegate,LoyagramSurveyDelegate {
+    func setSingleSelect() {
+        showNextQuestion()
+    }
+    
     func setCSATCESFollowUpEmail(email: String) {
         followUpEmail = email
     }
@@ -29,7 +33,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         followUpEmail = email
     }
     
-
+    
     func enableCSATCESFollowUp(enable: Bool) {
         isEmailFollowUpEnabled = enable
         if(!enable) {
@@ -44,7 +48,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         }
     }
     
-
+    
     
     var headerView: UIView!
     var contentView: UIView!
@@ -720,6 +724,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let campaignContentView = LoyagramSurveyView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self, resposne:response)
         animateCampaignView(isFromRight: isFromRight)
         campaignView.addSubview(campaignContentView)
+        campaignContentView.delegate
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
         let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
@@ -749,7 +754,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func showNPSView(isFromRight:Bool) {
         let followUpQuestion = campaign?.questions?[1]
-        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:(campaign?.type)!, question: currentQuestion, followUpQuestion: followUpQuestion!, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint, staticTextes:staticTexts, response:response)
+        let campaignContentView = LoyagramNPSView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), campaignType:(campaign?.type)!, question: currentQuestion, followUpQuestion: followUpQuestion!, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView: self, bottomConstraint:bottomConstraint, staticTexts:staticTexts, response:response)
         animateCampaignView(isFromRight: isFromRight)
         campaignView.addSubview(campaignContentView)
         campaignContentView.isUserInteractionEnabled = true
@@ -903,18 +908,18 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             case 2:
                 if(isEmailFollowUpEnabled) {
-                if(!isValidEmail(email: followUpEmail)) {
-                    txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"]
-                    txtValidation.isHidden = false
-                    currentValidationString = "EMAIL_NOT_VALID_TEXT"
-                    return
-                } else {
-                    txtValidation.isHidden = true
+                    if(!isValidEmail(email: followUpEmail)) {
+                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"]
+                        txtValidation.isHidden = false
+                        currentValidationString = "EMAIL_NOT_VALID_TEXT"
+                        return
+                    } else {
+                        txtValidation.isHidden = true
+                    }
                 }
-                }
-            campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
-            submitCampaign()
-            followUpIterator = 0
+                campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
+                submitCampaign()
+                followUpIterator = 0
                 break
             default:
                 break
@@ -923,30 +928,30 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         }
         else {
             if(!currentQuestion.optional!) {
-            switch(currentQuestion.type ?? "") {
-            case "EMAIL":
-                if(!isValidEmail(email: getTextResponse())) {
-                    txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"]
-                    txtValidation.isHidden = false
-                    currentValidationString = "EMAIL_NOT_VALID_TEXT"
-                    return
-                } else {
-                    txtValidation.isHidden = true
+                switch(currentQuestion.type ?? "") {
+                case "EMAIL":
+                    if(!isValidEmail(email: getTextResponse())) {
+                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"]
+                        txtValidation.isHidden = false
+                        currentValidationString = "EMAIL_NOT_VALID_TEXT"
+                        return
+                    } else {
+                        txtValidation.isHidden = true
+                    }
+                    break
+                case "NUMBER":
+                    if(!isValidNumber(number: getTextResponse())) {
+                        txtValidation.text = staticTexts.translation["VALIDATION_FAILED_TEXT"]
+                        txtValidation.isHidden = false
+                        currentValidationString = "VALIDATION_FAILED_TEXT"
+                        return
+                    } else {
+                        txtValidation.isHidden = true
+                    }
+                    break
+                default:
+                    break
                 }
-                break
-            case "NUMBER":
-                if(!isValidNumber(number: getTextResponse())) {
-                    txtValidation.text = staticTexts.translation["VALIDATION_FAILED_TEXT"]
-                    txtValidation.isHidden = false
-                    currentValidationString = "VALIDATION_FAILED_TEXT"
-                    return
-                } else {
-                    txtValidation.isHidden = true
-                }
-                break
-            default:
-                break
-            }
             }
             
             if(btnNext.titleLabel?.text == staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"]) {
@@ -986,7 +991,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             case 1: 
                 campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
-            followUpIterator -= 1
+                followUpIterator -= 1
                 break
             case 2: campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
             followUpIterator -= 1
@@ -1013,33 +1018,34 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func submitCampaign() {
         showThankYou()
-         let encoder = JSONEncoder()
-         encoder.outputFormatting = .prettyPrinted
-         response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
-         response.language_code = currentLanguage.language_code
-         let data = try! encoder.encode(response)
-         let jsonString = String(data:data, encoding: .utf8)
-         //let jsonString = String(data: data, encoding: String.Encoding.utf8)!.replacingOccurrences(of: "\\", with: "")
-         let jsonStringWithData:[String:Any] = ["data":jsonString ?? ""]
-//         let dict = NSMutableDictionary()
-//         dict.setValue(jsonString, forKey: "data")
-         let jsonData = try? JSONSerialization.data(withJSONObject: jsonStringWithData)
-         //let valid = JSONSerialization.isValidJSONObject(jsonData)
-        print(String(data:jsonData!, encoding : .utf8)!)
-//        campaignDelegate = viewController.self as! LoyagramCampaignCallback!
-        
-        SubmitResponse.submitResponse(response: jsonData!, success: {() -> Void in
-           self.deleteResponse()
-            if let successCallback = self.onSuccess {
-                successCallback ()
+        let encoder = JSONEncoder()
+        encoder.outputFormatting = .prettyPrinted
+        response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
+        response.language_code = currentLanguage.language_code
+        let data = try! encoder.encode(response)
+        var json:Any!
+        do {
+            json = try JSONSerialization.jsonObject(with: data, options: [])
+            if(json != nil) {
+                let jsonDict = NSDictionary(object: json, forKey: "data" as NSCopying)
+                let jsonData = try! JSONSerialization.data(withJSONObject: jsonDict, options: [])
+                //print("string json\(String(data: jsonData, encoding: .utf8) ?? "empty")")
+                SubmitResponse.submitResponse(response: jsonData, success: {() -> Void in
+                    self.deleteResponse()
+                    if let successCallback = self.onSuccess {
+                        successCallback ()
+                    }
+                    //print("sucessfully submited")
+                }, failure: {() -> Void in
+                    if let successCallback = self.onError {
+                        successCallback ()
+                    }
+                })
             }
-         //print("sucessfully submited")
-         }, failure: {() -> Void in
-            if let successCallback = self.onError {
-                successCallback ()
-            }
-         //print("failed to submit response")
-         })
+        }
+        catch {
+            print(error.localizedDescription)
+        }
     }
     
     @objc func resetCampaign() {
@@ -1056,19 +1062,19 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func closeCampaign() {
         resetCampaign()
-            switch(campaignViewType ?? 5) {
-            case 0 :
-                self.viewController.dismiss(animated: true, completion: nil)
-                break
-            case 1 :
-                dialogView.removeFromSuperview()
-                break
-            case 2 :
-                dialogView.removeFromSuperview()
-                break
-            default:
-                break
-            }
+        switch(campaignViewType ?? 5) {
+        case 0 :
+            self.viewController.dismiss(animated: true, completion: nil)
+            break
+        case 1 :
+            dialogView.removeFromSuperview()
+            break
+        case 2 :
+            dialogView.removeFromSuperview()
+            break
+        default:
+            break
+        }
         
         
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
@@ -1533,7 +1539,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         var str:String?
         for welcomeTranslation in welcomeTranslations! {
             if(welcomeTranslation.language_code != nil && welcomeTranslation.language_code == currentLanguage.language_code) {
-              str = welcomeTranslation.text
+                str = welcomeTranslation.text
                 break
             }
         }
@@ -1577,6 +1583,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let savedCampaign = getResponseFromDB()
         if(savedCampaign == nil) {
             response = Response()
+            response.id = UUID().uuidString
             response.channel = "MOBILE-SDK"
             response.sub_channel = "IOS"
             response.biz_id = UInt(campaign?.biz_id ?? 0)
@@ -1595,6 +1602,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             response = savedCampaign
         } else {
             response = Response()
+            response.id = UUID().uuidString
             response.channel = "MOBILE-SDK"
             response.sub_channel = "IOS"
             response.biz_id = UInt(campaign?.biz_id ?? 0)

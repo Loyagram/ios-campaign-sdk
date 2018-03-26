@@ -8,7 +8,11 @@
 
 import UIKit
 
-class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate {
+protocol LoyagramSurveyDelegate: class {
+    func setSingleSelect()
+}
+
+class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate {
     var surveyContainer: UIView!
     var txtQuestion: UITextView!
     var currentQuestion : Question!
@@ -19,17 +23,13 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     var tblHeight : NSLayoutConstraint!
     var radioGroup = [LoyagramRadioButton] ()
     var campaignView: LoyagramCampaignView!
+    var delegate: LoyagramSurveyDelegate!
     var response: Response!
     func languageChanged(lang: Language) {
         currentLanguage = lang
         setQuestion()
         changeLabelLanguage()
         
-    }
-    
-    
-    func ratingChangedValue(ratingBar: LoyagramRatingBar) {
-        print(ratingBar.rating)
     }
     
     
@@ -261,6 +261,9 @@ class LoyagramSurveyView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         sender.isSelected = !sender.isSelected
         setSingleSelectResposne(id: CUnsignedLong(sender.labelId))
         saveResponseToDB()
+        if(delegate != nil) {
+            delegate.setSingleSelect()
+        }
     }
     
     
