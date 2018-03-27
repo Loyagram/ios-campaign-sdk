@@ -125,6 +125,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                     textView.text = currentText
                 } else {
                     applyPlaceholderStyle(textView: textView, placeholderText: textViewPlaceHolderText)
+                    moveCursorToStart(txtView: textView)
                 }
                 textScrollView.addSubview(textView)
                 textView.translatesAutoresizingMaskIntoConstraints = false
@@ -134,6 +135,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 textView.autocorrectionType = .no
                 textView.layer.cornerRadius = 5
                 textView.delegate = self
+                textView.font = GlobalConstants.FONT_MEDIUM
             case "PARAGRAPH":
                 textView = UITextView()
                 let currentText = getTextResponse()
@@ -141,6 +143,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                     textView.text = currentText
                 } else {
                     applyPlaceholderStyle(textView: textView, placeholderText: textViewPlaceHolderText)
+                    moveCursorToStart(txtView: textView)
                 }
                 textScrollView.addSubview(textView)
                 textView.translatesAutoresizingMaskIntoConstraints = false
@@ -150,6 +153,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 textView.autocorrectionType = .no
                 textView.layer.cornerRadius = 5
                 textView.delegate = self
+                textView.font = GlobalConstants.FONT_MEDIUM
             case "EMAIL":
                 textField = UITextField()
                 textScrollView.addSubview(textField)
@@ -165,6 +169,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 }
                 
                 textField.delegate = self
+                textField.font = GlobalConstants.FONT_MEDIUM
                 type = "textField"
             case "NUMBER":
                 textField = UITextField()
@@ -180,6 +185,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                     textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
                 }
                 textField.delegate = self
+                textField.font = GlobalConstants.FONT_MEDIUM
                 type = "textField"
             default:
                 textView = UITextView()
@@ -188,6 +194,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                     textView.text = currentText
                 } else {
                     applyPlaceholderStyle(textView: textView, placeholderText: textViewPlaceHolderText)
+                    moveCursorToStart(txtView: textView)
                 }
                 textView.addSubview(textField)
                 textView.translatesAutoresizingMaskIntoConstraints = false
@@ -197,6 +204,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 textView.autocorrectionType = .no
                 textView.layer.cornerRadius = 5
                 textView.delegate = self
+                textView.font = GlobalConstants.FONT_MEDIUM
                 textFieldHeight = 80
             }
             //Text Field Cosntraints
@@ -317,6 +325,12 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        if (range.length > 1) {
+            return false
+        }
+        if(textView.text == textViewPlaceHolderText && text == "" && range.length == 0) {
+            return true
+        }
         let newLength = textView.text.utf16.count + text.utf16.count - range.length
         if newLength > 0 {
             // check if the only text is the placeholder and remove it if needed
@@ -324,6 +338,10 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 applyNonPlaceholderStyle(textView: textView)
                 textView.text = ""
             }
+        }
+        else if(newLength == 0 && textView.text != textViewPlaceHolderText) {
+            applyPlaceholderStyle(textView: textView, placeholderText: textViewPlaceHolderText)
+            moveCursorToStart(txtView: textView)
         }
         return true
     }
@@ -339,13 +357,18 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     
     func textViewDidEndEditing(_ textView: UITextView) {
         let textViewText = textView.text
+        let response = setTextResposne(id: currentQuestion.id!, rating: 1)
         if(textViewText != textViewPlaceHolderText) {
-            let response = setTextResposne(id: currentQuestion.id!, rating: 1)
             if (response.response_answer_text != nil) {
                 response.response_answer_text?.text = textViewText
             }
-            saveResponseToDB()
+            
+        } else {
+            if (response.response_answer_text != nil) {
+                response.response_answer_text?.text = ""
+            }
         }
+        saveResponseToDB()
     }
     
     func setTextResposne(id: CUnsignedLong, rating:Int) -> ResponseAnswer {
@@ -409,14 +432,19 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         DBManager.instance.insertResponseIntoDB(response: stringResponse)
     }
     
-    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+    func textViewDidBeginEditing(_ textView: UITextView) {
         if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] {
             // move cursor to start
-            moveCursorToStart(txtView:textView)
+            DispatchQueue.main.async() {
+                self.moveCursorToStart(txtView:textView)
+            }
         }
+    }
+    func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
+        
         return true
     }
-    
+
     func applyPlaceholderStyle(textView: UITextView, placeholderText: String) {
         // make it look (initially) like a placeholder
         textView.textColor = .lightGray
@@ -430,8 +458,8 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     }
     
     func moveCursorToStart(txtView: UITextView) {
-        DispatchQueue.main.async() {
+        
             self.textView.selectedRange = NSMakeRange(0, 0)
-        }
+        
     }
 }

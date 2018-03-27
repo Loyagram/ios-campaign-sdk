@@ -90,13 +90,13 @@ class CampaignViewController: UIViewController {
                 }
             } else {
                 DispatchQueue.main.async() {
-                    self.campaignView.campaignErrorHandler()
+                    self.campaignView.campaignErrorHandler(error: "Something unexpected happened, please try again after sometime!!!")
                 }
             }
             
-        }, failure:{() -> Void in
+        }, failure:{(error:String) -> Void in
             DispatchQueue.main.async() {
-                self.campaignView.campaignErrorHandler()
+                self.campaignView.campaignErrorHandler(error: error)
             }
         })
     }

@@ -15,9 +15,9 @@ class LoyagramDialog: UIView {
     var dialogTop: NSLayoutConstraint?
     var dialogBottom: NSLayoutConstraint?
     
-    init(frame: CGRect, campaignId: String, colorPrimary:UIColor) {
+    init(frame: CGRect, viewController: UIViewController, campaignId: String, colorPrimary:UIColor) {
         super.init(frame: frame)
-        initDialogView(colorPrimary: colorPrimary, campaignId: campaignId)
+        initDialogView(viewController:viewController, colorPrimary: colorPrimary, campaignId: campaignId)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -25,7 +25,7 @@ class LoyagramDialog: UIView {
     }
     
     
-    func initDialogView(colorPrimary: UIColor, campaignId: String) {
+    func initDialogView(viewController: UIViewController, colorPrimary: UIColor, campaignId: String) {
         //backgroundView.frame = frame
         backgroundView = UIView(frame: CGRect(x: 0, y: 0, width: 0, height: 0))
         backgroundView.backgroundColor = UIColor.black
@@ -35,6 +35,7 @@ class LoyagramDialog: UIView {
         campaignView = LoyagramCampaignView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), color:colorPrimary)
         campaignView.setCampaignType(type: 1)
         campaignView.setDialogView(view:self)
+        campaignView.setSecondaryViewController(vc: viewController)
         addSubview(campaignView)
         
         campaignView.translatesAutoresizingMaskIntoConstraints = false
@@ -99,13 +100,13 @@ class LoyagramDialog: UIView {
                 }
             } else {
                 DispatchQueue.main.async() {
-                    self.campaignView.campaignErrorHandler()
+                    self.campaignView.campaignErrorHandler(error: "Something unexpected happened, please try again after sometime!!!")
                 }
             }
             
-        }, failure:{() -> Void in
+        }, failure:{(error:String) -> Void in
             DispatchQueue.main.async() {
-                self.campaignView.campaignErrorHandler()
+                self.campaignView.campaignErrorHandler(error: error)
             }
         })
     }

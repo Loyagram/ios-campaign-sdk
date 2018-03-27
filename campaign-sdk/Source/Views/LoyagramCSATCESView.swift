@@ -240,7 +240,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         feedbackTextView.layer.borderColor = UIColor.lightGray.cgColor
         feedbackTextView.autocorrectionType = .no
         feedbackTextView.delegate = self
-        // feedbackTextView.delegate = self
+        feedbackTextView.font = GlobalConstants.FONT_MEDIUM
         
         let currentText = getTextResponse()
         if(currentText != "") {
@@ -730,6 +730,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     }
     
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
+        
+        if (range.length > 1) {
+            return false
+        }
+        if(textView.text == placeHolderText && text == "" && range.length == 0) {
+            return true
+        }
+        
         let newLength = textView.text.utf16.count + text.utf16.count - range.length
         if newLength > 0 {
             // check if the only text is the placeholder and remove it if needed
@@ -737,22 +745,27 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
                 applyNonPlaceholderStyle(textView: feedbackTextView)
                 textView.text = ""
             }
+        } else if(newLength == 0 && textView.text != placeHolderText) {
+            applyPlaceholderStyle(textView: textView, placeholderText: placeHolderText)
+            moveCursorToStart(txtView: textView)
         }
         return true
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         let textViewText = textView.text
+        let response = getResponseAnswer(id: currentQuestion.id!)
         if(textViewText != placeHolderText) {
-            let response = getResponseAnswer(id: currentQuestion.id!)
             if (response?.response_answer_text != nil) {
                 response?.response_answer_text?.text = textViewText
             }
-            saveResponseToDB()
+            
+        } else {
+            if (response?.response_answer_text != nil) {
+                response?.response_answer_text?.text = ""
+            }
         }
-        if(textViewText == "") {
-            applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
-        }
+        saveResponseToDB()
     }
     
     func textFieldDidEndEditing(_ textField: UITextField) {

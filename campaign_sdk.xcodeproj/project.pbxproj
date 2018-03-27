@@ -13,6 +13,7 @@
 		D3064AE22031C0310015E35B /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */; };
 		D311575220498D050064598E /* Csat_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311575120498D050064598E /* Csat_settings.swift */; };
 		D311575420498D120064598E /* Ces_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311575320498D120064598E /* Ces_settings.swift */; };
+		D314AD9F206A204B00FC0440 /* LoyagramCampaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D314AD9E206A204B00FC0440 /* LoyagramCampaign.swift */; };
 		D31AC33F202C4F88006EA2DB /* LGRadioButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31AC33E202C4F88006EA2DB /* LGRadioButton.swift */; };
 		D32AD91F2035A0F400B3061D /* Labels.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD91D2035A0F300B3061D /* Labels.swift */; };
 		D32AD9202035A0F400B3061D /* LabelTranslations.swift in Sources */ = {isa = PBXBuildFile; fileRef = D32AD91E2035A0F400B3061D /* LabelTranslations.swift */; };
@@ -134,6 +135,7 @@
 		D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
 		D311575120498D050064598E /* Csat_settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Csat_settings.swift; sourceTree = "<group>"; };
 		D311575320498D120064598E /* Ces_settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ces_settings.swift; sourceTree = "<group>"; };
+		D314AD9E206A204B00FC0440 /* LoyagramCampaign.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCampaign.swift; sourceTree = "<group>"; };
 		D31AC33E202C4F88006EA2DB /* LGRadioButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LGRadioButton.swift; sourceTree = "<group>"; };
 		D32AD91D2035A0F300B3061D /* Labels.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Labels.swift; sourceTree = "<group>"; };
 		D32AD91E2035A0F400B3061D /* LabelTranslations.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabelTranslations.swift; sourceTree = "<group>"; };
@@ -382,6 +384,7 @@
 			isa = PBXGroup;
 			children = (
 				D38EC149205BC3D600896F9D /* LoyagramAttribute.swift */,
+				D314AD9E206A204B00FC0440 /* LoyagramCampaign.swift */,
 			);
 			path = Globals;
 			sourceTree = "<group>";
@@ -734,6 +737,7 @@
 				D3D9F9A720347A250054F7FF /* All.swift in Sources */,
 				D3D9F9B420347A250054F7FF /* SettingsTranslations.swift in Sources */,
 				D340FCD6204D532A00D87B5B /* CustomThankYouAndRedirectSettings.swift in Sources */,
+				D314AD9F206A204B00FC0440 /* LoyagramCampaign.swift in Sources */,
 				D3D9F9A320347A250054F7FF /* Biz.swift in Sources */,
 				D3713731204EB0EC00047606 /* StaticTextTranslation.swift in Sources */,
 				D3BEFBA02056755D006822A0 /* SubmitResponse.swift in Sources */,

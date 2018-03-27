@@ -163,6 +163,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         fatalError("init(coder:) has not been implemented")
     }
     
+    @objc func setSecondaryViewController(vc:UIViewController!) {
+         self.viewController = vc
+    }
+    
     @objc func setViewController(vc:UIViewController!, statusBar: UIView) {
         self.viewController = vc
         self.statusBar = statusBar
@@ -724,7 +728,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let campaignContentView = LoyagramSurveyView(frame: CGRect(x: 0, y: 0, width: 0, height: 0), question: currentQuestion, currentLang: currentLanguage, primaryLang: primaryLanguage, color: primaryColor, campaignView:self, resposne:response)
         animateCampaignView(isFromRight: isFromRight)
         campaignView.addSubview(campaignContentView)
-        campaignContentView.delegate
+        campaignContentView.delegate = self
         campaignContentView.translatesAutoresizingMaskIntoConstraints = false
         //CampaignContentView cosntraints
         let campaignViewTrailing  = NSLayoutConstraint(item: campaignContentView, attribute: .trailing, relatedBy: .equal, toItem: campaignView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
@@ -895,7 +899,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         if(campaignType != "SURVEY" && campaignButtonDelegate != nil) {
             switch(followUpIterator) {
             case 0:
-                
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.campaignButtonDelegate.nextButtonPressed(iterator: self.followUpIterator)
                     self.followUpIterator += 1
@@ -1169,17 +1172,17 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     
-    func campaignErrorHandler() {
+    func campaignErrorHandler(error:String) {
         hideActivityIndicator()
-        showAlert()
+        showAlert(message: error)
         if(!isColorSet) {
             primaryColor = UIColor(red: 26.0/255.0, green: 188.0/255.0, blue: 156.0/255.0, alpha: 1.0)
             setTheme(colorTheme: primaryColor, isColorPrimarySet: true)
         } 
     }
-    func showAlert() {
+    func showAlert(message:String) {
         if(viewController != nil) {
-            let message = "Something unexpected happened. Please try again after sometime!!! "
+            //let message = "Something unexpected happened. Please try again after sometime!!! "
             let alert = UIAlertController(title: nil, message: message, preferredStyle: .alert)
             viewController.present(alert, animated: true)
             

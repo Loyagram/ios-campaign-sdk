@@ -146,10 +146,6 @@ class ViewController: UIViewController {
     
     @objc func controllerButtonAction(sender:UIButton!) {
         
-        //let campainView = LoyagramCampaignView(frame:CGRectMake(0,0,60,100))
-        //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
-        //let campaignView = LoyagramCampaignView(frame:rect)
-        //mainView.addSubview(campaignView)
         let date = Date()
         let calendar = Calendar.current
         let minutes = calendar.component(.minute, from: date)
@@ -160,6 +156,7 @@ class ViewController: UIViewController {
         attributes["username"] = "sandhil"
         attributes["cusotmerId"] = "1234"
         LoyagramCampaignManager.addAttributes(attributes: attributes)
+        LoyagramCampaign.initialize(clientId: "68bc4d8b-705d-4e65-badf-927e1450c131", clientSecret: "d71290e5-be41-4466-84f7-dd9241476c88")
         //LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
         LoyagramCampaignManager.showAsViewController(viewController: self, campaignId: campaignId, colorPrimary: colorPrimary, onSucces: {
             () -> Void in
@@ -171,36 +168,15 @@ class ViewController: UIViewController {
     
     @objc func dialogButtonAction(sender:UIButton!) {
         
-        //let campainView = LoyagramCampaignView(frame:CGRectMake(0,0,60,100))
-        //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
-        //let campaignView = LoyagramCampaignView(frame:rect)
-        //mainView.addSubview(campaignView)
-        //LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
-        //LoyagramCampaignManager.showAsDialog(VC: self, campaignId: campaignId, colorPrimary: colorPrimary)
         LoyagramCampaignManager.showAsDialog(viewController: self, campaignView: mainView, campaignId: campaignId, colorPrimary: colorPrimary)
     }
     @objc func slideButtonAction(sender:UIButton!) {
-        
-        //let campainView = LoyagramCampaignView(frame:CGRectMake(0,0,60,100))
-        //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
-        //let campaignView = LoyagramCampaignView(frame:rect)
-        //mainView.addSubview(campaignView)
-        //LoyagramCampaignManager.showAsViewController(viewController:self, campaignId: campaignId, colorPrimary: colorPrimary)
-        
         
         initBottomCampaignView()
         LoyagramCampaignManager.showFromBottom(viewController: self, campaignView: campaignView, campaignId: campaignId, colorPrimary: colorPrimary)
     }
     
     @objc func previewButtonAction(sender:UIButton!) {
-        
-        //let campainView = LoyagramCampaignView(frame:CGRectMake(0,0,60,100))
-        //let rect = CGRect(x: 0, y: 0, width: 300, height: 100)
-        //let campaignView = LoyagramCampaignView(frame:rect)
-        //mainView.addSubview(campaignView)
-//        LoyagramCampaignManager.addAttribute(key: "username", value: "sandhil")
-//        LoyagramCampaignManager.addAttribute(key: "customerId", value: "123")
-//        LoyagramCampaignManager.showAsViewController(viewController:self, campaignId: campaignId)
     }
     
     @objc func initButtonView() {
@@ -231,15 +207,7 @@ class ViewController: UIViewController {
         btnSlideBottom.setTitleColor(color, for: .normal)
         
         btnSlideBottom.addTarget(self, action: #selector(slideButtonAction(sender:)), for: .touchUpInside)
-        
-//        let btnPreview = UIButton(type: .system)
-//        btnPreview.setTitle("PREVIEW", for: .normal)
-//        btnPreview.layer.cornerRadius = 2
-//        btnPreview.layer.borderWidth = 2
-//        btnPreview.layer.borderColor = color.cgColor
-//        btnPreview.setTitleColor(color, for: .normal)
-        
-        //btnPreview.addTarget(self, action: #selector(previewButtonAction(sender:)), for: .touchUpInside)
+    
         
         radioGroupView.addSubview(btnVC)
         radioGroupView.addSubview(btnDialog)

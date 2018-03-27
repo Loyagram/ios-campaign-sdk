@@ -262,7 +262,9 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         setSingleSelectResposne(id: CUnsignedLong(sender.labelId))
         saveResponseToDB()
         if(delegate != nil) {
-            delegate.setSingleSelect()
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                self.delegate.setSingleSelect()
+            }
         }
     }
     

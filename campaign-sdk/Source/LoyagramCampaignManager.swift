@@ -31,7 +31,7 @@ public class LoyagramCampaignManager {
     
     @objc public class func showAsDialog(viewController:UIViewController, campaignView: UIView, campaignId: String, colorPrimary:UIColor = UIColor.clear) {
         let frame = CGRect(x: 0, y: 0, width: 0, height: 0)
-        let dialog:LoyagramDialog = LoyagramDialog(frame: frame, campaignId: campaignId, colorPrimary: colorPrimary)
+        let dialog:LoyagramDialog = LoyagramDialog(frame: frame, viewController:viewController, campaignId: campaignId, colorPrimary: colorPrimary)
         campaignView.addSubview(dialog)
         
         dialog.translatesAutoresizingMaskIntoConstraints = false
@@ -79,22 +79,22 @@ public class LoyagramCampaignManager {
                 }
             } else {
                 DispatchQueue.main.async() {
-                   loyagramCampaignView.campaignErrorHandler()
+                   loyagramCampaignView.campaignErrorHandler(error: "Something unexpected happened, please try again after sometime!!!")
                 }
             }
             
-        }, failure:{() -> Void in
+        }, failure:{(error:String) -> Void in
             DispatchQueue.main.async() {
-                loyagramCampaignView.campaignErrorHandler()
+                loyagramCampaignView.campaignErrorHandler(error: error)
             }
         })
     }
     
-    class func requestCampaignFromServer(campaignId: String, completion: @escaping ((_ campaign:Campaign) -> Void), failure: @escaping () -> Void ) {
+    class func requestCampaignFromServer(campaignId: String, completion: @escaping ((_ campaign:Campaign) -> Void), failure: @escaping (_ error:String) -> Void ) {
         RequestQuestion.requestQuestion(campaignId: campaignId, completion: { (campaign) -> Void in
             completion(campaign)
-        }, failure: {() -> Void in
-            failure()
+        }, failure: {(error:String) -> Void in
+            failure(error)
         })
     }
     

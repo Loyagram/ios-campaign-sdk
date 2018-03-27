@@ -8,51 +8,48 @@
 
 class RequestQuestion {
     
-    class func requestQuestion (campaignId : String, completion: @escaping ((_ campaign:Campaign) -> Void), failure: @escaping (() -> Void)) {
-        
-        let urlString = ApiBase.getApiPath() + getQuestionPath(campaignId: campaignId)
-        let url = URL(string:urlString)
-        let sessionConfig = URLSessionConfiguration.default
-        sessionConfig.timeoutIntervalForRequest = 15.0
-        sessionConfig.timeoutIntervalForResource = 15.0
-        let session = URLSession(configuration: sessionConfig)
+    class func requestQuestion (campaignId : String, completion: @escaping ((_ campaign:Campaign) -> Void), failure: @escaping ((_ errorMessage:String) -> Void)) {
         if(Reachability.isConnectedToNetwork()) {
-            let date = Date()
-            let calendar = Calendar.current
-            let minutes = calendar.component(.minute, from: date)
-            let seconds = calendar.component(.second, from: date)
-            print("---------- time before request \(minutes) : \(seconds)")
+            if(getQuestionPath(campaignId: campaignId) == "") {
+                failure("Client ID or Client Secret needs to be initialized")
+                return
+            }
+            let urlString = ApiBase.getApiPath() + getQuestionPath(campaignId: campaignId)
+            let url = URL(string:urlString)
+            let sessionConfig = URLSessionConfiguration.default
+            sessionConfig.timeoutIntervalForRequest = 15.0
+            sessionConfig.timeoutIntervalForResource = 15.0
+            let session = URLSession(configuration: sessionConfig)
             let request = URLRequest(url:url!)
             let task = session.dataTask(with:request) { (data, response, error) in
                 do {
-                    let date = Date()
-                    let calendar = Calendar.current
-                    let minutes = calendar.component(.minute, from: date)
-                    let seconds = calendar.component(.second, from: date)
-                    print("---------- after response \(minutes) : \(seconds)")
                     if(data != nil) {
                     let jsonDecoder = JSONDecoder()
                     let campaign = try jsonDecoder.decode(Campaign.self, from: data!)
-                    //print(campaign.brand_title ?? "not parsed!!!")
                     completion(campaign)
                     } else {
-                        failure()
+                        failure((error?.localizedDescription ?? "Something unexpected happened, please try again after sometime")!)
                     }
                 } catch let error {
                     print(error.localizedDescription)
-                    failure()
+                    failure(error.localizedDescription)
                 }
             }
             task.resume()
         } else {
-            failure()
+            failure("")
         }
         
     }
     
     class func getQuestionPath(campaignId : String) -> String{
         
-        return "/in-store/" + campaignId + "?lang=all"
+        let clientId = LoyagramCampaign.getInstance().getClientId()
+        let clientSecret = LoyagramCampaign.getInstance().getClientSecret()
+        if(clientId == "" || clientSecret == "") {
+            return ""
+        }
+        return "/in-store/" + campaignId + "?lang=allapiKey="+clientId+"&apiSecret="+clientSecret
     }
     
 }
