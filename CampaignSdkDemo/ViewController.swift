@@ -157,12 +157,14 @@ class ViewController: UIViewController {
         LoyagramCampaignManager.addAttributes(attributes: attributes)
         LoyagramCampaign.initialize(clientId: "68bc4d8b-705d-4e65-badf-927e1450c131", clientSecret: "d71290e5-be41-4466-84f7-dd9241476c88")
         //LoyagramCampaignManager.showAsViewController(VC:self, campaignId: campaignId, colorPrimary: colorPrimary)
-        LoyagramCampaignManager.showAsViewController(viewController: self, campaignId: campaignId, colorPrimary: colorPrimary, onSucces: {
+        LoyagramCampaignManager.showAsViewController(viewController: self, campaignId: campaignId)
+       
+        /* LoyagramCampaignManager.showAsViewController(viewController: self, campaignId: campaignId, colorPrimary: colorPrimary, onSucces: {
             () -> Void in
             print("campaign success")
         }, onError:{ () -> Void in
             print("campaign error")
-        })
+        }) */
     }
     
     @objc func dialogButtonAction(sender:UIButton!) {

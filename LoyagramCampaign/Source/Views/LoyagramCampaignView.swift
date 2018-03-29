@@ -198,6 +198,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnPrev.layer.borderColor = colorTheme.cgColor
         btnNext.layer.borderColor = colorTheme.cgColor
         btnStart.layer.borderColor = colorTheme.cgColor
+        btnNext.setTitleColor(colorTheme, for: .normal)
+        btnPrev.setTitleColor(colorTheme, for: .normal)
     }
     
     @objc func initMainView() {
