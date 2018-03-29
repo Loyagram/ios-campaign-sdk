@@ -6,7 +6,6 @@
 //  Copyright © 2018 loyagram. All rights reserved.
 //
 
-import UIKit
 
 class LoyagramDialog: UIView {
     

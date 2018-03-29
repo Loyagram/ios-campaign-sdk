@@ -6,8 +6,7 @@
 //  Copyright © 2018 loyagram. All rights reserved.
 //
 
-import UIKit
-import campaign_sdk
+import LoyagramCampaign
 
 class ViewController: UIViewController {
     

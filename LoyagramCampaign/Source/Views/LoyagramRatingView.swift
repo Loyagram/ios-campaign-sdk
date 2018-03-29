@@ -5,6 +5,7 @@
 //  Created by iOS-Apps on 20/02/18.
 //  Copyright © 2018 loyagram. All rights reserved.
 //
+import UIKit
 
 
 class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegate, UITableViewDataSource, LoyagramLanguageDelegate {

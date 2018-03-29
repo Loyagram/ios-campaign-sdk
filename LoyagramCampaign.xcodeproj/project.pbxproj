@@ -22,7 +22,7 @@
 		D33CF1B7204806080062EF01 /* TranslationSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CF1B6204806080062EF01 /* TranslationSettings.swift */; };
 		D33CFA24203A9F7E005E643A /* LoyagramCheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CFA23203A9F7E005E643A /* LoyagramCheckBox.swift */; };
 		D33CFA26203AD690005E643A /* LoyagramRatingBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = D33CFA25203AD690005E643A /* LoyagramRatingBar.swift */; };
-		D33E8F3C202DDE8B00BDF83C /* campaign_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; };
+		D33E8F3C202DDE8B00BDF83C /* LoyagramCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* LoyagramCampaign.framework */; };
 		D340FCD2204D508100D87B5B /* ThankYouAndRedirectSetting.swift in Sources */ = {isa = PBXBuildFile; fileRef = D340FCD1204D508100D87B5B /* ThankYouAndRedirectSetting.swift */; };
 		D340FCD4204D51FB00D87B5B /* ThankYouTranslation.swift in Sources */ = {isa = PBXBuildFile; fileRef = D340FCD3204D51FB00D87B5B /* ThankYouTranslation.swift */; };
 		D340FCD6204D532A00D87B5B /* CustomThankYouAndRedirectSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D340FCD5204D532A00D87B5B /* CustomThankYouAndRedirectSettings.swift */; };
@@ -41,9 +41,9 @@
 		D391C5D920515C2E0026DA31 /* ResponseAnswerText.swift in Sources */ = {isa = PBXBuildFile; fileRef = D391C5D820515C2E0026DA31 /* ResponseAnswerText.swift */; };
 		D3942247203D3F2100BEB61F /* LoyagramNPSView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3942246203D3F2100BEB61F /* LoyagramNPSView.swift */; };
 		D3942249203D3F4300BEB61F /* LoyagramCSATCESView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3942248203D3F4300BEB61F /* LoyagramCSATCESView.swift */; };
-		D3B0800C202B0068009B046B /* campaign_sdk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; };
+		D3B0800C202B0068009B046B /* LoyagramCampaign.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* LoyagramCampaign.framework */; };
 		D3B08011202B0068009B046B /* campaign_sdkTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08010202B0068009B046B /* campaign_sdkTests.swift */; };
-		D3B08013202B0068009B046B /* campaign_sdk.h in Headers */ = {isa = PBXBuildFile; fileRef = D3B08005202B0068009B046B /* campaign_sdk.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		D3B08013202B0068009B046B /* LoyagramCampaign.h in Headers */ = {isa = PBXBuildFile; fileRef = D3B08005202B0068009B046B /* LoyagramCampaign.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		D3B08023202B03B6009B046B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08022202B03B6009B046B /* AppDelegate.swift */; };
 		D3B08025202B03B6009B046B /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08024202B03B6009B046B /* ViewController.swift */; };
 		D3B08028202B03B6009B046B /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = D3B08026202B03B6009B046B /* Main.storyboard */; };
@@ -52,7 +52,7 @@
 		D3B08038202B03B6009B046B /* CampaignSdkDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08037202B03B6009B046B /* CampaignSdkDemoTests.swift */; };
 		D3B08043202B03B6009B046B /* CampaignSdkDemoUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3B08042202B03B6009B046B /* CampaignSdkDemoUITests.swift */; };
 		D3BEFBA02056755D006822A0 /* SubmitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BEFB9F2056755D006822A0 /* SubmitResponse.swift */; };
-		D3C21B1B2032E14F002FB1EE /* campaign_sdk.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* campaign_sdk.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		D3C21B1B2032E14F002FB1EE /* LoyagramCampaign.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* LoyagramCampaign.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D3C21B222032E44B002FB1EE /* LoyagramSurveyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */; };
 		D3D9F9A020347A250054F7FF /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98B20347A200054F7FF /* Campaign.swift */; };
 		D3D9F9A120347A250054F7FF /* Passives.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98C20347A210054F7FF /* Passives.swift */; };
@@ -121,7 +121,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				D3C21B1B2032E14F002FB1EE /* campaign_sdk.framework in Embed Frameworks */,
+				D3C21B1B2032E14F002FB1EE /* LoyagramCampaign.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -162,8 +162,8 @@
 		D391C5D820515C2E0026DA31 /* ResponseAnswerText.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ResponseAnswerText.swift; sourceTree = "<group>"; };
 		D3942246203D3F2100BEB61F /* LoyagramNPSView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramNPSView.swift; sourceTree = "<group>"; };
 		D3942248203D3F4300BEB61F /* LoyagramCSATCESView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCSATCESView.swift; sourceTree = "<group>"; };
-		D3B08002202B0068009B046B /* campaign_sdk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = campaign_sdk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		D3B08005202B0068009B046B /* campaign_sdk.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = campaign_sdk.h; sourceTree = "<group>"; };
+		D3B08002202B0068009B046B /* LoyagramCampaign.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LoyagramCampaign.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D3B08005202B0068009B046B /* LoyagramCampaign.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LoyagramCampaign.h; sourceTree = "<group>"; };
 		D3B08006202B0068009B046B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D3B0800B202B0068009B046B /* campaign-sdkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "campaign-sdkTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		D3B08010202B0068009B046B /* campaign_sdkTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = campaign_sdkTests.swift; sourceTree = "<group>"; };
@@ -224,7 +224,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3B0800C202B0068009B046B /* campaign_sdk.framework in Frameworks */,
+				D3B0800C202B0068009B046B /* LoyagramCampaign.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -232,7 +232,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D33E8F3C202DDE8B00BDF83C /* campaign_sdk.framework in Frameworks */,
+				D33E8F3C202DDE8B00BDF83C /* LoyagramCampaign.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -392,8 +392,8 @@
 		D3B07FF8202B0068009B046B = {
 			isa = PBXGroup;
 			children = (
-				D3B08004202B0068009B046B /* campaign-sdk */,
-				D3B0800F202B0068009B046B /* campaign-sdkTests */,
+				D3B08004202B0068009B046B /* LoyagramCampaign */,
+				D3B0800F202B0068009B046B /* LoyagramCampaignTests */,
 				D3B08021202B03B6009B046B /* CampaignSdkDemo */,
 				D3B08036202B03B6009B046B /* CampaignSdkDemoTests */,
 				D3B08041202B03B6009B046B /* CampaignSdkDemoUITests */,
@@ -405,7 +405,7 @@
 		D3B08003202B0068009B046B /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				D3B08002202B0068009B046B /* campaign_sdk.framework */,
+				D3B08002202B0068009B046B /* LoyagramCampaign.framework */,
 				D3B0800B202B0068009B046B /* campaign-sdkTests.xctest */,
 				D3B08020202B03B6009B046B /* CampaignSdkDemo.app */,
 				D3B08033202B03B6009B046B /* CampaignSdkDemoTests.xctest */,
@@ -414,23 +414,23 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		D3B08004202B0068009B046B /* campaign-sdk */ = {
+		D3B08004202B0068009B046B /* LoyagramCampaign */ = {
 			isa = PBXGroup;
 			children = (
 				D36D532C202DA01700258DCA /* Source */,
-				D3B08005202B0068009B046B /* campaign_sdk.h */,
+				D3B08005202B0068009B046B /* LoyagramCampaign.h */,
 				D3B08006202B0068009B046B /* Info.plist */,
 			);
-			path = "campaign-sdk";
+			path = LoyagramCampaign;
 			sourceTree = "<group>";
 		};
-		D3B0800F202B0068009B046B /* campaign-sdkTests */ = {
+		D3B0800F202B0068009B046B /* LoyagramCampaignTests */ = {
 			isa = PBXGroup;
 			children = (
 				D3B08010202B0068009B046B /* campaign_sdkTests.swift */,
 				D3B08012202B0068009B046B /* Info.plist */,
 			);
-			path = "campaign-sdkTests";
+			path = LoyagramCampaignTests;
 			sourceTree = "<group>";
 		};
 		D3B08021202B03B6009B046B /* CampaignSdkDemo */ = {
@@ -499,7 +499,7 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3B08013202B0068009B046B /* campaign_sdk.h in Headers */,
+				D3B08013202B0068009B046B /* LoyagramCampaign.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -521,7 +521,7 @@
 			);
 			name = "campaign-sdk";
 			productName = "campaign-sdk";
-			productReference = D3B08002202B0068009B046B /* campaign_sdk.framework */;
+			productReference = D3B08002202B0068009B046B /* LoyagramCampaign.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 		D3B0800A202B0068009B046B /* campaign-sdkTests */ = {
@@ -632,7 +632,7 @@
 					};
 				};
 			};
-			buildConfigurationList = D3B07FFC202B0068009B046B /* Build configuration list for PBXProject "campaign_sdk" */;
+			buildConfigurationList = D3B07FFC202B0068009B046B /* Build configuration list for PBXProject "LoyagramCampaign" */;
 			compatibilityVersion = "Xcode 8.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -966,12 +966,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "campaign-sdk/Info.plist";
+				INFOPLIST_FILE = LoyagramCampaign/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.loyagram.campaign-sdk";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.loyagram.LoyagramCampaign;
+				PRODUCT_MODULE_NAME = LoyagramCampaign;
+				PRODUCT_NAME = LoyagramCampaign;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 4.0;
@@ -989,12 +990,13 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = "campaign-sdk/Info.plist";
+				INFOPLIST_FILE = LoyagramCampaign/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.loyagram.campaign-sdk";
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_BUNDLE_IDENTIFIER = com.loyagram.LoyagramCampaign;
+				PRODUCT_MODULE_NAME = LoyagramCampaign;
+				PRODUCT_NAME = LoyagramCampaign;
 				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1006,9 +1008,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "campaign-sdkTests/Info.plist";
+				INFOPLIST_FILE = LoyagramCampaignTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.loyagram.campaign-sdkTests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.loyagram.LoyagramCampaignTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1020,9 +1022,9 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = "campaign-sdkTests/Info.plist";
+				INFOPLIST_FILE = LoyagramCampaignTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = "com.loyagram.campaign-sdkTests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.loyagram.LoyagramCampaignTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1132,7 +1134,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		D3B07FFC202B0068009B046B /* Build configuration list for PBXProject "campaign_sdk" */ = {
+		D3B07FFC202B0068009B046B /* Build configuration list for PBXProject "LoyagramCampaign" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				D3B08014202B0068009B046B /* Debug */,

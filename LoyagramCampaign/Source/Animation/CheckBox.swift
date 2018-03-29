@@ -1,4 +1,6 @@
 
+import Foundation
+import UIKit
 
 class CheckBox: UIControl, CAAnimationDelegate {
     enum AnimationType : Int {
