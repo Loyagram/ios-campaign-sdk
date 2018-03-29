@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "LoyagramCampaign"
-  s.version      = "0.0.4"
+  s.version      = "0.0.5"
   s.summary      = "FrameWork to run loyagram campaign."
 
   # This description is used to generate tags and improve search results.
@@ -105,7 +105,7 @@ Pod::Spec.new do |s|
   #
 
   # s.resource  = "icon.png"
-  # s.resources = "Resources/*.png"
+  s.resources = "LoyagramCampaign/Source/**/*.{sqlite,png,otf}"
 
   # s.preserve_paths = "FilesToSave", "MoreFilesToSave"
 
