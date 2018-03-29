@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   #
 
   s.license      = "Apache License, Version 2.0"
-  # s.license      = { :type => "MIT", :file => "FILE_LICENSE" }
+  # s.license      = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
