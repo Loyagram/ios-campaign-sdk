@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "LoyagramCampaign"
-  s.version      = "0.0.3"
+  s.version      = "0.0.4"
   s.summary      = "FrameWork to run loyagram campaign."
 
   # This description is used to generate tags and improve search results.
@@ -90,7 +90,7 @@ Pod::Spec.new do |s|
   #  Not including the public_header_files will make all headers public.
   #
 
-  s.source_files  = "LoyagramCampaign", "LoyagramCampaign/Source/**/*.{h,m}"
+  s.source_files  = "LoyagramCampaign", "LoyagramCampaign/Source/**/*.{h,m,swift}"
   #s.exclude_files = "Classes/Exclude"
 
   # s.public_header_files = "LoyagramCampaign/Source/**/*.h"
