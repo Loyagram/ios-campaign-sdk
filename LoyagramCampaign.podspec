@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "LoyagramCampaign"
-  s.version      = "0.0.1"
+  s.version      = "0.0.3"
   s.summary      = "FrameWork to run loyagram campaign."
 
   # This description is used to generate tags and improve search results.
@@ -39,7 +39,7 @@ Pod::Spec.new do |s|
   #
 
   s.license      = "Apache License, Version 2.0"
-  # s.license      = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
+  s.license      = { :type => "Apache License, Version 2.0", :file => "LICENSE" }
 
 
   # ――― Author Metadata  ――――――――――――――――――――――――――――――――――――――――――――――――――――――――― #
