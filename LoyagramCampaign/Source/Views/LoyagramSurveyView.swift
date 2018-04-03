@@ -116,7 +116,7 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         let langCode = currentLanguage.language_code
         let questionTranslations = currentQuestion.question_translations
         for questionTranslation in questionTranslations! {
-            if(questionTranslation.language_code == langCode) {
+            if(questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
                 txtQuestion.text = questionTranslation.text
                 break
             }
@@ -340,7 +340,7 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         var answers = [ResponseAnswer]()
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
-                if(ra.question_id == id) {
+                if(ra.question_id != nil && ra.question_id == id) {
                     answers.append(ra)
                 }
             }

@@ -683,6 +683,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func showQuestion(isFromRight:Bool) {
         currentQuestion = campaign?.questions?[questionNumber-1]
+        if(currentQuestion == nil) {
+            return
+        }
         let campaignType = campaign?.type
         if(campaignType != nil) {
             if(campaignType == "SAT" ) {
@@ -832,7 +835,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
     }
     @objc func showCampaignView() {
-        
         brandView.isHidden = false
         lblPoweredBy.isHidden = false
         startButtonContainerView.isHidden = false
@@ -882,18 +884,21 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func showNextQuestion() {
         
-        if(!currentQuestion.optional!) {
+        if(currentQuestion == nil) {
+            return
+        }
+        if(currentQuestion.optional != nil && !currentQuestion.optional! ) {
             if(isQuestionAttended(question: currentQuestion)) {
                 txtValidation.isHidden = true
             } else {
-                txtValidation.text = staticTexts.translation["MANDATORY_QUESTION_TEXT"]
+                txtValidation.text = staticTexts.translation["MANDATORY_QUESTION_TEXT"] ?? ""
                 currentValidationString = "MANDATORY_QUESTION_TEXT"
                 txtValidation.isHidden = false
                 return
             }
             
         }
-        let campaignType = campaign?.type
+        let campaignType = campaign?.type ?? ""
         btnNext.backgroundColor = primaryColor
         btnNext.setTitleColor(UIColor.white, for: .normal)
         btnPrev.setTitleColor(primaryColor, for: .normal)
@@ -909,12 +914,12 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             case 1: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             followUpIterator += 1
-            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "", for: .normal)
                 break
             case 2:
                 if(isEmailFollowUpEnabled) {
                     if(!isValidEmail(email: followUpEmail)) {
-                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"]
+                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"] ?? ""
                         txtValidation.isHidden = false
                         currentValidationString = "EMAIL_NOT_VALID_TEXT"
                         return
@@ -932,11 +937,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             return
         }
         else {
-            if(!currentQuestion.optional!) {
+            if(currentQuestion.optional != nil && !currentQuestion.optional! ) {
                 switch(currentQuestion.type ?? "") {
                 case "EMAIL":
                     if(!isValidEmail(email: getTextResponse())) {
-                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"]
+                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"] ?? ""
                         txtValidation.isHidden = false
                         currentValidationString = "EMAIL_NOT_VALID_TEXT"
                         return
@@ -946,7 +951,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                     break
                 case "NUMBER":
                     if(!isValidNumber(number: getTextResponse())) {
-                        txtValidation.text = staticTexts.translation["VALIDATION_FAILED_TEXT"]
+                        txtValidation.text = staticTexts.translation["VALIDATION_FAILED_TEXT"] ?? ""
                         txtValidation.isHidden = false
                         currentValidationString = "VALIDATION_FAILED_TEXT"
                         return
@@ -959,20 +964,21 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 }
             }
             
-            if(btnNext.titleLabel?.text == staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"]) {
+            if(btnNext.titleLabel?.text == staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "") {
                 print("pressed when text is submit")
                 submitCampaign()
                 return
             }
             questionNumber += 1
             if(questionNumber == noOfQuestions) {
-                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "", for: .normal)
             }
             
             let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
             lblQuestionCount.text = questionCount
             removeSubViews(view:self.campaignView)
-            if(questionNumber <= (campaign?.questions?.count)!) {
+            let noOfQstns = campaign?.questions?.count ?? 0
+            if(questionNumber <= noOfQstns) {
                 showQuestion(isFromRight: true)
             }
         }
@@ -985,7 +991,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func showPrevQuestion() {
         txtValidation.isHidden = true
-        let campaignType = campaign?.type
+        let campaignType = campaign?.type ?? ""
         btnPrev.backgroundColor = primaryColor
         btnPrev.setTitleColor(UIColor.white, for: .normal)
         btnNext.setTitleColor(primaryColor, for: .normal)
@@ -1000,7 +1006,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             case 2: campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
             followUpIterator -= 1
-            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] ?? "", for: .normal)
                 break
             default:
                 break
@@ -1011,7 +1017,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 return
             }
             if(questionNumber == noOfQuestions) {
-                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] ?? "", for: .normal)
             }
             questionNumber -= 1
             let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
@@ -1026,7 +1032,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let encoder = JSONEncoder()
         encoder.outputFormatting = .prettyPrinted
         response.ended_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
-        response.language_code = currentLanguage.language_code
+        response.language_code = currentLanguage.language_code ?? ""
         let data = try! encoder.encode(response)
         var json:Any!
         do {
@@ -1034,7 +1040,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             if(json != nil) {
                 let jsonDict = NSDictionary(object: json, forKey: "data" as NSCopying)
                 let jsonData = try! JSONSerialization.data(withJSONObject: jsonDict, options: [])
-                //print("string json\(String(data: jsonData, encoding: .utf8) ?? "empty")")
+                print("string json\(String(data: jsonData, encoding: .utf8) ?? "empty")")
                 SubmitResponse.submitResponse(response: jsonData, success: {() -> Void in
                     self.deleteResponse()
                     if let successCallback = self.onSuccess {
@@ -1080,8 +1086,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         default:
             break
         }
-        
-        
+
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillShow, object: nil)
         NotificationCenter.default.removeObserver(self, name: NSNotification.Name.UIKeyboardWillHide, object: nil)
     }
@@ -1123,9 +1128,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         cell.lblLanguage.textColor = primaryColor
         tableViewLanguage.reloadData()
         let languages = campaign?.settings?.translation!
-        if(currentLanguage.language_code != languages![indexPath.row].language_code) {
+        if(currentLanguage.language_code != nil && languages![indexPath.row].language_code != nil && currentLanguage.language_code != languages![indexPath.row].language_code) {
             currentLanguage = languages![indexPath.row]
-            btnLanguage.setTitle(currentLanguage.name, for: .normal)
+            btnLanguage.setTitle(currentLanguage.name ?? "", for: .normal)
             changeLanguage()
         }
     }
@@ -1134,7 +1139,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         self.campaign = campaign
         if(!isColorSet && campaign.color_primary != nil) {
-            primaryColor = getColorFromHex(hexString: campaign.color_primary!)
+            
+            let colorString = campaign.color_primary ?? ""
+            primaryColor = getColorFromHex(hexString: colorString)
             setTheme(colorTheme: primaryColor, isColorPrimarySet: true)
         }
         currentQuestion = campaign.questions?[0]
@@ -1143,32 +1150,32 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
         lblQuestionCount.text = questionCount
         loadLanguages()
-        btnLanguage.setTitle(currentLanguage.name, for: .normal)
+        btnLanguage.setTitle(currentLanguage.name ?? "", for: .normal)
         tableViewLanguage.reloadData()
         getStaticTexts()
         setStaticTexts()
         hideActivityIndicator()
-        if(campaign.welcome_message_enabled!) {
+        if(campaign.welcome_message_enabled ?? false) {
             showHideWelcomeScreen(isShow: true)
         }
         showCampaignView()
-        if(Reachability.isConnectedToNetwork()) {
+        if(Reachability.isConnectedToNetwork() && campaign.biz?.img_url != nil) {
             getDataFromUrl(url: URL(string:(campaign.biz?.img_url)!)!, completion: ({ (data, response, error) in
                 if(data != nil)  {
                     DispatchQueue.main.async() {
                         let image = UIImage(data: data!)
                         self.imageViewBrand.image = image
-                        self.lblBrand.text = campaign.biz?.name
+                        self.lblBrand.text = campaign.biz?.name ?? ""
                     }
                 } else {
                     DispatchQueue.main.async() {
-                        self.lblBrand.text = campaign.biz?.name
+                        self.lblBrand.text = campaign.biz?.name ?? ""
                     }
                 }
                 
             }))
         } else {
-            self.lblBrand.text = campaign.biz?.name
+            self.lblBrand.text = campaign.biz?.name ?? ""
         }
         initResponse()
     }
@@ -1207,6 +1214,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         sessionConfig.timeoutIntervalForRequest = 15.0
         sessionConfig.timeoutIntervalForResource = 15.0
         let session = URLSession(configuration: sessionConfig)
+        
         session.dataTask(with: url) { data, response, error in
             completion(data, response, error)
             }.resume()
@@ -1215,7 +1223,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     func loadLanguages() {
         languages = (campaign?.settings?.translation)!
         for language in languages {
-            if(language.primary)! {
+            if(language.primary ?? false) {
                 currentLanguage = language
                 primaryLanguage = language
                 break
@@ -1261,7 +1269,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func showThankYou() {
-        if(campaign?.thankyou_message_enabled)! {
+        if(campaign?.thankyou_message_enabled ?? false) {
             initThankYouView()
             self.perform(#selector(closeCampaign), with: self, afterDelay: 3.0)
         } else {
@@ -1357,10 +1365,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func getNPSThankYou() -> String {
         var strThankYou = String()
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let thankYouTranslations = campaign?.thank_you_and_redirect_settings_translations
         for thankYouTranslation in thankYouTranslations! {
-            if(langCode == thankYouTranslation.language_code) {
+            if(thankYouTranslation.language_code != nil && langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
                 switch(thankYouAndRedirectSettings.type ?? "") {
                 case "all" :
@@ -1385,10 +1393,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func getSurveyThankYou() -> String {
         var strThankYou = String()
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let thankYouTranslations = campaign?.thank_you_and_redirect_settings_translations
         for thankYouTranslation in thankYouTranslations! {
-            if(langCode == thankYouTranslation.language_code) {
+            if(thankYouTranslation.language_code != nil && langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
                 strThankYou = (thankYouAndRedirectSettings.all?.message)!
             }
@@ -1398,10 +1406,10 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func getCSATCESThankYou() -> String {
         var strThankYou = String()
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let thankYouTranslations = campaign?.thank_you_and_redirect_settings_translations
         for thankYouTranslation in thankYouTranslations! {
-            if(langCode == thankYouTranslation.language_code) {
+            if(thankYouTranslation.language_code != nil && langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
                 switch(thankYouAndRedirectSettings.type ?? "") {
                 case "all" :
@@ -1444,7 +1452,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         var staticText = String()
         staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = ""
         for staticTranslation in staticTranslations! {
-            if(currentLanguage.language_code == staticTranslation.language_code) {
+            if(currentLanguage.language_code != nil && staticTranslation.language_code != nil && currentLanguage.language_code == staticTranslation.language_code) {
                 staticText = staticTranslation.text!
                 switch(staticTranslation.static_text_id ?? "") {
                 case "CAMPAIGN_MODE_BACK_BUTTON_TEXT":
@@ -1513,29 +1521,29 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     @objc func setStaticTexts() {
         if (noOfQuestions == 1 || questionNumber == noOfQuestions) {
-            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "", for: .normal)
         } else if (campaign?.type == "SURVEY") {
             if (followUpIterator == 2) {
-                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"], for: .normal)
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "", for: .normal)
             } else {
-                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] ?? "", for: .normal)
             }
         } else {
-            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"], for: .normal)
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] ?? "", for: .normal)
         }
         
-        btnPrev.setTitle(staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"], for: .normal)
-        lblPoweredBy.text = staticTexts.translation["POWERED_BY"]
+        btnPrev.setTitle(staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] ?? "", for: .normal)
+        lblPoweredBy.text = staticTexts.translation["POWERED_BY"] ?? ""
         
         if (btnStart != nil) {
-            btnStart.setTitle(staticTexts.translation["CAMPAIGN_MODE_START_BUTTON_TEXT"], for: .normal)
+            btnStart.setTitle(staticTexts.translation["CAMPAIGN_MODE_START_BUTTON_TEXT"] ?? "", for: .normal)
         }
         if(txtWelcomeTip != nil && txtWelcomeMessage != nil) {
-            txtWelcomeTip.text = staticTexts.translation["WIDGET_WELCOME_TIP"]
+            txtWelcomeTip.text = staticTexts.translation["WIDGET_WELCOME_TIP"] ?? ""
             txtWelcomeMessage.text = getWelcomeText()
         }
         if(currentValidationString != "") {
-            txtValidation.text = staticTexts.translation[currentValidationString]
+            txtValidation.text = staticTexts.translation[currentValidationString] ?? ""
         }
     }
     
@@ -1543,8 +1551,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let welcomeTranslations = campaign?.welcome_message_translations
         var str:String?
         for welcomeTranslation in welcomeTranslations! {
-            if(welcomeTranslation.language_code != nil && welcomeTranslation.language_code == currentLanguage.language_code) {
-                str = welcomeTranslation.text
+            if(welcomeTranslation.language_code != nil && currentLanguage.language_code != nil && welcomeTranslation.language_code == currentLanguage.language_code) {
+                str = welcomeTranslation.text ?? ""
                 break
             }
         }
@@ -1575,11 +1583,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func hideActivityIndicator() {
         activityIndicator.stopAnimating()
-        let date = Date()
-        let calendar = Calendar.current
-        let minutes = calendar.component(.minute, from: date)
-        let seconds = calendar.component(.second, from: date)
-        print("---------- time  in hide activity\(minutes) : \(seconds)")
     }
     
     //Handle Resposne
@@ -1626,10 +1629,14 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     @objc func saveResponseToDB() {
         let encoder = JSONEncoder()
-        let data = try! encoder.encode(response)
+        do {
+        let data = try encoder.encode(response)
         let stringResponse = String(data: data, encoding: .utf8)!
         //DBManager.instance.createTableResponse()
         DBManager.instance.insertResponseIntoDB(response: stringResponse)
+        } catch {
+            
+        }
     }
     
     @objc func deleteResponse() {
@@ -1641,8 +1648,13 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         if(DBManager.instance.getResponseFromDB() != nil) {
             let jsonData = DBManager.instance.getResponseFromDB()!.data(using: .utf8)!
             let decoder = JSONDecoder()
-            let response = try! decoder.decode(Response.self, from: jsonData)
+            do {
+            let response = try decoder.decode(Response.self, from: jsonData)
             return response
+            }
+            catch {
+                return nil
+            }
         }
         return nil
     }
@@ -1670,7 +1682,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         var text = " "
         let responseAnswers:[ResponseAnswer] = response.response_answers
         for responseAnswer in responseAnswers {
-            if(currentQuestion.id == responseAnswer.question_id) {
+            if(currentQuestion.id != nil && responseAnswer.question_id != nil && currentQuestion.id == responseAnswer.question_id) {
                 text = (responseAnswer.response_answer_text?.text)!
                 break
             }

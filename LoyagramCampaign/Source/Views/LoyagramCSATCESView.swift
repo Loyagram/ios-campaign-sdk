@@ -641,7 +641,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     func getResponseAnswerByQuestionId(id: CUnsignedLong) -> ResponseAnswer! {
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
-                if(ra.question_id == id) {
+                if(ra.question_id != nil && ra.question_id == id) {
                     return ra
                 }
             }
@@ -652,7 +652,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
-                if(ra.question_label_id == id) {
+                if(ra.question_id != nil && ra.question_label_id == id) {
                     return ra
                 }
             }
@@ -768,15 +768,18 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         saveResponseToDB()
     }
     
-    func textFieldDidEndEditing(_ textField: UITextField) {
-        let textFieldText = textField.text
-        response.customer_email = textFieldText
-        if(delegate != nil) {
-            delegate.setCSATCESFollowUpEmail(email: textFieldText!)
-        }
-        saveResponseToDB()
-    }
     
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if let text = textField.text as NSString? {
+            let txtAfterUpdate = text.replacingCharacters(in: range, with: string)
+            response.customer_email = txtAfterUpdate
+            if(delegate != nil) {
+                delegate.setCSATCESFollowUpEmail(email: txtAfterUpdate)
+            }
+            saveResponseToDB()
+        }
+        return true
+    }
     @objc func saveResponseToDB() {
         let encoder = JSONEncoder()
         let data = try! encoder.encode(response)

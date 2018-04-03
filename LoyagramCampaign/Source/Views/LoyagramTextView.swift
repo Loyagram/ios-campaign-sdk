@@ -345,19 +345,32 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         }
         return true
     }
+    
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        if let text = textField.text as NSString? {
+            let txtAfterUpdate = text.replacingCharacters(in: range, with: string)
+            let response = setTextResposne(id: questionLabelId, rating: 1)
+            if (response.response_answer_text != nil) {
+                response.response_answer_text?.text = txtAfterUpdate
+            }
+            saveResponseToDB()
+        }
+        return true
+    }
+    
     func textFieldDidEndEditing(_ textField: UITextField) {
-        let textFieldText = textField.text
-        let response = setTextResposne(id: currentQuestion.id!, rating: 1)
+       /* let textFieldText = textField.text
+        let response = setTextResposne(id: questionLabelId, rating: 1)
         if (response.response_answer_text != nil) {
             response.response_answer_text?.text = textFieldText
         }
         saveResponseToDB()
-        
+       */
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         let textViewText = textView.text
-        let response = setTextResposne(id: currentQuestion.id!, rating: 1)
+        let response = setTextResposne(id: questionLabelId, rating: 1)
         if(textViewText != textViewPlaceHolderText) {
             if (response.response_answer_text != nil) {
                 response.response_answer_text?.text = textViewText
@@ -391,7 +404,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
-                if(ra.question_id == id) {
+                if( ra.question_label_id != nil && ra.question_label_id == id) {
                     return ra
                 }
             }
