@@ -19,21 +19,21 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         currentLanguage = lang
         setQuestion()
         setLikelyText()
-        if(campaignType == "NPS") {
+        if(campaignType ?? "" == "NPS") {
             setFeedBackQuestion()
             setFollowUpQuestion()
             changeLabelLanguage()
-            chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
+            chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] ?? ""
             chk.setNeedsDisplay()
-            feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+            feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] ?? ""
         }
         if(feedbackTextView != nil) {
             if feedbackTextView.text == placeHolderText {
-                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
                 feedbackTextView.text = placeHolderText
                 moveCursorToStart(txtView: feedbackTextView)
             } else {
-                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
             }
             
         }
@@ -87,7 +87,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         self.campaignView.languageDelegate = self
         self.staticTexts = staticTexts
         self.response = response
-        placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+        placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
         initNPSView()
         addNPSButtons()
         setQuestion()
@@ -106,34 +106,34 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     
     @objc func setQuestion() {
         
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let questionTranslations = currentQuestion.question_translations
         for questionTranslation in questionTranslations! {
-            if(questionTranslation.language_code == langCode) {
-                txtQuestion.text = questionTranslation.text
+            if(questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
+                txtQuestion.text = questionTranslation.text ?? ""
                 break
             }
         }
     }
     
     @objc func setFollowUpQuestion() {
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let questionTranslations = followUpQuestion.question_translations
         for questionTranslation in questionTranslations! {
-            if(questionTranslation.language_code == langCode) {
-                txtFollowUpQuestion.text = questionTranslation.text
+            if(questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
+                txtFollowUpQuestion.text = questionTranslation.text ?? ""
                 break
             }
         }
     }
     
     @objc func setFeedBackQuestion() {
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let settingsTranslations = currentQuestion.settings_translations
         for sT in settingsTranslations! {
-            if(sT.language_code == langCode) {
+            if(sT.language_code != nil && sT.language_code == langCode) {
                 let requestReasonSettings = sT.text?.settings?.nps_settings?.request_reason_settings
-                txtFeedBackQuestion.text = requestReasonSettings?.all?.message
+                txtFeedBackQuestion.text = requestReasonSettings?.all?.message ?? ""
                 break
             }
         }
@@ -149,7 +149,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         
         self.addSubview(txtQuestion)
         txtQuestion.translatesAutoresizingMaskIntoConstraints = false
-        txtQuestion.text = " "
+        txtQuestion.text = ""
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
         txtQuestion.font = GlobalConstants.FONT_MEDIUM
@@ -191,7 +191,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         followUpTableView.showsHorizontalScrollIndicator = false
         
         txtFollowUpQuestion.translatesAutoresizingMaskIntoConstraints = false
-        txtFollowUpQuestion.text = " "
+        txtFollowUpQuestion.text = ""
         txtFollowUpQuestion.textColor = UIColor.black
         txtFollowUpQuestion.textAlignment = .center
         txtFollowUpQuestion.font = GlobalConstants.FONT_MEDIUM
@@ -297,7 +297,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             //
             let responseAnswer = getResponseAnswer(id: currentQuestion.id!)
             if(responseAnswer != nil) {
-                if( i == responseAnswer?.answer) {
+                if(responseAnswer?.answer != nil && i == responseAnswer?.answer) {
                   npsButton.backgroundColor = primaryColor
                   npsButton.setTitleColor(UIColor.white, for: .normal)
                 }
@@ -306,7 +306,6 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     }
     
     @objc func npsButtonAction (sender: UIButton) {
-        
         if(currentRating != nil) {
             if(self.viewWithTag(currentRating) as? UIButton != nil) {
                 let button:UIButton = self.viewWithTag(currentRating) as! UIButton
@@ -319,7 +318,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         saveResponseToDB()
         let responseAnswer = getResponseAnswer(id: currentQuestion.id!)
         if(responseAnswer != nil) {
-            if(sender.tag - 1 == responseAnswer?.answer) {
+            if(sender.tag - 1 == responseAnswer?.answer ?? -10) {
                 sender.backgroundColor = primaryColor
                 sender.setTitleColor(UIColor.white, for: .normal)
             }
@@ -402,7 +401,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         if(currentText != "") {
             feedbackTextView.text = currentText
         } else {
-            placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
             applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
         }
         
@@ -413,7 +412,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         chk = LoyagramCheckBox(frame: rect, colorPrimary:primaryColor)
         chk.showTextLabel = true
         chk.tag = 1001
-        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
+        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] ?? ""
         
         chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
         chkContainer.addSubview(chk)
@@ -423,7 +422,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextField.isHidden = true
         feedbackTextField.delegate = self
         feedbackTextField.autocorrectionType = .no
-        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] ?? ""
         
         scrollView.addSubview(txtFeedBackQuestion)
         scrollView.addSubview(feedbackTextField)
@@ -509,6 +508,9 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             if(delegate != nil) {
                 delegate.enableNPSFollowUp(enable: false)
             }
+            if(response.email != nil) {
+                response.email = ""
+            }
         }
         feedbackTextField.isHidden = !feedbackTextField.isHidden
         
@@ -517,7 +519,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     override func layoutSubviews() {
         super.layoutSubviews()
         
-        if(campaignType == "NPS") {
+        if(campaignType ?? "" == "NPS") {
             //table View height
             let viewHeight = self.frame.height
             let requiredHeight = CGFloat(followUpQuestion.labels?.count ?? 0) * 35
@@ -603,10 +605,10 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         chk.tag = Int(label?.id ?? 0)
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
         let labelTranslations = label?.label_translations
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         for labelTranslation in labelTranslations! {
-            if(labelTranslation.language_code == langCode) {
-                chk.text = labelTranslation.text
+            if(labelTranslation.language_code != nil && labelTranslation.language_code == langCode) {
+                chk.text = labelTranslation.text ?? ""
                 break
             }
         }
@@ -625,11 +627,14 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     @objc func setLikelyText() {
         let settingsTransaltions = currentQuestion.settings_translations!
         for st in settingsTransaltions {
-            if(st.language_code == currentLanguage.language_code) {
+            if(st.language_code != nil && currentLanguage.language_code != nil && st.language_code == currentLanguage.language_code) {
                 let npsSettings = st.text?.settings?.nps_settings!
+                if(npsSettings == nil) {
+                    break
+                }
                 let widget = npsSettings?.widget!
-                txtLikely.text = widget?.very_likely
-                txtNotLikely.text = widget?.not_likely
+                txtLikely.text = widget?.very_likely ?? ""
+                txtNotLikely.text = widget?.not_likely ?? ""
                 break
                 }
             }
@@ -682,7 +687,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             ra.question_id = id
             ra.answer = Int(val)
             let responseAnswerText = ResponseAnswerText()
-            responseAnswerText.response_answer_id = ra.id
+            responseAnswerText.response_answer_id = ra.id ?? ""
             ra.response_answer_text = responseAnswerText
             response.response_answers.append(ra)
         }
@@ -732,8 +737,8 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         var text = ""
         let responseAnswers:[ResponseAnswer] = response.response_answers
         for responseAnswer in responseAnswers {
-            if(responseAnswer.question_id != nil && currentQuestion.id == responseAnswer.question_id) {
-                text = (responseAnswer.response_answer_text?.text)!
+            if(responseAnswer.question_id != nil && currentQuestion.id != nil && currentQuestion.id == responseAnswer.question_id) {
+                text = responseAnswer.response_answer_text?.text ?? ""
                 break
             }
         }
@@ -760,7 +765,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text as NSString? {
             let txtAfterUpdate = text.replacingCharacters(in: range, with: string)
-            response.customer_email = txtAfterUpdate
+            response.email = txtAfterUpdate
             if(delegate != nil) {
                 delegate.setNPSFollowUpEmail(email: txtAfterUpdate)
             }
@@ -778,7 +783,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     }
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] {
+        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? "" {
             // move cursor to start
             moveCursorToStart(txtView:textView)
         }

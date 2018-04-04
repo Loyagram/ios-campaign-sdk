@@ -891,7 +891,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             if(isQuestionAttended(question: currentQuestion)) {
                 txtValidation.isHidden = true
             } else {
-                txtValidation.text = staticTexts.translation["MANDATORY_QUESTION_TEXT"] ?? ""
+                txtValidation.text = staticTexts.translation["MANDATORY_QUESTION_TEXT"] ?? "This is a required question."
                 currentValidationString = "MANDATORY_QUESTION_TEXT"
                 txtValidation.isHidden = false
                 return
@@ -903,7 +903,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnNext.setTitleColor(UIColor.white, for: .normal)
         btnPrev.setTitleColor(primaryColor, for: .normal)
         btnPrev.backgroundColor = UIColor.white
-        if(campaignType != "SURVEY" && campaignButtonDelegate != nil) {
+        if(campaignType != "SURVEY" && campaignType != "" && campaignButtonDelegate != nil) {
             switch(followUpIterator) {
             case 0:
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -914,12 +914,12 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             case 1: campaignButtonDelegate.nextButtonPressed(iterator: followUpIterator)
             followUpIterator += 1
-            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "", for: .normal)
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "Submit", for: .normal)
                 break
             case 2:
                 if(isEmailFollowUpEnabled) {
                     if(!isValidEmail(email: followUpEmail)) {
-                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"] ?? ""
+                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"] ?? "Invalid email"
                         txtValidation.isHidden = false
                         currentValidationString = "EMAIL_NOT_VALID_TEXT"
                         return
@@ -941,7 +941,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 switch(currentQuestion.type ?? "") {
                 case "EMAIL":
                     if(!isValidEmail(email: getTextResponse())) {
-                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"] ?? ""
+                        txtValidation.text = staticTexts.translation["EMAIL_NOT_VALID_TEXT"] ?? "Invalid email"
                         txtValidation.isHidden = false
                         currentValidationString = "EMAIL_NOT_VALID_TEXT"
                         return
@@ -951,7 +951,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                     break
                 case "NUMBER":
                     if(!isValidNumber(number: getTextResponse())) {
-                        txtValidation.text = staticTexts.translation["VALIDATION_FAILED_TEXT"] ?? ""
+                        txtValidation.text = staticTexts.translation["VALIDATION_FAILED_TEXT"] ?? "Invalid data"
                         txtValidation.isHidden = false
                         currentValidationString = "VALIDATION_FAILED_TEXT"
                         return
@@ -964,14 +964,14 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 }
             }
             
-            if(btnNext.titleLabel?.text == staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "") {
+            if(btnNext.titleLabel?.text ?? "Submit" == staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "Submit") {
                 print("pressed when text is submit")
                 submitCampaign()
                 return
             }
             questionNumber += 1
             if(questionNumber == noOfQuestions) {
-                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "", for: .normal)
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_SUBMIT_BUTTON_TEXT"] ?? "Submit", for: .normal)
             }
             
             let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
@@ -996,7 +996,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnPrev.setTitleColor(UIColor.white, for: .normal)
         btnNext.setTitleColor(primaryColor, for: .normal)
         btnNext.backgroundColor = UIColor.white
-        if(campaignType != "SURVEY") {
+        if(campaignType != "SURVEY" && campaignType != "") {
             switch(followUpIterator) {
             case 0:
                 break
@@ -1006,7 +1006,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 break
             case 2: campaignButtonDelegate.prevButtonPressed(iterator: followUpIterator)
             followUpIterator -= 1
-            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] ?? "", for: .normal)
+            btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] ?? "Next", for: .normal)
                 break
             default:
                 break
@@ -1017,7 +1017,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 return
             }
             if(questionNumber == noOfQuestions) {
-                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] ?? "", for: .normal)
+                btnNext.setTitle(staticTexts.translation["CAMPAIGN_MODE_NEXT_BUTTON_TEXT"] ?? "Next", for: .normal)
             }
             questionNumber -= 1
             let questionCount: String = "\(questionNumber)/\(noOfQuestions)"
@@ -1097,7 +1097,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     
     // MARK:-
     public func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        
         return languages.count
         
     }
@@ -1105,7 +1104,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     public func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "LanguageCell")
         cell.selectionStyle = .none
-        cell.lblLanguage.text = languages[indexPath.row].name
+        cell.lblLanguage.text = languages[indexPath.row].name ?? ""
         //check if row is current language
         if(currentLang == indexPath.row) {
             cell.backgroundColor = UIColor.white
@@ -1331,8 +1330,6 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         
         NSLayoutConstraint(item: chkContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 60.0).isActive = true
         NSLayoutConstraint(item: chkContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,  multiplier: 1.0, constant: 60.0).isActive = true
-        
-        
         DispatchQueue.main.async() {
             self.chk.isTickShown = false
             self.chk.setColorPrimary(color: self.primaryColor)
@@ -1372,15 +1369,15 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
                 switch(thankYouAndRedirectSettings.type ?? "") {
                 case "all" :
-                    strThankYou = (thankYouAndRedirectSettings.all?.message)!
+                    strThankYou = thankYouAndRedirectSettings.all?.message ?? ""
                     break
                 case "score" :
                     if(npsRating <= 6) {
-                        strThankYou = (thankYouAndRedirectSettings.custom?.detractors?.message)!
+                        strThankYou = thankYouAndRedirectSettings.custom?.detractors?.message ?? ""
                     } else if(npsRating <= 8) {
-                        strThankYou = (thankYouAndRedirectSettings.custom?.passives?.message)!
+                        strThankYou = thankYouAndRedirectSettings.custom?.passives?.message ?? ""
                     } else {
-                        strThankYou = (thankYouAndRedirectSettings.custom?.promoters?.message)!
+                        strThankYou = thankYouAndRedirectSettings.custom?.promoters?.message ?? ""
                     }
                     break
                 default:
@@ -1398,7 +1395,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         for thankYouTranslation in thankYouTranslations! {
             if(thankYouTranslation.language_code != nil && langCode == thankYouTranslation.language_code) {
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
-                strThankYou = (thankYouAndRedirectSettings.all?.message)!
+                strThankYou = thankYouAndRedirectSettings.all?.message ?? ""
             }
         }
         return strThankYou
@@ -1413,25 +1410,25 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 let thankYouAndRedirectSettings = thankYouTranslation.text!
                 switch(thankYouAndRedirectSettings.type ?? "") {
                 case "all" :
-                    strThankYou = (thankYouAndRedirectSettings.all?.message)!
+                    strThankYou = thankYouAndRedirectSettings.all?.message ?? ""
                     break
                 case "custom" :
                     let customThankYou = thankYouAndRedirectSettings.custom!
                     switch(cescsatOption) {
                     case "neutral" :
-                        strThankYou = (customThankYou.neutral?.message)!
+                        strThankYou = customThankYou.neutral?.message ?? ""
                         break
                     case "dissatisfied" :
-                        strThankYou = (customThankYou.dissatisfied?.message)!
+                        strThankYou = customThankYou.dissatisfied?.message ?? ""
                         break
                     case "satisfied" :
-                        strThankYou = (customThankYou.satisfied?.message!)!
+                        strThankYou = customThankYou.satisfied?.message ?? ""
                         break
                     case "agree" :
-                        strThankYou = (customThankYou.agree?.message!)!
+                        strThankYou = customThankYou.agree?.message ?? ""
                         break
                     case "disagree" :
-                        strThankYou = (customThankYou.disagree?.message!)!
+                        strThankYou = customThankYou.disagree?.message ?? ""
                         break
                     default:
                         break
@@ -1453,7 +1450,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = ""
         for staticTranslation in staticTranslations! {
             if(currentLanguage.language_code != nil && staticTranslation.language_code != nil && currentLanguage.language_code == staticTranslation.language_code) {
-                staticText = staticTranslation.text!
+                staticText = staticTranslation.text ?? ""
                 switch(staticTranslation.static_text_id ?? "") {
                 case "CAMPAIGN_MODE_BACK_BUTTON_TEXT":
                     staticTexts.translation["CAMPAIGN_MODE_BACK_BUTTON_TEXT"] = staticText
@@ -1595,7 +1592,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             response.channel = "MOBILE-SDK"
             response.sub_channel = "IOS"
             response.biz_id = UInt(campaign?.biz_id ?? 0)
-            response.campaign_id = campaign?.id
+            response.campaign_id = campaign?.id ?? 0
             response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
             if(response.response_answers == nil) {
                 response.response_answers = [ResponseAnswer]()
@@ -1606,7 +1603,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
                 response.attr = attr
             }
             saveResponseToDB()
-        }else if(savedCampaign?.campaign_id == campaign?.id) {
+        }else if(savedCampaign?.campaign_id ?? 0 == campaign?.id ?? 0) {
             response = savedCampaign
         } else {
             response = Response()
@@ -1614,7 +1611,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             response.channel = "MOBILE-SDK"
             response.sub_channel = "IOS"
             response.biz_id = UInt(campaign?.biz_id ?? 0)
-            response.campaign_id = campaign?.id
+            response.campaign_id = campaign?.id ?? 0
             response.started_at = CUnsignedLong(Date().timeIntervalSince1970 * 1000)
             if(response.response_answers == nil) {
                 response.response_answers = [ResponseAnswer]()
@@ -1679,7 +1676,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     }
     
     @objc func getTextResponse() -> String {
-        var text = " "
+        var text = ""
         let responseAnswers:[ResponseAnswer] = response.response_answers
         for responseAnswer in responseAnswers {
             if(currentQuestion.id != nil && responseAnswer.question_id != nil && currentQuestion.id == responseAnswer.question_id) {
@@ -1694,8 +1691,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         switch currentQuestion.type ?? "" {
         case "SINGLE_SELECT":
             for responseAnswer in responseAnswers {
-                if(question.id == responseAnswer.question_id) {
-                    if(responseAnswer.answer > 0) {
+                if(question.id != nil && responseAnswer.question_id != nil && question.id == responseAnswer.question_id) {
+                    if(responseAnswer.answer ?? 0 > 0) {
                         return true
                     }
                 }
@@ -1703,8 +1700,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             break
         case "MULTI_SELECT":
             for responseAnswer in responseAnswers {
-                if(question.id == responseAnswer.question_label_id) {
-                    if(responseAnswer.answer > 0) {
+                if(question.id != nil && responseAnswer.question_id != nil &&  question.id == responseAnswer.question_id) {
+                    if(responseAnswer.answer ?? 0 > 0) {
                         return true
                     }
                 }
@@ -1713,8 +1710,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         case "RATING":
             var attendedCount = 0
             for responseAnswer in responseAnswers {
-                if(question.id == responseAnswer.question_label_id) {
-                    if(responseAnswer.answer > 0) {
+                if(question.id != nil && responseAnswer.question_id != nil &&  question.id == responseAnswer.question_id) {
+                    if(responseAnswer.answer ?? 0 > 0) {
                         attendedCount += 1
                     }
                 }
@@ -1725,35 +1722,35 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
             break
         case "NPS":
             for responseAnswer in responseAnswers {
-                if(question.id == responseAnswer.question_id) {
+                if(question.id != nil && responseAnswer.question_id != nil &&  question.id == responseAnswer.question_id) {
                     return true
                 }
             }
             break
         case "TEXT":
             for responseAnswer in responseAnswers {
-                if(question.id == responseAnswer.question_id) {
+                if(question.id != nil && responseAnswer.question_id != nil &&  question.id == responseAnswer.question_id) {
                     return true
                 }
             }
             break
         case "PARAGRAPH":
             for responseAnswer in responseAnswers {
-                if(question.id == responseAnswer.question_id) {
+                if(question.id != nil && responseAnswer.question_id != nil &&  question.id == responseAnswer.question_id) {
                     return true
                 }
             }
             break
         case "EMAIL":
             for responseAnswer in responseAnswers {
-                if(question.id == responseAnswer.question_id) {
+                if(question.id != nil && responseAnswer.question_id != nil &&  question.id == responseAnswer.question_id) {
                     return true
                 }
             }
             break
         case "NUMBER":
             for responseAnswer in responseAnswers {
-                if(question.id == responseAnswer.question_id) {
+                if(question.id != nil && responseAnswer.question_id != nil &&  question.id == responseAnswer.question_id) {
                     return true
                 }
             }

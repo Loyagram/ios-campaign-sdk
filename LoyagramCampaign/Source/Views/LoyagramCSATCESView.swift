@@ -23,21 +23,19 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         setFollowUpQuestion()
         setFeedBackQuestion()
         changeLabelLanguage()
-        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
+        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] ?? ""
         chk.setNeedsDisplay()
-        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] ?? ""
         if(feedbackTextView != nil) {
             if feedbackTextView.text == placeHolderText {
-                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
                 feedbackTextView.text = placeHolderText
                 moveCursorToStart(txtView: feedbackTextView)
             } else {
-                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
             }
-            
         }
     }
-    
     var txtQuestion: UITextView!
     var txtFollowUpQuestion : UITextView!
     var txtFeedbackQuestion : UITextView!
@@ -81,7 +79,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         isFollowUp = false
         self.staticTexts = staticTexts
         self.response = response
-        placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+        placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
         csatcesOption = String()
         initCSATCESView()
         initFollowUpView()
@@ -95,11 +93,11 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     
     @objc func setQuestion() {
         
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let questionTranslations = currentQuestion.question_translations
         for questionTranslation in questionTranslations! {
-            if(questionTranslation.language_code == langCode) {
-                txtQuestion.text = questionTranslation.text
+            if(questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
+                txtQuestion.text = questionTranslation.text ?? ""
                 break
             }
         }
@@ -110,25 +108,29 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let langCode = currentLanguage.language_code
         let questionTranslations = followUpQuestion.question_translations
         for questionTranslation in questionTranslations! {
-            if(questionTranslation.language_code == langCode) {
-                txtFollowUpQuestion.text = questionTranslation.text
+            if(questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
+                txtFollowUpQuestion.text = questionTranslation.text ?? ""
                 break
             }
         }
     }
     
     @objc func setFeedBackQuestion() {
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let settingsTranslations = currentQuestion.settings_translations
         for sT in settingsTranslations! {
-            if(sT.language_code == langCode) {
+            if(sT.language_code != nil && sT.language_code == langCode) {
                 //txtFollowUpQuestion.text = questionTranslation.text
                 if(isCSAT) {
                     let requestReasonSettings = sT.text?.settings?.csat_settings?.request_reason_settings
-                    txtFeedbackQuestion.text = requestReasonSettings?.all?.message
+                    if(requestReasonSettings != nil) {
+                        txtFeedbackQuestion.text = requestReasonSettings?.all?.message ?? ""
+                    }
                 } else {
                     let requestReasonSettings = sT.text?.settings?.ces_settings?.request_reason_settings
-                    txtFeedbackQuestion.text = requestReasonSettings?.all?.message
+                    if(requestReasonSettings != nil) {
+                        txtFeedbackQuestion.text = requestReasonSettings?.all?.message ?? ""
+                    }
                 }
                 break
             }
@@ -154,7 +156,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         csatcesTableView.showsHorizontalScrollIndicator = false
         
         txtQuestion.translatesAutoresizingMaskIntoConstraints = false
-        txtQuestion.text = " "
+        txtQuestion.text = ""
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
         txtQuestion.font = GlobalConstants.FONT_MEDIUM
@@ -246,7 +248,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         if(currentText != "") {
             feedbackTextView.text = currentText
         } else {
-            placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+            placeHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
             applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
         }
         
@@ -256,14 +258,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         let rect = CGRect(x: 0, y: 0, width: 320, height: 35)
         chk = LoyagramCheckBox(frame: rect, colorPrimary:primaryColor)
         chk.showTextLabel = true
-        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"]
+        chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] ?? ""
         chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
         chkContainer.addSubview(chk)
         feedbackTextField = UITextField()
         feedbackTextField.translatesAutoresizingMaskIntoConstraints = false
         feedbackTextField.isHidden = true
         feedbackTextField.autocorrectionType = .no
-        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+        feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] ?? ""
         feedbackTextField.delegate = self
         
         csatcesScrollView.addSubview(txtFeedbackQuestion)
@@ -348,6 +350,9 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         } else {
             if(delegate != nil) {
                 delegate.enableCSATCESFollowUp(enable: false)
+            }
+            if(response.email != nil) {
+                response.email = ""
             }
         }
         feedbackTextField.isHidden = !feedbackTextField.isHidden
@@ -441,14 +446,14 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             isFollowUp = false
             txtQuestion.isHidden = false
             txtFollowUpQuestion.isHidden = true
-            noOfRows = currentQuestion.labels?.count
+            noOfRows = currentQuestion.labels?.count ?? 0
             csatcesTableView.reloadData()
             self.layoutSubviews()
             break
         case 2:
             csatcesScrollView.isHidden = true
             isFollowUp = true
-            noOfRows = followUpQuestion.labels?.count
+            noOfRows = followUpQuestion.labels?.count ?? 0
             txtFollowUpQuestion.isHidden = false
             csatcesTableView.isHidden = false
             csatcesTableView.reloadData()
@@ -463,7 +468,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         switch iterator {
         case 0:
             isFollowUp = true
-            noOfRows = followUpQuestion.labels?.count
+            noOfRows = followUpQuestion.labels?.count ?? 0
             txtFollowUpQuestion.isHidden = false
             txtQuestion.isHidden = true
             csatcesTableView.reloadData()
@@ -544,10 +549,10 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         radioLabel.translatesAutoresizingMaskIntoConstraints = false
         radioLabel.tag = Int(label?.id ?? 0)
         radioButton.labelId = Int(label?.id ?? 0)
-        radioButton.csatcesOption = (label?.name!)!
+        radioButton.csatcesOption = label?.name ?? ""
         
-        let ra = getResponseAnswer(id: (label?.id!)!)
-        if(ra != nil && ra?.question_label_id == label?.id) {
+        let ra = getResponseAnswer(id: label?.id ?? 0)
+        if(ra != nil && ra?.question_label_id != nil && label?.id != nil && ra?.question_label_id == label?.id) {
             radioButton.isSelected = true
         }
         
@@ -574,11 +579,11 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         radioGroup.append(radioButton)
         
         let labelTranslations = label?.label_translations
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         
         for labelTranslation in labelTranslations! {
-            if(labelTranslation.language_code == langCode) {
-                radioLabel.text = labelTranslation.text
+            if(labelTranslation.language_code != nil && labelTranslation.language_code == langCode) {
+                radioLabel.text = labelTranslation.text ?? ""
                 break
             }
         }
@@ -593,15 +598,15 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         checkBoxContainer.addSubview(chk)
         chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
         let labelTranslations = label?.label_translations
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         for labelTranslation in labelTranslations! {
-            if(labelTranslation.language_code == langCode) {
-                chk.text = labelTranslation.text
+            if(labelTranslation.language_code != nil && labelTranslation.language_code == langCode) {
+                chk.text = labelTranslation.text ?? ""
                 break
             }
         }
         
-        let responseAnswer = getMulResponseAnswer(id: (label?.id!)!)
+        let responseAnswer = getMulResponseAnswer(id: label?.id ?? 0)
         if(responseAnswer != nil) {
             chk.isChecked = true
         }
@@ -622,11 +627,11 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         for ql in questionLabels {
             let labelTranslations = ql.label_translations!
             for labelTranslation in labelTranslations {
-                if (labelTranslation.language_code == currentLanguage.language_code) {
-                    if(currentQuestion.type == "SINGLE_SELECT") {
+                if (labelTranslation.language_code ?? "" == currentLanguage.language_code ?? "") {
+                    if(currentQuestion.type ?? "" == "SINGLE_SELECT") {
                         if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
                             let radioLabel:UILabel = self.viewWithTag(Int(ql.id ?? 0)) as! UILabel
-                            radioLabel.text = labelTranslation.text
+                             radioLabel.text = labelTranslation.text ?? ""
                         }
                     }
                     break
@@ -652,7 +657,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     func getResponseAnswer(id:CUnsignedLong) ->ResponseAnswer! {
         if(response.response_answers.count > 0) {
             for ra in response.response_answers {
-                if(ra.question_id != nil && ra.question_label_id == id) {
+                if(ra.question_label_id != nil && ra.question_label_id == id) {
                     return ra
                 }
             }
@@ -694,7 +699,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             ra.question_label_id = id
             ra.answer = Int(id)
             let responseAnswerText = ResponseAnswerText()
-            responseAnswerText.response_answer_id = ra.id
+            responseAnswerText.response_answer_id = ra.id ?? ""
             ra.response_answer_text = responseAnswerText
             response.response_answers.append(ra)
         }
@@ -721,8 +726,8 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         var text = ""
         let responseAnswers:[ResponseAnswer] = response.response_answers
         for responseAnswer in responseAnswers {
-            if(responseAnswer.question_id != nil && responseAnswer.response_answer_text?.text != nil && currentQuestion.id == responseAnswer.question_id) {
-                text = responseAnswer.response_answer_text!.text
+            if(responseAnswer.question_id != nil && responseAnswer.response_answer_text?.text != nil && currentQuestion.id != nil && currentQuestion.id == responseAnswer.question_id) {
+                text = responseAnswer.response_answer_text!.text ?? ""
                 break
             }
         }
@@ -772,7 +777,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
         if let text = textField.text as NSString? {
             let txtAfterUpdate = text.replacingCharacters(in: range, with: string)
-            response.customer_email = txtAfterUpdate
+            response.email = txtAfterUpdate
             if(delegate != nil) {
                 delegate.setCSATCESFollowUpEmail(email: txtAfterUpdate)
             }
@@ -789,7 +794,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     }
     
     func textViewShouldBeginEditing(_ textView: UITextView) -> Bool {
-        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] {
+        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? "" {
             // move cursor to start
             moveCursorToStart(txtView:textView)
         }

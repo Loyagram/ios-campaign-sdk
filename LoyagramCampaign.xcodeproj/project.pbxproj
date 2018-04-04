@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		D3064AD7203157BF0015E35B /* LoyagramCampaignManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3064AD6203157BF0015E35B /* LoyagramCampaignManager.swift */; };
 		D3064AD9203158E20015E35B /* CampaignViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3064AD8203158E20015E35B /* CampaignViewController.swift */; };
-		D3064ADE20318AC90015E35B /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = D3064ADD20318AC90015E35B /* close.png */; };
 		D3064AE22031C0310015E35B /* LanguageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */; };
 		D311575220498D050064598E /* Csat_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311575120498D050064598E /* Csat_settings.swift */; };
 		D311575420498D120064598E /* Ces_settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = D311575320498D120064598E /* Ces_settings.swift */; };
@@ -54,6 +53,10 @@
 		D3BEFBA02056755D006822A0 /* SubmitResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3BEFB9F2056755D006822A0 /* SubmitResponse.swift */; };
 		D3C21B1B2032E14F002FB1EE /* LoyagramCampaign.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = D3B08002202B0068009B046B /* LoyagramCampaign.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		D3C21B222032E44B002FB1EE /* LoyagramSurveyView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */; };
+		D3CCD9B12074FD39004C60C5 /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D3CCD9B02074FD39004C60C5 /* ProximaNova-Regular.otf */; };
+		D3CCD9B42074FE1F004C60C5 /* close.png in Resources */ = {isa = PBXBuildFile; fileRef = D3CCD9B22074FE1E004C60C5 /* close.png */; };
+		D3CCD9B52074FE1F004C60C5 /* drop-down-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D3CCD9B32074FE1F004C60C5 /* drop-down-arrow.png */; };
+		D3CCD9B7207501D2004C60C5 /* loyagram.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D3CCD9B6207501D2004C60C5 /* loyagram.sqlite */; };
 		D3D9F9A020347A250054F7FF /* Campaign.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98B20347A200054F7FF /* Campaign.swift */; };
 		D3D9F9A120347A250054F7FF /* Passives.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98C20347A210054F7FF /* Passives.swift */; };
 		D3D9F9A220347A250054F7FF /* Custom.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9F98D20347A210054F7FF /* Custom.swift */; };
@@ -77,10 +80,7 @@
 		D3E3B1502057DDE7005A4175 /* AnimationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E3B14F2057DDE7005A4175 /* AnimationManager.swift */; };
 		D3E3B1522057E205005A4175 /* CheckBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E3B1512057E205005A4175 /* CheckBox.swift */; };
 		D3E3B1542057E279005A4175 /* PathManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3E3B1532057E279005A4175 /* PathManager.swift */; };
-		D3F17CCC205014B400F431F5 /* drop-down-arrow.png in Resources */ = {isa = PBXBuildFile; fileRef = D3F17CCB205014B400F431F5 /* drop-down-arrow.png */; };
-		D3F17CCE20501EA800F431F5 /* ProximaNova-Regular.otf in Resources */ = {isa = PBXBuildFile; fileRef = D3F17CC82050140900F431F5 /* ProximaNova-Regular.otf */; };
 		D3F94782205A3EE800E0C9A2 /* DBManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3F94781205A3EE800E0C9A2 /* DBManager.swift */; };
-		D3F94784205A8FE700E0C9A2 /* loyagram.sqlite in Resources */ = {isa = PBXBuildFile; fileRef = D3F94783205A8FE700E0C9A2 /* loyagram.sqlite */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -131,7 +131,6 @@
 /* Begin PBXFileReference section */
 		D3064AD6203157BF0015E35B /* LoyagramCampaignManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramCampaignManager.swift; sourceTree = "<group>"; };
 		D3064AD8203158E20015E35B /* CampaignViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CampaignViewController.swift; sourceTree = "<group>"; };
-		D3064ADD20318AC90015E35B /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
 		D3064AE12031C0310015E35B /* LanguageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LanguageTableViewCell.swift; sourceTree = "<group>"; };
 		D311575120498D050064598E /* Csat_settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Csat_settings.swift; sourceTree = "<group>"; };
 		D311575320498D120064598E /* Ces_settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ces_settings.swift; sourceTree = "<group>"; };
@@ -183,6 +182,10 @@
 		D3B08044202B03B6009B046B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		D3BEFB9F2056755D006822A0 /* SubmitResponse.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubmitResponse.swift; sourceTree = "<group>"; };
 		D3C21B212032E44B002FB1EE /* LoyagramSurveyView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoyagramSurveyView.swift; sourceTree = "<group>"; };
+		D3CCD9B02074FD39004C60C5 /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Regular.otf"; sourceTree = "<group>"; };
+		D3CCD9B22074FE1E004C60C5 /* close.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = close.png; sourceTree = "<group>"; };
+		D3CCD9B32074FE1F004C60C5 /* drop-down-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drop-down-arrow.png"; sourceTree = "<group>"; };
+		D3CCD9B6207501D2004C60C5 /* loyagram.sqlite */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = loyagram.sqlite; sourceTree = "<group>"; };
 		D3D9F98B20347A200054F7FF /* Campaign.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Campaign.swift; sourceTree = "<group>"; };
 		D3D9F98C20347A210054F7FF /* Passives.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Passives.swift; sourceTree = "<group>"; };
 		D3D9F98D20347A210054F7FF /* Custom.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Custom.swift; sourceTree = "<group>"; };
@@ -206,10 +209,7 @@
 		D3E3B14F2057DDE7005A4175 /* AnimationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimationManager.swift; sourceTree = "<group>"; };
 		D3E3B1512057E205005A4175 /* CheckBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CheckBox.swift; sourceTree = "<group>"; };
 		D3E3B1532057E279005A4175 /* PathManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PathManager.swift; sourceTree = "<group>"; };
-		D3F17CC82050140900F431F5 /* ProximaNova-Regular.otf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "ProximaNova-Regular.otf"; sourceTree = "<group>"; };
-		D3F17CCB205014B400F431F5 /* drop-down-arrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "drop-down-arrow.png"; sourceTree = "<group>"; };
 		D3F94781205A3EE800E0C9A2 /* DBManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DBManager.swift; sourceTree = "<group>"; };
-		D3F94783205A8FE700E0C9A2 /* loyagram.sqlite */ = {isa = PBXFileReference; lastKnownFileType = text; path = loyagram.sqlite; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -256,8 +256,8 @@
 		D3064ADA203178820015E35B /* Images */ = {
 			isa = PBXGroup;
 			children = (
-				D3F17CCB205014B400F431F5 /* drop-down-arrow.png */,
-				D3064ADD20318AC90015E35B /* close.png */,
+				D3CCD9B22074FE1E004C60C5 /* close.png */,
+				D3CCD9B32074FE1F004C60C5 /* drop-down-arrow.png */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -478,7 +478,7 @@
 		D3F17CCD20501E8400F431F5 /* Fonts */ = {
 			isa = PBXGroup;
 			children = (
-				D3F17CC82050140900F431F5 /* ProximaNova-Regular.otf */,
+				D3CCD9B02074FD39004C60C5 /* ProximaNova-Regular.otf */,
 			);
 			path = Fonts;
 			sourceTree = "<group>";
@@ -486,8 +486,8 @@
 		D3F94780205A3EC900E0C9A2 /* SQLite */ = {
 			isa = PBXGroup;
 			children = (
+				D3CCD9B6207501D2004C60C5 /* loyagram.sqlite */,
 				D3F94781205A3EE800E0C9A2 /* DBManager.swift */,
-				D3F94783205A8FE700E0C9A2 /* loyagram.sqlite */,
 			);
 			path = SQLite;
 			sourceTree = "<group>";
@@ -659,10 +659,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				D3F17CCE20501EA800F431F5 /* ProximaNova-Regular.otf in Resources */,
-				D3064ADE20318AC90015E35B /* close.png in Resources */,
-				D3F17CCC205014B400F431F5 /* drop-down-arrow.png in Resources */,
-				D3F94784205A8FE700E0C9A2 /* loyagram.sqlite in Resources */,
+				D3CCD9B52074FE1F004C60C5 /* drop-down-arrow.png in Resources */,
+				D3CCD9B42074FE1F004C60C5 /* close.png in Resources */,
+				D3CCD9B12074FD39004C60C5 /* ProximaNova-Regular.otf in Resources */,
+				D3CCD9B7207501D2004C60C5 /* loyagram.sqlite in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

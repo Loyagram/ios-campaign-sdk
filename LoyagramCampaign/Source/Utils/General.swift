@@ -16,15 +16,18 @@ struct GlobalConstants {
     static var FONT_XSMALL = UIFont.systemFont(ofSize: 10)
     static func initContstants() {
         unpackFonts()
-        FONT_MEDIUM = UIFont(name:"Proxima Nova", size: 17)!
-        FONT_SMALL = UIFont(name:"Proxima Nova", size: 12)!
-        FONT_XSMALL = UIFont(name:"Proxima Nova", size: 10)!
+        FONT_MEDIUM = UIFont(name:"Proxima Nova", size: 17) ?? UIFont.systemFont(ofSize: 17.0)
+        FONT_SMALL = UIFont(name:"Proxima Nova", size: 12) ?? UIFont.systemFont(ofSize: 12.0)
+        FONT_XSMALL = UIFont(name:"Proxima Nova", size: 10) ?? UIFont.systemFont(ofSize: 10.0)
     }
     
     static func unpackFonts() {
         do {
             let bundle = Bundle(for: LoyagramCampaignView.self)
             let fontPath = bundle.path(forResource: "ProximaNova-Regular", ofType: "otf")
+            if(fontPath == nil) {
+                return
+            }
             let fontBinary  = try NSData(contentsOfFile: fontPath!, options: NSData.ReadingOptions())
             let error: UnsafeMutablePointer<Unmanaged<CFError>?>? = nil
             let dataProvider = CGDataProvider(data: fontBinary as CFData)

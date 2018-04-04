@@ -74,7 +74,7 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         surveyTableView.showsHorizontalScrollIndicator = false
         
         txtQuestion.translatesAutoresizingMaskIntoConstraints = false
-        txtQuestion.text = " "
+        txtQuestion.text = ""
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
         txtQuestion.font = GlobalConstants.FONT_MEDIUM
@@ -116,8 +116,8 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         let langCode = currentLanguage.language_code
         let questionTranslations = currentQuestion.question_translations
         for questionTranslation in questionTranslations! {
-            if(questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
-                txtQuestion.text = questionTranslation.text
+            if(langCode != nil && questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
+                txtQuestion.text = questionTranslation.text ?? ""
                 break
             }
         }
@@ -153,9 +153,9 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         
         
         
-        if(currentQuestion.type == "SINGLE_SELECT") {
+        if(currentQuestion.type ?? "" == "SINGLE_SELECT") {
             getSingleSelectCell(radioButtonContainer: cellContent, row: indexPath.row)
-        } else {
+        } else if(currentQuestion.type ?? "" == "MULTI_SELECT") {
             getMultiSelectCell(checkBoxContainer: cellContent, row: indexPath.row)
         }
         
@@ -192,7 +192,7 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         radioLabel.tag = Int(label.id ?? 0)
         radioButton.labelId = Int(label.id ?? 0)
         let ra = getResponseAnswer(id: label.id!)
-        if(ra != nil && ra?.question_label_id == label.id) {
+        if(ra != nil && ra?.question_label_id ?? 0 == label.id ?? 0) {
             radioButton.isSelected = true
         }
         
@@ -222,8 +222,8 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         let langCode = currentLanguage.language_code
         
         for labelTranslation in labelTranslations! {
-            if(labelTranslation.language_code == langCode) {
-                radioLabel.text = labelTranslation.text
+            if(labelTranslation.language_code != nil && langCode != nil && labelTranslation.language_code == langCode) {
+                radioLabel.text = labelTranslation.text ?? ""
                 break
             }
         }
@@ -245,8 +245,8 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         let labelTranslations = label.label_translations
         let langCode = currentLanguage.language_code
         for labelTranslation in labelTranslations! {
-            if(labelTranslation.language_code == langCode) {
-                chk.text = labelTranslation.text
+            if(labelTranslation.language_code != nil && langCode != nil && labelTranslation.language_code == langCode) {
+                chk.text = labelTranslation.text ?? ""
                 break
             }
         }
@@ -296,16 +296,16 @@ class LoyagramSurveyView: UIView, UITableViewDelegate, UITableViewDataSource, Lo
         for ql in questionLabels {
             let labelTranslations = ql.label_translations!
             for labelTranslation in labelTranslations {
-                if (labelTranslation.language_code == currentLanguage.language_code) {
-                    if(currentQuestion.type == "SINGLE_SELECT") {
+                if (labelTranslation.language_code != nil && currentLanguage.language_code != nil && labelTranslation.language_code == currentLanguage.language_code) {
+                    if(currentQuestion.type ?? "" == "SINGLE_SELECT") {
                         if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
                             let radioLabel:UILabel = self.viewWithTag(Int(ql.id ?? 0)) as! UILabel
-                            radioLabel.text = labelTranslation.text
+                            radioLabel.text = labelTranslation.text ?? ""
                         }
                     } else {
                         if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
                             let checkBox:LoyagramCheckBox = viewWithTag(Int(ql.id ?? 0)) as! LoyagramCheckBox
-                            checkBox.text = labelTranslation.text
+                            checkBox.text = labelTranslation.text ?? ""
                             checkBox.setNeedsDisplay()
                         }
                     }

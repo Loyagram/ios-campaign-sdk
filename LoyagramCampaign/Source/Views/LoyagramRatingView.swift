@@ -15,7 +15,6 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         changeLabelLanguage()
     }
     
-    
     func ratingChangedValue(ratingBar: LoyagramRatingBar) {
         
         setRatingResposne(id: CUnsignedLong(ratingBar.labelId), rating:Int(ratingBar.rating))
@@ -61,8 +60,8 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         let langCode = currentLanguage.language_code
         let questionTranslations = currentQuestion.question_translations
         for questionTranslation in questionTranslations! {
-            if(questionTranslation.language_code == langCode) {
-                txtQuestion.text = questionTranslation.text
+            if(langCode != nil && questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
+                txtQuestion.text = questionTranslation.text ?? ""
                 break
             }
         }
@@ -93,7 +92,7 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
         txtQuestion.font = GlobalConstants.FONT_MEDIUM
-        
+        //txtQuestion.backgroundColor = UIColor.blue
         
         //TextView Question constraints
         let txtQuestionTop = NSLayoutConstraint(item: txtQuestion, attribute: .bottom, relatedBy: .equal, toItem: tableView, attribute: .top, multiplier: 1.0, constant: -10.0)
@@ -127,36 +126,41 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
+        var labelString = String()
         let label = currentQuestion.labels![indexPath.row]
+        let labelTranslations = label.label_translations
+        let langCode = currentLanguage.language_code
+        for labelTranslation in labelTranslations! {
+            if(langCode != nil && labelTranslation.language_code != nil && labelTranslation.language_code == langCode) {
+                labelString = labelTranslation.text ?? ""
+                break
+            }
+        }
         
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
         
         cell.translatesAutoresizingMaskIntoConstraints = false
         
         cell.selectionStyle = .none
-        let ratingLabel = UITextView(frame:CGRect(x: 0, y: 0, width: 80, height: 30))
-        ratingLabel.isEditable = false
-        ratingLabel.showsVerticalScrollIndicator = false
+        
         let ratingBar = LoyagramRatingBar(starSize: CGSize(width: 30, height:30), numberOfStars: 5, rating: 0.0, fillColor: primaryColor, unfilledColor: UIColor.clear, strokeColor: primaryColor)
-        ratingLabel.font = GlobalConstants.FONT_MEDIUM
-        ratingLabel.translatesAutoresizingMaskIntoConstraints = false
+        
         ratingBar.translatesAutoresizingMaskIntoConstraints = false
         ratingBar.isEditable = true
         ratingBar.delegate = self
-        ratingLabel.tag = Int(label.id ?? 0)
         ratingBar.labelId = Int(label.id ?? 0)
         let responseAnswer = getResponseAnswer(id: label.id!)
         if(responseAnswer != nil) {
-            ratingBar.rating = Float((responseAnswer?.answer)!)
+            ratingBar.rating = Float(responseAnswer?.answer ?? 0)
         }
-        //ContentView constrinats
+        
         let cellContent = UIView()
         
         cell.contentView.addSubview(cellContent)
         
         cellContent.addSubview(ratingBar)
-        cellContent.addSubview(ratingLabel)
-        
+    
+        //cellContent.backgroundColor = UIColor.red
         cellContent.translatesAutoresizingMaskIntoConstraints = false
         
         let centerX = NSLayoutConstraint(item: cellContent, attribute: .centerX, relatedBy: .equal, toItem: cell.contentView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
@@ -170,29 +174,36 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         
         NSLayoutConstraint.activate([cellContentWidth, cellContentHeight, centerX, centerY])
         
-        
-        let labelLeading = NSLayoutConstraint(item: ratingLabel, attribute: .leading, relatedBy: .equal, toItem: cellContent, attribute: .leading, multiplier: 1.0, constant: 0.0)
-        
-        let labelTop = NSLayoutConstraint(item: ratingLabel, attribute: .top, relatedBy: .equal, toItem: cellContent, attribute: .top, multiplier: 1.0, constant: 0.0)
-        let labelWidth = NSLayoutConstraint(item: ratingLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
-        let labelHeight = NSLayoutConstraint(item: ratingLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
-        
-        
-        NSLayoutConstraint.activate([labelLeading, labelWidth, labelHeight, labelTop])
-        
-        let ratingLeading = NSLayoutConstraint(item: ratingBar, attribute: .leading, relatedBy: .equal, toItem: ratingLabel, attribute: .trailing, multiplier: 1.0, constant: 10.0)
-        
-        let ratingTop = NSLayoutConstraint(item: ratingLabel, attribute: .top, relatedBy: .equal, toItem: cellContent, attribute: .top, multiplier: 1.0, constant: 0.0)
-        
-        NSLayoutConstraint.activate([ ratingLeading, ratingTop])
-        let labelTranslations = label.label_translations
-        let langCode = currentLanguage.language_code
-        for labelTranslation in labelTranslations! {
-            if(labelTranslation.language_code == langCode) {
-                ratingLabel.text = labelTranslation.text
-                break
-            }
+        if(labelString == "") {
+            NSLayoutConstraint(item: ratingBar, attribute: .centerX, relatedBy: .equal, toItem: cellContent, attribute: .centerX, multiplier: 1.0, constant: 0.0).isActive = true
+            
+        } else {
+            let ratingLabel = UITextView(frame:CGRect(x: 0, y: 0, width: 80, height: 30))
+            cellContent.addSubview(ratingLabel)
+            ratingLabel.isEditable = false
+            ratingLabel.showsVerticalScrollIndicator = false
+            ratingLabel.font = GlobalConstants.FONT_MEDIUM
+            ratingLabel.translatesAutoresizingMaskIntoConstraints = false
+            ratingLabel.tag = Int(label.id ?? 0)
+            ratingLabel.text = labelString
+            let labelLeading = NSLayoutConstraint(item: ratingLabel, attribute: .leading, relatedBy: .equal, toItem: cellContent, attribute: .leading, multiplier: 1.0, constant: 0.0)
+            
+            let labelTop = NSLayoutConstraint(item: ratingLabel, attribute: .top, relatedBy: .equal, toItem: cellContent, attribute: .top, multiplier: 1.0, constant: 0.0)
+            let labelWidth = NSLayoutConstraint(item: ratingLabel, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 80.0)
+            let labelHeight = NSLayoutConstraint(item: ratingLabel, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 30.0)
+            
+            
+            NSLayoutConstraint.activate([labelLeading, labelWidth, labelHeight, labelTop])
+            let ratingLeading = NSLayoutConstraint(item: ratingBar, attribute: .leading, relatedBy: .equal, toItem: ratingLabel, attribute: .trailing, multiplier: 1.0, constant: 10.0)
+            
+            let ratingTop = NSLayoutConstraint(item: ratingLabel, attribute: .top, relatedBy: .equal, toItem: cellContent, attribute: .top, multiplier: 1.0, constant: 0.0)
+            
+            NSLayoutConstraint.activate([ ratingLeading, ratingTop])
+            
         }
+        
+        
+        
         return cell
     }
     
@@ -229,10 +240,10 @@ class LoyagramRatingView: UIView, LoyagramRatingViewDelegate, UITableViewDelegat
         for ql in questionLabels {
             let labelTranslations = ql.label_translations!
             for labelTranslation in labelTranslations {
-                if (labelTranslation.language_code == currentLanguage.language_code) {
+                if (labelTranslation.language_code != nil && currentLanguage.language_code != nil && labelTranslation.language_code == currentLanguage.language_code) {
                     if(self.viewWithTag(Int(ql.id ?? 0)) != nil) {
                         let radioLabel:UITextView = self.viewWithTag(Int(ql.id ?? 0)) as! UITextView
-                        radioLabel.text = labelTranslation.text
+                        radioLabel.text = labelTranslation.text ?? ""
                     }
                     break
                 }

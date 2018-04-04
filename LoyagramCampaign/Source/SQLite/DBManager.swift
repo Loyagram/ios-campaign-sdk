@@ -16,10 +16,7 @@ class DBManager {
     var dbPath = String()
     let documentsDirectory = ""
     init() {
-//        fileUrl = try! FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false).appendingPathComponent("loyagram.sqlite")
-       // let fileMgr = FileManager.default
-         dbPath = URL(fileURLWithPath: Bundle.main.resourcePath ?? "").appendingPathComponent("loyagram.sqlite").absoluteString
-        //let success: Bool = fileMgr.fileExists(atPath: dbPath)
+        dbPath = URL(fileURLWithPath: Bundle.main.resourcePath ?? "").appendingPathComponent("loyagram.sqlite").absoluteString
         openDB()
         createTableResponse()
     }
@@ -29,10 +26,6 @@ class DBManager {
         if !(sqlite3_open(dbPath, &db) == SQLITE_OK) {
             print("An error has occured.")
         }
-//        let databasePath: String = URL(fileURLWithPath: documentsDirectory).appendingPathComponent("loyagram.sqlite").absoluteString
-//        if sqlite3_open(databasePath, &db) != SQLITE_OK {
-//            print("error openning db")
-//        }
     }
     func createTableResponse() {
         let createTableQuery = "CREATE TABLE IF NOT EXISTS RESPONSE(id INTEGER PRIMARY KEY AUTOINCREMENT, response TEXT, kioskStatus INTEGER)"
@@ -106,7 +99,7 @@ class DBManager {
     }
     
     func deleteResponseFromDB() -> Bool {
-      let queryString = "DELETE FROM RESPONSE WHERE kioskStatus = 0"
+        let queryString = "DELETE FROM RESPONSE WHERE kioskStatus = 0"
         var deleteStatement: OpaquePointer?
         var isSuccess = false
         if sqlite3_prepare_v2(db, queryString, -1, &deleteStatement, nil) == SQLITE_OK{
@@ -139,9 +132,9 @@ class DBManager {
         return count
     }
     func closeDB() {
-//        if sqlite3_close(db) != SQLITE_OK {
-//            print("cannot close db")
-//        }
+        //        if sqlite3_close(db) != SQLITE_OK {
+        //            print("cannot close db")
+        //        }
     }
     
 }

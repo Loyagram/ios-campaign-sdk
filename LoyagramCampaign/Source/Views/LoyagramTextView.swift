@@ -42,7 +42,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         self.staticTexts = staticTexts
         self.response = response
         campaignView.languageDelegate = self
-        textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+        textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
         initTextView()
         setQuestion()
         showTextView()
@@ -54,11 +54,11 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     
     @objc func setQuestion() {
         
-        let langCode = currentLanguage.language_code
+        let langCode = currentLanguage.language_code ?? ""
         let questionTranslations = currentQuestion.question_translations
         for questionTranslation in questionTranslations! {
-            if(questionTranslation.language_code == langCode) {
-                txtQuestion.text = questionTranslation.text
+            if(questionTranslation.language_code != nil && questionTranslation.language_code == langCode) {
+                txtQuestion.text = questionTranslation.text ?? ""
                 break
             }
         }
@@ -79,7 +79,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         textScrollView.addSubview(txtQuestion)
         
         txtQuestion.translatesAutoresizingMaskIntoConstraints = false
-        txtQuestion.text = " "
+        txtQuestion.text = ""
         txtQuestion.textColor = UIColor.black
         txtQuestion.textAlignment = .center
         txtQuestion.font = GlobalConstants.FONT_MEDIUM
@@ -113,8 +113,8 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         let questionCount = currentQuestion.labels?.count ?? 0
         if (questionCount > 0) {
             let label = currentQuestion.labels![0]
-            questionLabelId = label.id
-            fieldType = label.field_type
+            questionLabelId = label.id ?? 0
+            fieldType = label.field_type ?? ""
             var textFieldHeight:CGFloat = 40
             var type = "textView"
             switch(fieldType) {
@@ -268,8 +268,6 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
             scrollViewCenterY.constant = 25
             
         }
-        
-        
         setBorderForTextField()
     }
     
@@ -289,35 +287,35 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         switch (fieldType) {
         case "SHORT_ANSWER":
             if textView.text == textViewPlaceHolderText {
-                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
                 textView.text = textViewPlaceHolderText
                 moveCursorToStart(txtView: textView)
             } else {
-                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
             }
             break
         case "PARAGRAPH":
             if textView.text == textViewPlaceHolderText {
-                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
                 textView.text = textViewPlaceHolderText
                 moveCursorToStart(txtView: textView)
             } else {
-                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
             }
             break
         case "NUMBER":
-            textField.placeholder = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]
+            textField.placeholder = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
             break;
         case "EMAIL":
-            textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"]
+            textField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] ?? ""
             break
         default:
             if textView.text == textViewPlaceHolderText {
-                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
                 textView.text = textViewPlaceHolderText
                 moveCursorToStart(txtView: textView)
             } else {
-                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"]!
+                textViewPlaceHolderText = staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? ""
             }
             break
         }
@@ -394,7 +392,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
             ra.question_label_id = id
             ra.answer = Int(rating)
             let responseAnswerText = ResponseAnswerText()
-            responseAnswerText.response_answer_id = ra.id
+            responseAnswerText.response_answer_id = ra.id ?? ""
             ra.response_answer_text = responseAnswerText
             response.response_answers.append(ra)
             return ra
@@ -429,8 +427,8 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
         var text = ""
         let responseAnswers:[ResponseAnswer] = response.response_answers
         for responseAnswer in responseAnswers {
-            if(responseAnswer.question_id != nil && currentQuestion.id == responseAnswer.question_id) {
-                text = (responseAnswer.response_answer_text?.text)!
+            if(responseAnswer.question_id != nil && currentQuestion.id != nil && currentQuestion.id == responseAnswer.question_id) {
+                text = responseAnswer.response_answer_text?.text ?? ""
                 break
             }
         }
@@ -446,7 +444,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
     }
     
     func textViewDidBeginEditing(_ textView: UITextView) {
-        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] {
+        if textView.text == staticTexts.translation["INPUT_PLACEHOLDER_TEXT"] ?? "" {
             // move cursor to start
             DispatchQueue.main.async() {
                 self.moveCursorToStart(txtView:textView)
