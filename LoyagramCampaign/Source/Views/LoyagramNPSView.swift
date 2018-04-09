@@ -423,6 +423,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextField.delegate = self
         feedbackTextField.autocorrectionType = .no
         feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] ?? ""
+        feedbackTextField.accessibilityIdentifier = "LGTEXTFIELD"
         
         scrollView.addSubview(txtFeedBackQuestion)
         scrollView.addSubview(feedbackTextField)
@@ -710,26 +711,20 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         }
     }
     func textView(_ textView: UITextView, shouldChangeTextIn range: NSRange, replacementText text: String) -> Bool {
-        
         if (range.length > 1) {
             return false
         }
-        if(textView.text == placeHolderText && text == "" && range.length == 0) {
-            return true
-        }
-        
         let newLength = textView.text.utf16.count + text.utf16.count - range.length
         if newLength > 0 {
-            // check if the only text is the placeholder and remove it if needed
-            if textView.text == placeHolderText {
+            if feedbackTextView.text == placeHolderText {
                 applyNonPlaceholderStyle(textView: feedbackTextView)
                 textView.text = ""
             }
         } else if(newLength == 0 && textView.text != placeHolderText) {
-            applyPlaceholderStyle(textView: textView, placeholderText: placeHolderText)
-            moveCursorToStart(txtView: textView)
+            applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
+            moveCursorToStart(txtView: feedbackTextView)
+            return false
         }
-        
         return true
     }
     
@@ -747,7 +742,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     
     func textViewDidEndEditing(_ textView: UITextView) {
         let textViewText = textView.text
-         let response = getResponseAnswer(id: currentQuestion.id!)
+        let response = getResponseAnswer(id: currentQuestion.id!)
         if(textViewText != placeHolderText) {
             if (response?.response_answer_text != nil) {
                 response?.response_answer_text?.text = textViewText
@@ -794,6 +789,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         // make it look (initially) like a placeholder
         textView.textColor = .lightGray
         textView.text = placeholderText
+        print("text in apply place holder \(feedbackTextView.text)")
     }
     
     func applyNonPlaceholderStyle(textView: UITextView) {

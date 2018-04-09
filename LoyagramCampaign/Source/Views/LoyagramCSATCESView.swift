@@ -739,27 +739,23 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         if (range.length > 1) {
             return false
         }
-        if(textView.text == placeHolderText && text == "" && range.length == 0) {
-            return true
-        }
-        
         let newLength = textView.text.utf16.count + text.utf16.count - range.length
         if newLength > 0 {
-            // check if the only text is the placeholder and remove it if needed
-            if textView.text == placeHolderText {
+            if feedbackTextView.text == placeHolderText {
                 applyNonPlaceholderStyle(textView: feedbackTextView)
                 textView.text = ""
             }
         } else if(newLength == 0 && textView.text != placeHolderText) {
-            applyPlaceholderStyle(textView: textView, placeholderText: placeHolderText)
-            moveCursorToStart(txtView: textView)
+            applyPlaceholderStyle(textView: feedbackTextView, placeholderText: placeHolderText)
+            moveCursorToStart(txtView: feedbackTextView)
+            return false
         }
         return true
     }
     
     func textViewDidEndEditing(_ textView: UITextView) {
         let textViewText = textView.text
-        let response = getResponseAnswer(id: currentQuestion.id!)
+        let response = getResponseAnswerByQuestionId(id: currentQuestion.id!)
         if(textViewText != placeHolderText) {
             if (response?.response_answer_text != nil) {
                 response?.response_answer_text?.text = textViewText
