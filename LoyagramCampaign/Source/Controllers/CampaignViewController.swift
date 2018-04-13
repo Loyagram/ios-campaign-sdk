@@ -121,8 +121,12 @@ class CampaignViewController: UIViewController {
         let screenSize: CGRect = UIScreen.main.bounds
         let screenWidth = screenSize.width
         let screenHeight = screenSize.height
-        
-        if(screenHeight > screenWidth) {
+        let deviceType = UIDevice.current.userInterfaceIdiom
+        var isIpad = false
+        if(deviceType == .pad) {
+           isIpad = true
+        }
+        if(screenHeight > screenWidth || isIpad) {
             statusBarTop.constant = 0
             campaignViewTop.constant = 20
         } else {

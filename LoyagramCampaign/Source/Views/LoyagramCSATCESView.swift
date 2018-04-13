@@ -501,7 +501,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
         cell.contentView.addSubview(cellContent)
         
-        
+        cell.contentView.isUserInteractionEnabled = false
         cellContent.translatesAutoresizingMaskIntoConstraints = false
         
         let centerX = NSLayoutConstraint(item: cellContent, attribute: .centerX, relatedBy: .equal, toItem: cell.contentView, attribute: .centerX, multiplier: 1.0, constant: 0.0)
@@ -535,7 +535,41 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         return 35.0
     }
     
-    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        if(cell != nil) {
+            let cellSubViews = (cell?.contentView.subviews)!
+            if(!isFollowUp) {
+                for subView in cellSubViews {
+                    if !(subView is UILabel) {
+                        let radioButtonSubViews = subView.subviews
+                        for sv in radioButtonSubViews {
+                            if (sv is LoyagramRadioButton) {
+                                let button = sv as! LoyagramRadioButton
+                                radioButtonAction(sender: button)
+                            }
+                        }
+                        
+                    }
+                }
+            } else {
+                for subView in cellSubViews {
+                    if !(subView is UILabel) {
+                        let chkSubViews = subView.subviews
+                        for sv in chkSubViews {
+                            if (sv is LoyagramCheckBox) {
+                                let button = sv as! LoyagramCheckBox
+                                button.isChecked = !button.isChecked
+                                button.setNeedsDisplay()
+                                checkBoxAction(sender: button)
+                            }
+                        }
+                        
+                    }
+                }
+            }
+        }
+    }
     @objc func getSingleSelectCell(radioButtonContainer: UIView, row:Int) {
         
         let label = currentQuestion.labels?[row]
@@ -575,7 +609,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         
         
         NSLayoutConstraint.activate([labelTop,labelLeading, labelTrailing, labelHeight])
-        radioButton.addTarget(self, action: #selector(radioButtonAction(sender:)), for: .touchUpInside)
+        //radioButton.addTarget(self, action: #selector(radioButtonAction(sender:)), for: .touchUpInside)
         radioGroup.append(radioButton)
         
         let labelTranslations = label?.label_translations
@@ -596,7 +630,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         chk.showTextLabel = true
         chk.tag = Int(label?.id ?? 0)
         checkBoxContainer.addSubview(chk)
-        chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
+        //chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
         let labelTranslations = label?.label_translations
         let langCode = currentLanguage.language_code ?? ""
         for labelTranslation in labelTranslations! {

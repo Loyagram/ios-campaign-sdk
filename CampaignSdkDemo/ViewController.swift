@@ -107,29 +107,29 @@ class ViewController: UIViewController {
     }
     
     @objc func initRadioButtonView() {
-        let rdbNPS = LGRadioButton(frame: CGRect(x: 0, y: 10, width: 20, height: 30))
+        let rdbNPS = LGRadioButton(frame: CGRect(x: 0, y: 10, width: 25, height: 30))
         rdbNPS.addTarget(self, action: #selector(manualAction(sender:)), for: .touchUpInside)
         rdbNPS.tag = 101
-        let lblNPS = UILabel(frame: CGRect(x:25, y:10, width:40, height:30))
+        let lblNPS = UILabel(frame: CGRect(x:30, y:10, width:40, height:30))
         lblNPS.text = "NPS"
         rdbNPS.isSelected = true
         
-        let rdbSurvey = LGRadioButton(frame: CGRect(x: 70, y: 10, width: 20, height: 30))
+        let rdbSurvey = LGRadioButton(frame: CGRect(x: 70, y: 10, width: 25, height: 30))
         rdbSurvey.addTarget(self, action: #selector(manualAction(sender:)), for: .touchUpInside)
         rdbSurvey.tag = 102
-        let lblSurvey = UILabel(frame: CGRect(x:95, y:10, width:60, height:30))
+        let lblSurvey = UILabel(frame: CGRect(x:100, y:10, width:60, height:30))
         lblSurvey.text = "Survey"
         
-        let rdbCSAT = LGRadioButton(frame: CGRect(x: 160, y: 10, width: 20, height: 30))
+        let rdbCSAT = LGRadioButton(frame: CGRect(x: 160, y: 10, width: 25, height: 30))
         rdbCSAT.addTarget(self, action: #selector(manualAction(sender:)), for: .touchUpInside)
         rdbCSAT.tag = 103
-        let lblCSAT = UILabel(frame: CGRect(x:185, y:10, width:50, height:30))
+        let lblCSAT = UILabel(frame: CGRect(x:190, y:10, width:50, height:30))
         lblCSAT.text = "CSAT"
         
-        let rdbCES = LGRadioButton(frame: CGRect(x: 240, y: 10, width: 20, height: 30))
+        let rdbCES = LGRadioButton(frame: CGRect(x: 240, y: 10, width: 25, height: 30))
         rdbCES.addTarget(self, action: #selector(manualAction(sender:)), for: .touchUpInside)
         rdbCES.tag = 104
-        let lblCES = UILabel(frame: CGRect(x:265, y:10, width:40, height:30))
+        let lblCES = UILabel(frame: CGRect(x:270, y:10, width:40, height:30))
         lblCES.text = "CES"
         rdbGroup = [rdbNPS,rdbSurvey, rdbCSAT, rdbCES]
         

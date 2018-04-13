@@ -298,8 +298,8 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
             let responseAnswer = getResponseAnswer(id: currentQuestion.id!)
             if(responseAnswer != nil) {
                 if(responseAnswer?.answer != nil && i == responseAnswer?.answer) {
-                  npsButton.backgroundColor = primaryColor
-                  npsButton.setTitleColor(UIColor.white, for: .normal)
+                    npsButton.backgroundColor = primaryColor
+                    npsButton.setTitleColor(UIColor.white, for: .normal)
                 }
             }
         }
@@ -564,7 +564,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         let cell = LanguageTableViewCell(style: UITableViewCellStyle.default, reuseIdentifier: "Cell")
         cell.translatesAutoresizingMaskIntoConstraints = false
         cell.selectionStyle = .none
-        //ContentView constrinats
+        cell.contentView.isUserInteractionEnabled = false
         
         let cellContent = UIView()
         cell.contentView.addSubview(cellContent)
@@ -597,6 +597,27 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         return 35.0
     }
     
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let cell = tableView.cellForRow(at: indexPath)
+        if(cell != nil) {
+            let cellSubViews = (cell?.contentView.subviews)!
+            for subView in cellSubViews {
+                if !(subView is UILabel) {
+                    let chkSubViews = subView.subviews
+                    for sv in chkSubViews {
+                        if (sv is LoyagramCheckBox) {
+                            let button = sv as! LoyagramCheckBox
+                            button.isChecked = !button.isChecked
+                            button.setNeedsDisplay()
+                            checkBoxAction(sender: button)
+                        }
+                    }
+                    
+                }
+            }
+        }
+    }
+    
     @objc func getMultiSelectCell(checkBoxContainer: UIView, row:Int) {
         let label = followUpQuestion.labels?[row]
         let rect = CGRect(x: 0, y: 0, width: 220, height: 35)
@@ -604,7 +625,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         chk.showTextLabel = true
         checkBoxContainer.addSubview(chk)
         chk.tag = Int(label?.id ?? 0)
-        chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
+        //chk.addTarget(self, action: #selector(checkBoxAction(sender:)), for: .touchUpInside)
         let labelTranslations = label?.label_translations
         let langCode = currentLanguage.language_code ?? ""
         for labelTranslation in labelTranslations! {
@@ -637,9 +658,9 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
                 txtLikely.text = widget?.very_likely ?? ""
                 txtNotLikely.text = widget?.not_likely ?? ""
                 break
-                }
             }
         }
+    }
     @objc func changeLabelLanguage() {
         followUpTableView.reloadData()
     }

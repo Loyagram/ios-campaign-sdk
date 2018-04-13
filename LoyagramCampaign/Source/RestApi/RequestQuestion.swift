@@ -37,7 +37,7 @@ class RequestQuestion {
             }
             task.resume()
         } else {
-            failure("")
+            failure("Not connected to Internet")
         }
         
     }

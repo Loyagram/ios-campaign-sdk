@@ -129,7 +129,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 }
                 textScrollView.addSubview(textView)
                 textView.translatesAutoresizingMaskIntoConstraints = false
-                textFieldHeight = 40
+                textFieldHeight = 80
                 textView.layer.borderWidth = 1
                 textView.layer.borderColor = UIColor.lightGray.cgColor
                 textView.autocorrectionType = .no
@@ -158,7 +158,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 textField = UITextField()
                 textScrollView.addSubview(textField)
                 textField.translatesAutoresizingMaskIntoConstraints = false
-                textFieldHeight = 20
+                textFieldHeight = 30
                 textField.keyboardType = .emailAddress
                 textField.autocorrectionType = .no
                 let currentText = getTextResponse()
@@ -175,7 +175,7 @@ class LoyagramTextView: UIView, UIScrollViewDelegate, LoyagramLanguageDelegate, 
                 textField = UITextField()
                 textScrollView.addSubview(textField)
                 textField.translatesAutoresizingMaskIntoConstraints = false
-                textFieldHeight = 20
+                textFieldHeight = 30
                 textField.keyboardType = .phonePad
                 textField.autocorrectionType = .no
                 let currentText = getTextResponse()

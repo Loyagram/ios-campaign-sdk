@@ -59,6 +59,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
     var lblBrand : UILabel!
     var brandView : UIView!
     var btnClose : UIButton!
+    var btnCloseContainer : UIView!
     var lblQuestionCount : UILabel!
     var btnLanguage: UIButton!
     var viewController : UIViewController!
@@ -231,6 +232,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         imageViewBrand = UIImageView()
         lblBrand = UILabel()
         btnClose = UIButton()
+        btnCloseContainer = UIView()
         lblQuestionCount = UILabel()
         btnLanguage = UIButton(type: .custom)
         //imageViewArrow = UIImageView()
@@ -243,18 +245,21 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         brandView.addSubview(lblBrand)
         
         
-        headerView.addSubview(btnClose)
+        
         headerView.addSubview(brandView)
         headerView.addSubview(btnLanguage)
-        //headerView.addSubview(imageViewArrow)
+        headerView.addSubview(btnCloseContainer)
         headerView.addSubview(lblQuestionCount)
         mainView.addSubview(headerView)
+        btnCloseContainer.addSubview(btnClose)
         
         //headerView.backgroundColor = primaryColor
         headerView.translatesAutoresizingMaskIntoConstraints = false
         brandView.translatesAutoresizingMaskIntoConstraints = false
         lblBrand.translatesAutoresizingMaskIntoConstraints = false
         btnClose.translatesAutoresizingMaskIntoConstraints = false
+        btnCloseContainer.translatesAutoresizingMaskIntoConstraints = false
+        btnCloseContainer.backgroundColor = UIColor.clear
         imageViewBrand.translatesAutoresizingMaskIntoConstraints = false
         btnLanguage.translatesAutoresizingMaskIntoConstraints = false
         //imageViewArrow.translatesAutoresizingMaskIntoConstraints = false
@@ -262,7 +267,7 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnLanguage.setTitleColor(UIColor.white, for: .normal)
         btnLanguage.setTitleColor(UIColor.white, for: .normal)
         lblQuestionCount.textColor = UIColor.white
-        
+        btnClose.isUserInteractionEnabled = false
         //Hardcoded texts need to change once api request implemented
         
         //lblQuestionCount.text = " "
@@ -272,7 +277,9 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         btnLanguage.titleLabel?.font = GlobalConstants.FONT_MEDIUM
         lblQuestionCount.font = GlobalConstants.FONT_MEDIUM
         
-        btnClose.addTarget(self, action: #selector(closeButtonAction(sender:)), for: .touchUpInside)
+        let closeButonGesture = UITapGestureRecognizer(target: self, action:  #selector (self.closeButtonAction(sender:)))
+        btnCloseContainer.addGestureRecognizer(closeButonGesture)
+        //btnClose.addTarget(self, action: #selector(closeButtonAction(sender:)), for: .touchUpInside)
         btnLanguage.addTarget(self, action: #selector(languageButtonAction(sender:)), for: .touchUpInside)
         // Constriants to headerView
         
@@ -323,6 +330,17 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         NSLayoutConstraint.activate([btnLanguageHeight, btnLanguageWidth, btnLanguageBottom, btnLanguageLeading])
         
         
+        let closeButtonContainerHeight = NSLayoutConstraint(item: btnCloseContainer, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1.0, constant: 60.0)
+        
+        //Height
+        let closeButtonContainerWidth = NSLayoutConstraint(item: btnCloseContainer, attribute: .width, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute,   multiplier: 1.0,  constant: 60.0)
+        
+        let closeButtonContainerTop = NSLayoutConstraint(item: btnCloseContainer, attribute: .top, relatedBy: .equal, toItem: headerView, attribute: .top, multiplier: 1.0, constant: 0.0)
+        
+        let closeButtonContainerTrailing = NSLayoutConstraint(item: btnCloseContainer, attribute: .trailing, relatedBy: .equal, toItem: headerView, attribute: .trailing, multiplier: 1.0, constant: 0.0)
+        
+        NSLayoutConstraint.activate([closeButtonContainerHeight, closeButtonContainerWidth, closeButtonContainerTop, closeButtonContainerTrailing])
+        
         //Close Button Constraints
         
         //Height
@@ -336,6 +354,8 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let closeButtonTrailing = NSLayoutConstraint(item: btnClose, attribute: .trailing, relatedBy: .equal, toItem: headerView, attribute: .trailing, multiplier: 1.0, constant: -10.0)
         
         NSLayoutConstraint.activate([closeButtonWidth, closeButtonHeight, closeButtonTop, closeButtonTrailing])
+        
+        
         
         
         //BrandView Constraints
@@ -1245,9 +1265,11 @@ public class LoyagramCampaignView: UIView, UITableViewDelegate, UITableViewDataS
         let animationDurarion = userInfo[UIKeyboardAnimationDurationUserInfoKey] as! TimeInterval
         var changeInHeight:CGFloat = 0.0
         if(show) {
-            changeInHeight = CGFloat((keyboardFrame.height) * -1 )
+//            changeInHeight = CGFloat((keyboardFrame.height) * -1 )
+            changeInHeight = CGFloat((keyboardFrame.height) * -0.7 )
         } else {
-            changeInHeight = CGFloat((keyboardFrame.height) * 1 )
+            //changeInHeight = CGFloat((keyboardFrame.height) * 1 )
+            changeInHeight = CGFloat((keyboardFrame.height) * 0.7 )
         }
         UIView.animate(withDuration: animationDurarion, animations: { () -> Void in
             self.bottomConstraint.constant = changeInHeight
