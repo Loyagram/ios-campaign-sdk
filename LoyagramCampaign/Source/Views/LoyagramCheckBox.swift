@@ -51,7 +51,7 @@ class LoyagramCheckBox: UIControl {
         checkColor = UIColor.white
         isChecked = false
         isEnabled = true
-        showTextLabel = false
+        showTextLabel = true
         textIsSet = false
         self.backgroundColor = UIColor.clear
         
@@ -68,7 +68,6 @@ class LoyagramCheckBox: UIControl {
     override func draw(_ rect: CGRect) {
         
         boxBorderColor.setStroke()
-        
         if(showTextLabel) {
             if(!textIsSet) {
                 label = UITextView(frame: CGRect(x: self.frame.minX + 30, y: 0, width: self.frame.size.width - 30, height: self.frame.size.height))
@@ -76,6 +75,7 @@ class LoyagramCheckBox: UIControl {
                 self.addSubview(label)
                 label.isEditable = false
                 label.font = GlobalConstants.FONT_MEDIUM
+                label.isUserInteractionEnabled = false
                 textIsSet  = true
             }
             

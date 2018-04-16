@@ -401,7 +401,7 @@ class ViewController: UIViewController {
             //landscape
         } else if(screenHeight > 375){
             if(screenHeight > 575) {
-                let constant = 375 + (screenHeight - 200)
+                let constant = (screenHeight - 200)
                 campaignViewHeight.constant = constant
             } else {
                 campaignViewHeight.constant = 375

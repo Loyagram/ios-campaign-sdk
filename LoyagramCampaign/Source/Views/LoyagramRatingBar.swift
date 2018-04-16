@@ -145,7 +145,7 @@ class LoyagramRatingBar: UIView {
         let colorSpace: CGColorSpace = CGColorSpaceCreateDeviceRGB()
         let gradientColors = [startColor?.cgColor, endColor?.cgColor, endColor?.cgColor]
         let gradientLocations = [fillPercentage, fillPercentage, fillPercentage]
-        let gradient: CGGradient = CGGradient(colorsSpace: colorSpace, colors: (gradientColors as? CFArray)!, locations: gradientLocations)!
+        let gradient: CGGradient = CGGradient(colorsSpace: colorSpace, colors: gradientColors as CFArray, locations: gradientLocations)!
         context?.drawLinearGradient(gradient, start: CGPoint(x: starBounds.minX, y: starBounds.midY), end: CGPoint(x: starBounds.maxX, y: starBounds.midY), options: [])
     }
     

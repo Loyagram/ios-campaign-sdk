@@ -260,7 +260,11 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
         chk.showTextLabel = true
         chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] ?? ""
         chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
+        chk.tag = 1001
         chkContainer.addSubview(chk)
+        let chkGesture = UITapGestureRecognizer(target: self, action: #selector(followUpTextFieldAction))
+        chkGesture.numberOfTapsRequired = 1
+        chkContainer.addGestureRecognizer(chkGesture)
         feedbackTextField = UITextField()
         feedbackTextField.translatesAutoresizingMaskIntoConstraints = false
         feedbackTextField.isHidden = true
@@ -342,7 +346,7 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
     }
     
     @objc func followUpCheckBoxAction (sender: LoyagramCheckBox) {
-        
+       /*
         if(sender.isChecked) {
             if(delegate != nil) {
                 delegate.enableCSATCESFollowUp(enable: true)
@@ -356,10 +360,31 @@ class LoyagramCSATCESView: UIView, LoyagramCampaignButtonDelegate, UITableViewDe
             }
         }
         feedbackTextField.isHidden = !feedbackTextField.isHidden
-        
+        */
     }
     
-    
+    @objc func followUpTextFieldAction () {
+        let chk = self.viewWithTag(1001) as? LoyagramCheckBox
+        if chk != nil {
+            if(chk?.isChecked)! {
+                chk?.isChecked = false
+                if(delegate != nil) {
+                    delegate.enableCSATCESFollowUp(enable: false)
+                }
+                
+            } else {
+                chk?.isChecked = true
+                if(delegate != nil) {
+                    delegate.enableCSATCESFollowUp(enable: true)
+                }
+                if(response.email != nil) {
+                    response.email = ""
+                }
+            }
+            chk?.setNeedsDisplay()
+            feedbackTextField.isHidden = !feedbackTextField.isHidden
+        }
+    }
     
     override func layoutSubviews() {
         super.layoutSubviews()

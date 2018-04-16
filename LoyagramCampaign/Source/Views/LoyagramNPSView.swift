@@ -413,9 +413,14 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         chk.showTextLabel = true
         chk.tag = 1001
         chk.text = staticTexts.translation["FOLLOW_UP_REQUEST_CHECKBOX_LABEL"] ?? ""
+        //chk.label.addTarget(self, action: #selector(followUpTextFieldAction), for: .touchUpInside)
         
-        chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
+        
         chkContainer.addSubview(chk)
+        let chkGesture = UITapGestureRecognizer(target: self, action: #selector(followUpTextFieldAction))
+        chkGesture.numberOfTapsRequired = 1
+        chkContainer.addGestureRecognizer(chkGesture)
+        chk.addTarget(self, action: #selector(followUpCheckBoxAction(sender:)), for: .touchUpInside)
         feedbackTextField = UITextField()
         feedbackTextField.font = GlobalConstants.FONT_MEDIUM
         feedbackTextField.translatesAutoresizingMaskIntoConstraints = false
@@ -424,6 +429,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
         feedbackTextField.autocorrectionType = .no
         feedbackTextField.placeholder = staticTexts.translation["EMAIL_ADDRESS_PLACEHOLDER_TEXT"] ?? ""
         feedbackTextField.accessibilityIdentifier = "LGTEXTFIELD"
+        
         
         scrollView.addSubview(txtFeedBackQuestion)
         scrollView.addSubview(feedbackTextField)
@@ -500,7 +506,7 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
     }
     
     @objc func followUpCheckBoxAction (sender: LoyagramCheckBox) {
-        if(sender.isChecked) {
+        /*if(sender.isChecked) {
             if(delegate != nil) {
                 delegate.enableNPSFollowUp(enable: true)
             }
@@ -513,8 +519,30 @@ class LoyagramNPSView: UIView, UITableViewDelegate, UITableViewDataSource, Loyag
                 response.email = ""
             }
         }
-        feedbackTextField.isHidden = !feedbackTextField.isHidden
+        feedbackTextField.isHidden = !feedbackTextField.isHidden */
         
+    }
+    @objc func followUpTextFieldAction () {
+        let chk = self.viewWithTag(1001) as? LoyagramCheckBox
+        if chk != nil {
+            if(chk?.isChecked)! {
+                chk?.isChecked = false
+            if(delegate != nil) {
+                delegate.enableNPSFollowUp(enable: false)
+            }
+            
+        } else {
+                chk?.isChecked = true
+            if(delegate != nil) {
+                delegate.enableNPSFollowUp(enable: true)
+            }
+            if(response.email != nil) {
+                response.email = ""
+            }
+        }
+        chk?.setNeedsDisplay()
+        feedbackTextField.isHidden = !feedbackTextField.isHidden
+        }
     }
     
     override func layoutSubviews() {
