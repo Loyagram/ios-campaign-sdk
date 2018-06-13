@@ -4,7 +4,7 @@ Loyagram iOS FRAMEWORK
 ### Getting started
 
 ```
-platform :ios, '8.0'
+platform :ios, '9.0'
 use_frameworks!
 
 target YOUR_PROJECT_TARGET do
@@ -32,7 +32,7 @@ Loyagram campaign sdk can be implemented using any of the following methods:
 2. Show as a dialog
 3. Animate from bottom
 
-**1. Show as a new View Controller **
+**1. Show as a new View Controller**
 
 To run campaigns as a new Controller.
 ```swift
